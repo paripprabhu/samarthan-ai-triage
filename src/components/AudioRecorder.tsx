@@ -13,6 +13,7 @@ interface AudioRecorderProps {
 
 const MAX_SECONDS = 60
 const BAR_COUNT = 28
+const CHUNK_MS = 4000
 
 export default function AudioRecorder({ language, onAudioReady, onLiveTranscript, theme = 'light' }: AudioRecorderProps) {
   const hi = language === 'hi'
@@ -24,7 +25,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
   const [permissionDenied, setPermissionDenied] = useState(false)
   const [levels, setLevels] = useState<number[]>(() => Array(BAR_COUNT).fill(0.08))
   const [liveText, setLiveText] = useState('')
-  const [speechSupported, setSpeechSupported] = useState(true)
+  const [captionError, setCaptionError] = useState('')
 
   const mediaRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
@@ -35,15 +36,20 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
   const rafRef = useRef<number | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
 
-  const recognitionRef = useRef<any>(null)
+  // Rolling ~4s chunk recorder for live captions — separate from the main
+  // MediaRecorder so the final audio blob sent to Whisper stays one clean
+  // continuous file, while captions are a best-effort streaming preview.
+  const chunkRecorderRef = useRef<MediaRecorder | null>(null)
   const finalTranscriptRef = useRef('')
+  const captionSeqRef = useRef(0)
+  const lastAppliedSeqRef = useRef(0)
 
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       if (blobUrl) URL.revokeObjectURL(blobUrl)
-      recognitionRef.current?.stop?.()
+      try { chunkRecorderRef.current?.stop() } catch { /* already stopped */ }
       audioCtxRef.current?.close?.()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,48 +84,69 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
     rafRef.current = requestAnimationFrame(tick)
   }
 
-  const startSpeechRecognition = () => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-    if (!SpeechRecognition) {
-      setSpeechSupported(false)
-      return
+  const uploadChunkForCaption = async (blob: Blob, seq: number) => {
+    if (blob.size < 1000) return // too short to contain speech
+    try {
+      const formData = new FormData()
+      formData.append('audio', blob, 'chunk.webm')
+      formData.append('language', language)
+      const resp = await fetch('/api/transcribe-chunk', { method: 'POST', body: formData })
+      if (!resp.ok) return
+      const { text } = await resp.json()
+      // Chunks resolve out of order if one Whisper call is slow — only apply
+      // a response if it's not older than the last one we already applied.
+      // (Every chunk WILL be "behind" the currently-recording chunk by the
+      // time its request completes, since Whisper latency > the chunk
+      // interval — that's expected, not staleness.)
+      if (seq <= lastAppliedSeqRef.current) return
+      lastAppliedSeqRef.current = seq
+      if (text && text.trim()) {
+        finalTranscriptRef.current = (finalTranscriptRef.current + ' ' + text.trim()).trim()
+        setLiveText(finalTranscriptRef.current)
+        onLiveTranscript?.(finalTranscriptRef.current)
+        setCaptionError('')
+      }
+    } catch {
+      // Best-effort — the final Whisper pass on the full recording (in
+      // /api/triage) is what actually matters. Only surface an error if we
+      // haven't managed a single successful caption yet, so one dropped
+      // chunk mid-stream doesn't overwrite text that's already showing.
+      if (!finalTranscriptRef.current) {
+        setCaptionError(hi ? 'लाइव कैप्शन अभी उपलब्ध नहीं' : 'Live captions unavailable right now')
+      }
     }
-    const recognition = new SpeechRecognition()
-    recognition.continuous = true
-    recognition.interimResults = true
-    recognition.lang = hi ? 'hi-IN' : 'en-IN'
+  }
 
-    finalTranscriptRef.current = ''
+  const startChunkCaptioning = (stream: MediaStream) => {
+    const mimeType = ['audio/webm;codecs=opus', 'audio/webm']
+      .find(type => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(type)) || ''
 
-    recognition.onresult = (event: any) => {
-      let interim = ''
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript
-        if (event.results[i].isFinal) {
-          finalTranscriptRef.current += transcript + ' '
-        } else {
-          interim += transcript
+    const launchChunk = () => {
+      if (!(mediaRef.current && mediaRef.current.state === 'recording')) return
+
+      const seq = ++captionSeqRef.current
+      const chunkChunks: Blob[] = []
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream)
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunkChunks.push(e.data)
+      }
+      recorder.onstop = () => {
+        const blob = new Blob(chunkChunks, { type: recorder.mimeType || 'audio/webm' })
+        uploadChunkForCaption(blob, seq)
+        if (mediaRef.current && mediaRef.current.state === 'recording') {
+          launchChunk()
         }
       }
-      const combined = (finalTranscriptRef.current + interim).trim()
-      setLiveText(combined)
-      onLiveTranscript?.(combined)
+
+      chunkRecorderRef.current = recorder
+      recorder.start()
+      setTimeout(() => {
+        if (recorder.state !== 'inactive') recorder.stop()
+      }, CHUNK_MS)
     }
 
-    recognition.onerror = () => { /* mic still records fine without live captions */ }
-    recognition.onend = () => {
-      // Some browsers auto-stop after silence; restart while still recording.
-      if (mediaRef.current && mediaRef.current.state === 'recording') {
-        try { recognition.start() } catch { /* already starting */ }
-      }
-    }
-
-    try {
-      recognition.start()
-      recognitionRef.current = recognition
-    } catch {
-      setSpeechSupported(false)
-    }
+    launchChunk()
   }
 
   const startRecording = async () => {
@@ -158,6 +185,10 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       setRecording(true)
       setSeconds(0)
       setLiveText('')
+      setCaptionError('')
+      finalTranscriptRef.current = ''
+      captionSeqRef.current = 0
+      lastAppliedSeqRef.current = 0
 
       // Waveform visualizer, driven by the mic's actual amplitude.
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
@@ -170,7 +201,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       analyserRef.current = analyser
       runLevelLoop()
 
-      startSpeechRecognition()
+      startChunkCaptioning(stream)
 
       timerRef.current = setInterval(() => {
         setSeconds((s) => {
@@ -195,8 +226,8 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
     audioCtxRef.current?.close?.()
     audioCtxRef.current = null
     analyserRef.current = null
-    try { recognitionRef.current?.stop?.() } catch { /* already stopped */ }
-    recognitionRef.current = null
+    try { chunkRecorderRef.current?.stop() } catch { /* already stopped */ }
+    chunkRecorderRef.current = null
     setLevels(Array(BAR_COUNT).fill(0.08))
     setRecording(false)
   }
@@ -242,15 +273,18 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
         </button>
 
         {/* Live waveform bars, height driven by mic amplitude */}
-        <div className="flex items-center justify-center gap-[3px] h-10 w-full max-w-[220px]">
+        <div className="flex items-end justify-center gap-[3px] h-10 w-full max-w-[220px]">
           {levels.map((lvl, i) => (
-            <span
+            <div
               key={i}
               className={clsx(
-                'w-[3px] rounded-full transition-all duration-75',
+                'w-[3px] rounded-full',
                 recording ? (isDark ? 'bg-white' : 'bg-blue-600') : (isDark ? 'bg-white/20' : 'bg-zinc-200')
               )}
-              style={{ height: `${Math.max(8, lvl * 40)}%` }}
+              style={{
+                height: `${Math.max(3, lvl * 40)}px`,
+                transition: recording ? 'height 60ms linear' : 'height 200ms ease-out',
+              }}
             />
           ))}
         </div>
@@ -272,9 +306,9 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       {/* Live caption */}
       {recording && (
         <div className={clsx("rounded-lg p-2.5 text-xs min-h-[2.5rem] max-h-24 overflow-y-auto", isDark ? "bg-white/5 text-white/80" : "bg-white text-zinc-600 border border-zinc-200")}>
-          {liveText || (speechSupported
-            ? <span className="opacity-50 flex items-center gap-1.5"><Loader2 className="w-3 h-3 animate-spin" />{hi ? 'सुन रहा है…' : 'Listening…'}</span>
-            : <span className="opacity-50">{hi ? 'लाइव कैप्शन इस ब्राउज़र में उपलब्ध नहीं' : 'Live captions not supported in this browser'}</span>
+          {liveText || (captionError
+            ? <span className="text-amber-600">{captionError}</span>
+            : <span className="opacity-50 flex items-center gap-1.5"><Loader2 className="w-3 h-3 animate-spin" />{hi ? 'सुन रहा है…' : 'Listening…'}</span>
           )}
         </div>
       )}
