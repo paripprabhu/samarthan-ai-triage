@@ -1,41 +1,132 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Mic, Square, Upload, Loader2 } from 'lucide-react'
+import { Mic, Square, Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
 interface AudioRecorderProps {
   language: 'en' | 'hi'
   onAudioReady: (blob: Blob) => void
+  onLiveTranscript?: (text: string) => void
   theme?: 'light' | 'dark'
 }
 
 const MAX_SECONDS = 60
+const BAR_COUNT = 28
 
-export default function AudioRecorder({ language, onAudioReady, theme = 'light' }: AudioRecorderProps) {
+export default function AudioRecorder({ language, onAudioReady, onLiveTranscript, theme = 'light' }: AudioRecorderProps) {
   const hi = language === 'hi'
   const isDark = theme === 'dark'
-  
+
   const [recording, setRecording] = useState(false)
   const [seconds, setSeconds] = useState(0)
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
   const [permissionDenied, setPermissionDenied] = useState(false)
+  const [levels, setLevels] = useState<number[]>(() => Array(BAR_COUNT).fill(0.08))
+  const [liveText, setLiveText] = useState('')
+  const [speechSupported, setSpeechSupported] = useState(true)
 
   const mediaRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
+  const audioCtxRef = useRef<AudioContext | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
+  const rafRef = useRef<number | null>(null)
+  const streamRef = useRef<MediaStream | null>(null)
+
+  const recognitionRef = useRef<any>(null)
+  const finalTranscriptRef = useRef('')
+
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
       if (blobUrl) URL.revokeObjectURL(blobUrl)
+      recognitionRef.current?.stop?.()
+      audioCtxRef.current?.close?.()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blobUrl])
+
+  const runLevelLoop = () => {
+    const analyser = analyserRef.current
+    if (!analyser) return
+    const data = new Uint8Array(analyser.frequencyBinCount)
+
+    const tick = () => {
+      analyser.getByteTimeDomainData(data)
+      // RMS amplitude of the waveform, mapped into a handful of bars with
+      // slight per-bar variance so it reads as a live waveform, not one blob.
+      let sumSq = 0
+      for (let i = 0; i < data.length; i++) {
+        const v = (data[i] - 128) / 128
+        sumSq += v * v
+      }
+      const rms = Math.sqrt(sumSq / data.length)
+      const amplitude = Math.min(1, rms * 4)
+
+      setLevels((prev) =>
+        prev.map((_, i) => {
+          const wobble = 0.6 + 0.4 * Math.sin(Date.now() / 120 + i)
+          return Math.max(0.08, Math.min(1, amplitude * wobble))
+        })
+      )
+
+      rafRef.current = requestAnimationFrame(tick)
+    }
+    rafRef.current = requestAnimationFrame(tick)
+  }
+
+  const startSpeechRecognition = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      setSpeechSupported(false)
+      return
+    }
+    const recognition = new SpeechRecognition()
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = hi ? 'hi-IN' : 'en-IN'
+
+    finalTranscriptRef.current = ''
+
+    recognition.onresult = (event: any) => {
+      let interim = ''
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript
+        if (event.results[i].isFinal) {
+          finalTranscriptRef.current += transcript + ' '
+        } else {
+          interim += transcript
+        }
+      }
+      const combined = (finalTranscriptRef.current + interim).trim()
+      setLiveText(combined)
+      onLiveTranscript?.(combined)
+    }
+
+    recognition.onerror = () => { /* mic still records fine without live captions */ }
+    recognition.onend = () => {
+      // Some browsers auto-stop after silence; restart while still recording.
+      if (mediaRef.current && mediaRef.current.state === 'recording') {
+        try { recognition.start() } catch { /* already starting */ }
+      }
+    }
+
+    try {
+      recognition.start()
+      recognitionRef.current = recognition
+    } catch {
+      setSpeechSupported(false)
+    }
+  }
 
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      
+      streamRef.current = stream
+
       const mimeType = [
         'audio/webm;codecs=opus',
         'audio/webm',
@@ -44,8 +135,8 @@ export default function AudioRecorder({ language, onAudioReady, theme = 'light' 
         'audio/ogg'
       ].find(type => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(type)) || ''
 
-      const recorder = mimeType 
-        ? new MediaRecorder(stream, { mimeType }) 
+      const recorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
         : new MediaRecorder(stream)
 
       chunksRef.current = []
@@ -66,6 +157,20 @@ export default function AudioRecorder({ language, onAudioReady, theme = 'light' 
       recorder.start(250)
       setRecording(true)
       setSeconds(0)
+      setLiveText('')
+
+      // Waveform visualizer, driven by the mic's actual amplitude.
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
+      const audioCtx = new AudioCtx()
+      const source = audioCtx.createMediaStreamSource(stream)
+      const analyser = audioCtx.createAnalyser()
+      analyser.fftSize = 256
+      source.connect(analyser)
+      audioCtxRef.current = audioCtx
+      analyserRef.current = analyser
+      runLevelLoop()
+
+      startSpeechRecognition()
 
       timerRef.current = setInterval(() => {
         setSeconds((s) => {
@@ -86,6 +191,13 @@ export default function AudioRecorder({ language, onAudioReady, theme = 'light' 
       mediaRef.current.stop()
     }
     if (timerRef.current) clearInterval(timerRef.current)
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    audioCtxRef.current?.close?.()
+    audioCtxRef.current = null
+    analyserRef.current = null
+    try { recognitionRef.current?.stop?.() } catch { /* already stopped */ }
+    recognitionRef.current = null
+    setLevels(Array(BAR_COUNT).fill(0.08))
     setRecording(false)
   }
 
@@ -102,49 +214,79 @@ export default function AudioRecorder({ language, onAudioReady, theme = 'light' 
   }
 
   return (
-    <div className="space-y-4">
-      {/* Record button */}
-      <div className="flex flex-col items-center gap-4">
+    <div className="space-y-3 h-full flex flex-col">
+      {/* Record button + live waveform */}
+      <div className="flex flex-col items-center gap-3 flex-1 justify-center">
         <button
           onClick={recording ? stopRecording : startRecording}
           className={clsx(
-            'w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg',
+            'relative w-16 h-16 rounded-full flex items-center justify-center transition-transform duration-150 shadow-lg',
             'focus:outline-none focus:ring-4 focus:ring-offset-2',
             isDark ? 'focus:ring-offset-black' : 'focus:ring-offset-white',
             recording
-              ? 'bg-red-500 hover:bg-red-600 focus:ring-red-500/50 animate-pulse'
+              ? 'bg-red-500 hover:bg-red-600 focus:ring-red-500/50 scale-105'
               : (isDark ? 'bg-white hover:bg-gray-200 focus:ring-white/50 text-gray-900' : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-300 text-white')
           )}
           aria-label={recording ? 'Stop recording' : 'Start recording'}
         >
+          {recording && (
+            <span
+              className="absolute inset-0 rounded-full bg-red-500/40"
+              style={{ transform: `scale(${1 + levels[0] * 0.5})`, transition: 'transform 80ms linear' }}
+            />
+          )}
           {recording
-            ? <Square className="w-8 h-8 text-white fill-white" />
-            : <Mic className={clsx("w-8 h-8", recording ? "text-white" : (isDark ? "text-gray-900" : "text-white"))} />
+            ? <Square className="w-6 h-6 text-white fill-white relative" />
+            : <Mic className={clsx("w-6 h-6 relative", isDark ? "text-gray-900" : "text-white")} />
           }
         </button>
 
+        {/* Live waveform bars, height driven by mic amplitude */}
+        <div className="flex items-center justify-center gap-[3px] h-10 w-full max-w-[220px]">
+          {levels.map((lvl, i) => (
+            <span
+              key={i}
+              className={clsx(
+                'w-[3px] rounded-full transition-all duration-75',
+                recording ? (isDark ? 'bg-white' : 'bg-blue-600') : (isDark ? 'bg-white/20' : 'bg-zinc-200')
+              )}
+              style={{ height: `${Math.max(8, lvl * 40)}%` }}
+            />
+          ))}
+        </div>
+
         {recording && (
-          <div className={clsx("flex items-center gap-2 font-mono font-bold", isDark ? "text-red-400" : "text-red-600")}>
-            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          <div className={clsx("flex items-center gap-2 font-mono text-xs font-bold", isDark ? "text-red-400" : "text-red-600")}>
+            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
             {formatTime(seconds)} / {formatTime(MAX_SECONDS)}
           </div>
         )}
 
-        <p className={clsx("text-sm text-center", isDark ? "text-white/60" : "text-gray-500")}>
+        <p className={clsx("text-xs text-center", isDark ? "text-white/60" : "text-gray-500")}>
           {recording
             ? (hi ? 'रिकॉर्ड हो रहा है… रोकने के लिए दबाएं' : 'Recording… tap to stop')
-            : (hi ? 'माइक आइकन दबाकर बोलना शुरू करें' : 'Tap the mic to start speaking')}
+            : (hi ? 'माइक दबाकर बोलना शुरू करें' : 'Tap the mic to start speaking')}
         </p>
       </div>
 
+      {/* Live caption */}
+      {recording && (
+        <div className={clsx("rounded-lg p-2.5 text-xs min-h-[2.5rem] max-h-24 overflow-y-auto", isDark ? "bg-white/5 text-white/80" : "bg-white text-zinc-600 border border-zinc-200")}>
+          {liveText || (speechSupported
+            ? <span className="opacity-50 flex items-center gap-1.5"><Loader2 className="w-3 h-3 animate-spin" />{hi ? 'सुन रहा है…' : 'Listening…'}</span>
+            : <span className="opacity-50">{hi ? 'लाइव कैप्शन इस ब्राउज़र में उपलब्ध नहीं' : 'Live captions not supported in this browser'}</span>
+          )}
+        </div>
+      )}
+
       {/* Playback */}
       {blobUrl && !recording && (
-        <div className={clsx("rounded-xl p-4 border", isDark ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200")}>
-          <p className={clsx("text-xs font-semibold mb-2", isDark ? "text-green-400" : "text-green-700")}>
+        <div className={clsx("rounded-lg p-2.5 border", isDark ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200")}>
+          <p className={clsx("text-[10px] font-semibold mb-1.5 uppercase tracking-wide", isDark ? "text-green-400" : "text-green-700")}>
             {hi ? 'रिकॉर्डिंग तैयार है' : 'Recording ready'}
           </p>
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-          <audio controls src={blobUrl} className={clsx("w-full", isDark ? "opacity-90 grayscale-[0.2]" : "")} />
+          <audio controls src={blobUrl} className={clsx("w-full h-8", isDark ? "opacity-90 grayscale-[0.2]" : "")} />
         </div>
       )}
     </div>

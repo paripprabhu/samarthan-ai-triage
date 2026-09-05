@@ -26,6 +26,7 @@ function IntakeContent() {
 
   const [textValue, setTextValue] = useState('')
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const [voiceTranscript, setVoiceTranscript] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -50,7 +51,7 @@ function IntakeContent() {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 90000)
 
-    const finalTxtForFallback = forcedText || textValue
+    const finalTxtForFallback = [forcedText || textValue, voiceTranscript].filter(Boolean).join('\n').trim()
     const buildClientFallback = (): TriageResult => {
       const finalTxt = finalTxtForFallback
       const user = getUser()
@@ -120,8 +121,8 @@ function IntakeContent() {
       formData.append('language', language)
       if (categoryParam && categoryParam !== 'auto') formData.append('fraudType', categoryParam)
       if (scenario) formData.append('scenarioId', scenario.id)
-      const finalTxt = forcedText || textValue
-      if (finalTxt.trim()) formData.append('text', finalTxt)
+      const finalTxt = [forcedText || textValue, voiceTranscript].filter(Boolean).join('\n').trim()
+      if (finalTxt) formData.append('text', finalTxt)
       if (audioBlob) formData.append('audio', audioBlob, 'recording.webm')
       const finalImg = forcedImg || imageFile
       if (finalImg) formData.append('image', finalImg)
@@ -180,7 +181,7 @@ function IntakeContent() {
 
       {/* ── BACK BAR ── */}
       <header className="border-b border-zinc-200 bg-white sticky top-14 z-40">
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center gap-3">
+        <div className="max-w-4xl mx-auto px-6 h-14 flex items-center gap-3">
           <button
             onClick={() => router.back()}
             aria-label={hi ? 'वापस जाएं' : 'Go back'}
@@ -201,7 +202,7 @@ function IntakeContent() {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
+      <div className="max-w-4xl mx-auto px-6 py-10 space-y-6">
 
         {scenario && (
           <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
@@ -221,11 +222,21 @@ function IntakeContent() {
           </h1>
         </div>
 
-        {/* ── FORM CARD ── */}
-        <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm divide-y divide-zinc-100 overflow-hidden">
+        {/* ── FORM GRID ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          {/* Voice — hero cell, spans both rows on desktop */}
+          <div className="md:row-span-2 border border-zinc-200 rounded-2xl bg-zinc-50 shadow-sm p-5 flex flex-col min-h-[280px]">
+            <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">
+              <span className="flex items-center gap-1.5"><Mic className="w-3.5 h-3.5" />{hi ? 'वॉइस नोट' : 'Voice Note'}</span>
+            </label>
+            <div className="flex-1">
+              <AudioRecorder language={language} onAudioReady={setAudioBlob} onLiveTranscript={setVoiceTranscript} theme="light" />
+            </div>
+          </div>
 
           {/* Text */}
-          <div className="p-5">
+          <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm p-5">
             <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2">
               <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5" />{hi ? 'विवरण लिखें' : 'Type Details'}</span>
             </label>
@@ -236,20 +247,16 @@ function IntakeContent() {
               placeholder={hi ? 'विस्तार से बताएं…' : 'Describe the incident in detail…'}
               className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 text-sm text-zinc-900 placeholder-zinc-400 resize-none outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
             />
-          </div>
-
-          {/* Voice */}
-          <div className="p-5">
-            <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">
-              <span className="flex items-center gap-1.5"><Mic className="w-3.5 h-3.5" />{hi ? 'वॉइस नोट' : 'Voice Note'}</span>
-            </label>
-            <div className="bg-zinc-50 rounded-xl border border-zinc-200 p-4">
-              <AudioRecorder language={language} onAudioReady={setAudioBlob} theme="light" />
-            </div>
+            {voiceTranscript && (
+              <p className="mt-2 text-xs text-zinc-500 flex items-start gap-1.5">
+                <Mic className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span className="italic line-clamp-2">{voiceTranscript}</span>
+              </p>
+            )}
           </div>
 
           {/* Upload */}
-          <div className="p-5">
+          <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm p-5">
             <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">
               <span className="flex items-center gap-1.5"><ImagePlus className="w-3.5 h-3.5" />{hi ? 'सबूत संलग्न करें' : 'Attach Evidence'}</span>
             </label>
@@ -272,7 +279,7 @@ function IntakeContent() {
             ) : (
               <button
                 onClick={() => fileRef.current?.click()}
-                className="w-full h-20 rounded-xl border-2 border-dashed border-zinc-200 hover:border-zinc-400 bg-zinc-50 hover:bg-zinc-100 flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-zinc-600 transition-all "
+                className="w-full h-24 rounded-xl border-2 border-dashed border-zinc-200 hover:border-zinc-400 bg-zinc-50 hover:bg-zinc-100 flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-zinc-600 transition-all "
               >
                 <ImagePlus className="w-5 h-5" />
                 <span className="text-xs font-medium">{hi ? 'फ़ाइल अपलोड करें' : 'Upload Screenshot or File'}</span>
@@ -294,7 +301,7 @@ function IntakeContent() {
         {/* ── SUBMIT ── */}
         <button
           onClick={() => handleAIAnalyze()}
-          disabled={!textValue && !audioBlob && !imageFile && !scenario}
+          disabled={!textValue && !voiceTranscript && !audioBlob && !imageFile && !scenario}
           className="w-full flex items-center justify-center gap-2 rounded-xl font-semibold text-white py-3.5 text-sm bg-zinc-900 hover:bg-zinc-700 transition-all shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {scenario ? (hi ? 'AI से तैयार करें' : 'Run AI Triage') : (hi ? 'AI से विश्लेषण करें' : 'Analyze with AI')}
