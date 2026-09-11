@@ -519,14 +519,16 @@ function DashboardContent() {
 
                 {/* Category */}
                 <div>
-                  <label htmlFor="crime-category" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                    {dashLoc.crimeCategoryLabel}
-                  </label>
+                  <div className="flex items-center h-5 mb-1.5">
+                    <label htmlFor="crime-category" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                      {dashLoc.crimeCategoryLabel}
+                    </label>
+                  </div>
                   <select
                     id="crime-category"
                     value={r.fraudType}
                     onChange={(e) => handleUpdate('fraudType', e.target.value)}
-                    className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                   >
                     <option value="Financial Fraud">{CRIME_CATEGORY_LABELS_12['Financial Fraud']?.[language] || 'Financial Fraud'}</option>
                     <option value="Women/Children Related Crime">{CRIME_CATEGORY_LABELS_12['Women/Children Related Crime']?.[language] || 'Women/Children Related Crime'}</option>
@@ -539,128 +541,151 @@ function DashboardContent() {
 
                 {/* Complainant Name */}
                 <div>
-                  <label htmlFor="complainant-name" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                    {t.dashboard.complainant}
-                  </label>
+                  <div className="flex items-center h-5 mb-1.5">
+                    <label htmlFor="complainant-name" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                      {t.dashboard.complainant}
+                    </label>
+                  </div>
                   <input
                     id="complainant-name"
                     type="text"
                     value={r.complainantName || ''}
                     onChange={(e) => handleUpdate('complainantName', e.target.value)}
                     placeholder={hi ? 'उदा. राजेश कुमार' : 'e.g. Citizen Complainant'}
-                    className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
                 {/* Fraudster Name + Amount */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="fraudster-name" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      {t.dashboard.fraudster}
-                    </label>
+                    <div className="flex items-center h-5 mb-1.5">
+                      <label htmlFor="fraudster-name" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                        {t.dashboard.fraudster}
+                      </label>
+                    </div>
                     <input
                       id="fraudster-name"
                       type="text" value={r.fraudsterIdentifier || ''}
                       onChange={(e) => handleUpdate('fraudsterIdentifier', e.target.value)}
-                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <div>
-                    <label htmlFor="amount-lost" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      {t.dashboard.amount} (₹)
-                    </label>
+                    <div className="flex items-center h-5 mb-1.5">
+                      <label htmlFor="amount-lost" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                        {t.dashboard.amount} (₹)
+                      </label>
+                    </div>
                     <input
                       id="amount-lost"
                       type="number" value={r.amount}
                       onChange={(e) => handleUpdate('amount', Number(e.target.value))}
-                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                 </div>
 
                 {/* Fraudster Contact */}
                 <div>
-                  <label htmlFor="fraudster-contact" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                    {dashLoc.fraudsterContactLabel}
-                  </label>
+                  <div className="flex items-center h-5 mb-1.5">
+                    <label htmlFor="fraudster-contact" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                      {dashLoc.fraudsterContactLabel}
+                    </label>
+                  </div>
                   <input
                     id="fraudster-contact"
                     type="text" value={r.frauderContact}
                     onChange={(e) => handleUpdate('frauderContact', e.target.value)}
-                    className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
                 {/* Debited Bank & Account (Complainant's Bank) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="bank-name" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      {hi ? 'डेबिटेड बैंक का नाम (आपका बैंक)' : 'Debited Bank Name (Your Bank)'}
-                    </label>
+                    <div className="flex items-center h-5 mb-1.5">
+                      <label htmlFor="bank-name" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                        {hi ? 'डेबिटेड बैंक का नाम (आपका बैंक)' : 'Debited Bank Name (Your Bank)'}
+                      </label>
+                    </div>
                     <input
                       id="bank-name"
                       type="text"
                       value={r.bankName || ''}
                       onChange={(e) => handleUpdate('bankName', e.target.value)}
                       placeholder={hi ? 'उदा. HDFC Bank, SBI' : 'e.g. HDFC Bank, SBI'}
-                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <div>
-                    <label htmlFor="account-number" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      {hi ? 'खाता / कार्ड नंबर' : 'Account / Card Number'}
-                    </label>
+                    <div className="flex items-center h-5 mb-1.5">
+                      <label htmlFor="account-number" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                        {hi ? 'खाता / कार्ड नंबर' : 'Account / Card Number'}
+                      </label>
+                    </div>
                     <input
                       id="account-number"
                       type="text"
                       value={r.accountNumber || ''}
                       onChange={(e) => handleUpdate('accountNumber', e.target.value)}
                       placeholder={hi ? 'उदा. XXXX-XXXX-5102' : 'e.g. XXXX-XXXX-5102'}
-                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
                     />
                   </div>
                 </div>
 
                 {/* Transaction Ref / UTR, UPI ID & Bank IFSC */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
                   <div>
-                    <label htmlFor="utr-number" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                      <span>{hi ? 'लेनदेन यूटीआर संदर्भ' : 'Transaction Ref / UTR'}</span>
-                      <span className="text-[10px] text-amber-600 font-semibold uppercase">{hi ? 'फ्रीज हेतु अनिवार्य' : 'Mandatory'}</span>
-                    </label>
+                    <div className="flex items-center justify-between h-5 mb-1.5">
+                      <label htmlFor="utr-number" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                        {hi ? 'यूटीआर संदर्भ' : 'UTR / Ref ID'}
+                      </label>
+                      <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded font-semibold uppercase tracking-normal shrink-0 ml-1.5">
+                        {hi ? 'अनिवार्य' : 'Mandatory'}
+                      </span>
+                    </div>
                     <input
                       id="utr-number"
                       type="text"
                       value={r.utrNumber || ''}
                       onChange={(e) => handleUpdate('utrNumber', e.target.value)}
                       placeholder={hi ? 'उदा. 123456789012' : 'e.g. 123456789012'}
-                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
+                      title={r.utrNumber || ''}
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
                     />
                   </div>
                   <div>
-                    <label htmlFor="upi-id" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      {hi ? 'लाभार्थी यूपीआई / वीपीए' : 'Beneficiary UPI / VPA'}
-                    </label>
+                    <div className="flex items-center h-5 mb-1.5">
+                      <label htmlFor="upi-id" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                        {hi ? 'लाभार्थी यूपीआई / वीपीए' : 'Beneficiary UPI / VPA'}
+                      </label>
+                    </div>
                     <input
                       id="upi-id"
                       type="text"
                       value={r.upiId || ''}
                       onChange={(e) => handleUpdate('upiId', e.target.value)}
-                      placeholder="e.g. fraudster@okhdfcbank"
-                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      placeholder={hi ? 'उदा. fraudster@okhdfcbank' : 'e.g. fraudster@okhdfcbank'}
+                      title={r.upiId || ''}
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <div>
-                    <label htmlFor="ifsc-code" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      {hi ? 'आईएफएससी कोड' : 'Beneficiary IFSC Code'}
-                    </label>
+                    <div className="flex items-center h-5 mb-1.5">
+                      <label htmlFor="ifsc-code" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
+                        {hi ? 'आईएफएससी कोड' : 'Beneficiary IFSC Code'}
+                      </label>
+                    </div>
                     <input
                       id="ifsc-code"
                       type="text"
                       value={r.ifscCode || ''}
                       onChange={(e) => handleUpdate('ifscCode', e.target.value.toUpperCase())}
-                      placeholder="e.g. SBIN0001234"
-                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono uppercase"
+                      placeholder={hi ? 'उदा. SBIN0001234' : 'e.g. SBIN0001234'}
+                      title={r.ifscCode || ''}
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono uppercase placeholder:normal-case"
                     />
                   </div>
                 </div>
