@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getOrCreateSession, processWhatsAppTurn } from '@/lib/whatsapp-agent'
+import { getOrCreateSession, processWhatsAppTurn, clearAllWhatsAppSessions } from '@/lib/whatsapp-agent'
 import { SupportedLanguage, LANGUAGE_MAP } from '@/lib/i18n/languages'
 import OpenAI, { toFile } from 'openai'
 
@@ -8,6 +8,11 @@ export const maxDuration = 60
 
 // GET /api/whatsapp -> Meta Cloud API Webhook verification
 export async function GET(req: NextRequest) {
+  if (req.nextUrl.searchParams.get('action') === 'clear') {
+    clearAllWhatsAppSessions()
+    return NextResponse.json({ status: 'cleared', message: 'All active WhatsApp bot sessions cleared' })
+  }
+
   const mode = req.nextUrl.searchParams.get('hub.mode')
   const token = req.nextUrl.searchParams.get('hub.verify_token')
   const challenge = req.nextUrl.searchParams.get('hub.challenge')
