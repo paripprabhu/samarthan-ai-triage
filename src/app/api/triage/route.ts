@@ -57,6 +57,16 @@ CRITICAL INSTRUCTIONS:
       * In summary / summaryHi: Clearly state that the complainant is filing on behalf of X.
       * Under NO circumstances extract X or the complainant as the fraudsterIdentifier!
 
+1c. COMPLAINANT'S STATED NAME ALWAYS OVERRIDES SIGNED-IN IDENTITY:
+    - Whenever the person filing the report mentions their own name in their narrative/voice note/text — for example: "My name is X", "I am X", "mera naam X hai", "ente peru X", "na peru X", "amar naam X", "this is X", etc. — you MUST extract and use that EXACT stated name as "complainantName", EVEN IF the citizen is signed in under another profile name!
+    - The complainant's stated name ALWAYS TAKES HIGHEST PRIORITY.
+    - Use this stated name in:
+      * "complainantName": "[Stated Name]"
+      * "complaintDraft": "I, [Stated Name], hereby lodge/state..."
+      * "complaintDraftHi": "मैं, [Stated Name], ..."
+      * "complaintDraftRegional": opening and signoff with [Stated Name]
+      * "summary", "summaryHi", "summaryRegional": reference the incident as experienced/reported by [Stated Name] (e.g. "[Stated Name] reported that...", "[Stated Name] was defrauded of ₹...").
+
 2. FRAUD TYPE CLASSIFICATION - Use EXACT categories and logic:
    - Financial Fraud: Direct bank/UPI transfers phished, credit card misuse, phishing for money, OTP theft leading to bank debit, direct money theft via banking channels (NOT marketplace).
    - Women/Children Related Crime: Cyberbullying, harassment, abuse, threats involving minors or women, sextortion of minors/women, fake impersonation profiles targeting someone.
@@ -390,9 +400,13 @@ export async function POST(req: NextRequest) {
       customPrompt += `\n\nNOTE: The user pre-selected the category: "${categoryHint}". Please strongly consider mapping the incident to this category.`
     }
     if (complainantName) {
-      customPrompt += `\n\nCOMPLAINANT IDENTITY: The person filing this complaint is "${complainantName}" (DigiLocker verified). If the user states they are filing on behalf of someone else X (e.g. "on behalf of X"), the complainantName MUST still be "${complainantName}" (the person actually filing), and the complaintDraft must open with "I, ${complainantName}, am filing this formal cybercrime complaint on behalf of [X] regarding...". Otherwise, begin with "I, ${complainantName}, hereby state that..."`
+      customPrompt += `\n\nCOMPLAINANT IDENTITY:
+The citizen is logged in under profile name "${complainantName}".
+CRITICAL OVERRIDE: If the complainant explicitly mentions their own name in their narrative/voice note/text (e.g. "my name is X", "I am X", "mera naam X hai", "ente peru X", "na peru X", "amar naam X", etc.), you MUST set "complainantName" to that EXACT stated name X, and use X in all drafts and summaries! Stated name in narrative ALWAYS OVERRIDES the profile name "${complainantName}".
+Only if the complainant does NOT state their name in the narrative, use "${complainantName}".
+If filing on behalf of someone else Y, Y is the victim and the complainant is the filer (stated name or "${complainantName}"). Open complaintDraft with "I, [Complainant Name], am filing this formal cybercrime complaint on behalf of [Y] regarding...". Otherwise, open complaintDraft with "I, [Complainant Name], hereby state that..."`
     } else {
-      customPrompt += `\n\nCOMPLAINANT IDENTITY: The complainant is filing anonymously and is NOT signed in. If the narrative states a self-intro name ("my name is Y"), use Y. If filing on behalf of X, the complaintDraft must open like "I am filing this complaint on behalf of X regarding...". Set "complainantName" to the person actually complaining (or "Anonymous Complainant" if unnamed).`
+      customPrompt += `\n\nCOMPLAINANT IDENTITY: The complainant is filing without a logged-in profile. If the narrative states a self-intro name ("my name is Y", "mera naam Y hai", "I am Y"), use Y as "complainantName" and in all drafts and summaries. If unnamed, use "Anonymous Complainant".`
     }
 
     const langMeta = LANGUAGE_MAP[targetLanguage as SupportedLanguage] || LANGUAGE_MAP.en
@@ -480,14 +494,15 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
       parsed.complainantName = 'Anonymous Complainant'
     }
 
-    // If complainant explicitly introduced themselves with another name, sync it into drafts
+    // If complainant explicitly introduced themselves with another name, sync it into drafts and report messages
     if (complainantName && parsed.complainantName && parsed.complainantName !== complainantName) {
-      if (parsed.complaintDraft) {
-        parsed.complaintDraft = parsed.complaintDraft.replace(new RegExp(complainantName, 'g'), parsed.complainantName)
-      }
-      if (parsed.complaintDraftHi) {
-        parsed.complaintDraftHi = parsed.complaintDraftHi.replace(new RegExp(complainantName, 'g'), parsed.complainantName)
-      }
+      const regexOld = new RegExp(complainantName, 'g')
+      if (parsed.complaintDraft) parsed.complaintDraft = parsed.complaintDraft.replace(regexOld, parsed.complainantName)
+      if (parsed.complaintDraftHi) parsed.complaintDraftHi = parsed.complaintDraftHi.replace(regexOld, parsed.complainantName)
+      if (parsed.complaintDraftRegional) parsed.complaintDraftRegional = parsed.complaintDraftRegional.replace(regexOld, parsed.complainantName)
+      if (parsed.summary) parsed.summary = parsed.summary.replace(regexOld, parsed.complainantName)
+      if (parsed.summaryHi) parsed.summaryHi = parsed.summaryHi.replace(regexOld, parsed.complainantName)
+      if (parsed.summaryRegional) parsed.summaryRegional = parsed.summaryRegional.replace(regexOld, parsed.complainantName)
     }
 
     // Ensure the draft states filing on behalf of X if onBehalfOfTarget was specified
@@ -511,6 +526,9 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
     }
     if (parsed.complaintDraftHi) {
       parsed.complaintDraftHi = parsed.complaintDraftHi.replace(/\[शिकायतकर्ता का नाम\]/gi, parsed.complainantName)
+    }
+    if (parsed.complaintDraftRegional) {
+      parsed.complaintDraftRegional = parsed.complaintDraftRegional.replace(/\[Complainant Name\]|\[शिकायतकर्ता का नाम\]/gi, parsed.complainantName)
     }
 
     // Guarantee a complete, correctly-typed TriageResult so the dashboard,

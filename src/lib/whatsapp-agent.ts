@@ -1292,7 +1292,7 @@ CRITICAL CLASSIFICATION & ROUTING RULES:
    - "Identity Theft" is ONLY for cases where NO money was stolen from the victim's own accounts (e.g. fake profile, forged PAN/Aadhaar used for loan in victim's name).
    - Whenever money was lost or debited (amount > 0 or UTR / UPI / bank mentioned), recommendedChannel MUST be "bank" and recommendedChannelTarget MUST be the victim's bank name (e.g. "HDFC Bank", "SBI") or "the bank".
 2. MANDATORY BANKING DETAILS: If the user provides a 12-digit UPI UTR / transaction reference number, beneficiary UPI handle, or victim's bank name (e.g. HDFC Bank, SBI), extract them into "utrNumber", "upiId", and "bankName", and include them in "frauderContact".
-3. COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"). Never include or append placeholders like "[Address / city - to be provided]".`,
+3. COMPLAINANT: Whenever the person explicitly mentions their own name in the narrative / voice note / text (e.g. "my name is X", "mera naam X hai", "I am X", "ente peru X", etc.), ALWAYS extract that EXACT stated name into "complainantName"! Also reference the complainant by their stated name in "summary", "summaryHi", "summaryRegional" (e.g. "[Name] was defrauded of ₹..."), and in "complaintDraft" ("I, [Name], hereby lodge..."). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Only set "complainantName" to "Anonymous Complainant" if the filer states no name at all. Never include or append placeholders like "[Address / city - to be provided]".`,
           },
           { role: 'user', content: incidentText },
         ],
@@ -1327,6 +1327,19 @@ CRITICAL CLASSIFICATION & ROUTING RULES:
           parsed.complaintDraftHi = parsed.complaintDraftHi.replace(
             new RegExp(`मैं,\\s*(?:${finalComplainant})?,?\\s*`, 'i'),
             `मैं, ${finalComplainant}, ${onBehalfOfTarget} की ओर से यह `
+          )
+        }
+      } else if (finalComplainant !== 'Anonymous Complainant') {
+        if (parsed.complaintDraft) {
+          parsed.complaintDraft = parsed.complaintDraft.replace(
+            /\bI,?\s*(?:Anonymous Complainant)?,?\s*(?:hereby state that|hereby lodge|am filing this complaint regarding|am filing)?/i,
+            `I, ${finalComplainant}, hereby lodge this formal cybercrime complaint regarding`
+          )
+        }
+        if (parsed.complaintDraftHi) {
+          parsed.complaintDraftHi = parsed.complaintDraftHi.replace(
+            /(^|[\s,।])मैं,?\s*(?:Anonymous Complainant)?,?\s*/,
+            `$1मैं, ${finalComplainant}, `
           )
         }
       }

@@ -704,6 +704,28 @@ export function formatComplaintFiledReply(
   const hasAmount = triageResult.amount > 0
   const formattedAmt = hasAmount ? `₹${triageResult.amount.toLocaleString('en-IN')}` : null
 
+  // Show complainant name if it was stated in the narrative (not Anonymous)
+  const namedComplainant = triageResult.complainantName &&
+    !['anonymous complainant', 'anonymous', 'not identified', 'not provided', 'unknown', 'n/a'].includes(triageResult.complainantName.trim().toLowerCase())
+    ? triageResult.complainantName.trim()
+    : null
+
+  // Complainant line per language
+  const complainantLine = namedComplainant
+    ? (lang === 'hi'   ? `🙋 *शिकायतकर्ता:* ${namedComplainant}\n`
+      : lang === 'bn'  ? `🙋 *অভিযোগকারী:* ${namedComplainant}\n`
+      : lang === 'mr'  ? `🙋 *तक्रारदार:* ${namedComplainant}\n`
+      : lang === 'te'  ? `🙋 *ఫిర్యాదీ:* ${namedComplainant}\n`
+      : lang === 'ta'  ? `🙋 *புகாரளிப்பவர்:* ${namedComplainant}\n`
+      : lang === 'gu'  ? `🙋 *ફરિયાદી:* ${namedComplainant}\n`
+      : lang === 'ur'  ? `🙋 *شکایت کنندہ:* ${namedComplainant}\n`
+      : lang === 'kn'  ? `🙋 *ದೂರುದಾರ:* ${namedComplainant}\n`
+      : lang === 'or'  ? `🙋 *ଅଭିଯୋଗକାରୀ:* ${namedComplainant}\n`
+      : lang === 'ml'  ? `🙋 *പരാതിക്കാരൻ:* ${namedComplainant}\n`
+      : lang === 'pa'  ? `🙋 *ਸ਼ਿਕਾਇਤਕਰਤਾ:* ${namedComplainant}\n`
+      :                  `🙋 *Complainant:* ${namedComplainant}\n`)
+    : ''
+
   // Voice notes are always translated to English on WhatsApp, so always show English header
   const voiceHeader = voiceTranscript
     ? `🎙️ *Voice Note Heard & Transcribed:*\n"${voiceTranscript}"\n\n`
@@ -716,7 +738,7 @@ export function formatComplaintFiledReply(
 ⚖️ *लागू कानून:* ${lawsList}
 💰 *राशि:* ${formattedAmt || 'दर्ज नहीं (अपडेट के लिए राशि लिखकर भेजें)'}
 👤 *आरोपी:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *शिकायत का विवरण:*
 ${summaryText}
 
@@ -735,7 +757,7 @@ ${trackingLink}
 ⚖️ *প্রযোজ্য আইন:* ${lawsList}
 💰 *টাকার পরিমাণ:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *অভিযুক্ত প্রতারক:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *অভিযোগের সারসংক্ষেপ:*
 ${summaryText}
 
@@ -754,7 +776,7 @@ ${trackingLink}
 ⚖️ *लागू कायदे:* ${lawsList}
 💰 *रक्कम:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *आरोपी:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *तक्रारीचा तपशील:*
 ${summaryText}
 
@@ -773,7 +795,7 @@ ${trackingLink}
 ⚖️ *వర్తించే చట్టాలు:* ${lawsList}
 💰 *మొత్తం:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *మోసగాడు:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *ఫిర్యాదు సారాంశం:*
 ${summaryText}
 
@@ -792,7 +814,7 @@ ${trackingLink}
 ⚖️ *பொருந்தக்கூடிய சட்டங்கள்:* ${lawsList}
 💰 *தொகை:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *எதிராகப் புகார்:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *புகாரின் சுருக்கம்:*
 ${summaryText}
 
@@ -811,7 +833,7 @@ ${trackingLink}
 ⚖️ *લાગુ કાયદા:* ${lawsList}
 💰 *રકમ:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *આરોપી:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *ફરિયાદનો સારાંશ:*
 ${summaryText}
 
@@ -830,7 +852,7 @@ ${trackingLink}
 ⚖️ *قابل اطلاق قوانین:* ${lawsList}
 💰 *رقم:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *ملزم کی تفصیل:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *شکایت کا خلاصہ:*
 ${summaryText}
 
@@ -849,7 +871,7 @@ ${trackingLink}
 ⚖️ *ಅನ್ವಯವಾಗುವ ಕಾನೂನುಗಳು:* ${lawsList}
 💰 *ಮೊತ್ತ:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *ಆರೋಪಿ:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *ದೂರಿನ ಸಾರಾಂಶ:*
 ${summaryText}
 
@@ -868,7 +890,7 @@ ${trackingLink}
 ⚖️ *ପ୍ରଯୁଜ୍ୟ ଆଇନ:* ${lawsList}
 💰 *ପରିମାଣ:* ₹${triageResult.amount.toLocaleString('en-IN')}
 👤 *ଅଭିଯୁକ୍ତ:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *ଅଭିଯୋଗର ସାରାଂଶ:*
 ${summaryText}
 
@@ -887,7 +909,7 @@ ${trackingLink}
 ⚖️ *ബാധകമായ നിയമങ്ങൾ:* ${lawsList}
 💰 *തുക:* ${formattedAmt || 'രേഖപ്പെടുത്തിയിട്ടില്ല (തുക ചേർക്കാൻ മറുപടി നൽകുക)'}
 👤 *പ്രതി:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *പരാതിയുടെ സംഗ്രഹം:*
 ${summaryText}
 
@@ -906,7 +928,7 @@ ${trackingLink}
 ⚖️ *ਲਾਗੂ ਕਾਨੂੰਨ:* ${lawsList}
 💰 *ਰਕਮ:* ${formattedAmt || 'ਦਰਜ ਨਹੀਂ (ਰਕਮ ਜੋੜਨ ਲਈ ਜਵਾਬ ਦਿਓ)'}
 👤 *ਦੋਸ਼ੀ:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *ਸ਼ਿਕਾਇਤ ਦਾ ਸਾਰ:*
 ${summaryText}
 
@@ -926,7 +948,7 @@ ${trackingLink}
 ⚖️ *Applicable Laws:* ${lawsList}
 💰 *Amount:* ${formattedAmt || 'Not Specified (Reply with amount to update)'}
 👤 *Reported Against:* ${triageResult.fraudsterIdentifier}
-
+${complainantLine}
 📋 *Official Summary:*
 ${summaryText}
 

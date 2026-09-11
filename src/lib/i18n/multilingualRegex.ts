@@ -376,25 +376,25 @@ export function inferCategoryFromMultilingualText(text: string): FraudType {
 
 // 4. Multilingual Complainant Name Extractor
 const EXPLICIT_NAME_REGEXES = [
-  new RegExp(`(?:my name is|name is)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
+  new RegExp(`(?:my name is|name is|this is|myself)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:mera naam|mera name|amar naam|amar name|majhe naav|mazhe naav|naa peru|na peru|en peyar|en peyer|maru naam|maru name|nanna hesaru|nanna name|mora nama|mora na|ente peru|ente name|mera na)\\s*(?:hai|is|ahe|undi|haye|chhe)?\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
-  new RegExp(`(?:मेरा नाम)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+है)?`, 'i'),
-  new RegExp(`(?:আমার নাম)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
-  new RegExp(`(?:माझे नाव)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+आहे)?`, 'i'),
-  new RegExp(`(?:నా పేరు)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
+  new RegExp(`(?:मेरा नाम है|मेरा नाम)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+है)?`, 'i'),
+  new RegExp(`(?:আমার নাম হচ্ছে|আমার নাম)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
+  new RegExp(`(?:माझे नाव आहे|माझे नाव)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+आहे)?`, 'i'),
+  new RegExp(`(?:నా పేరు వచ్చేసి|నా పేరు)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:என் பெயர்)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:મારું નામ)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+છે)?`, 'i'),
   new RegExp(`(?:میرا نام)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+ہے)?`, 'i'),
   new RegExp(`(?:ನನ್ನ ಹೆಸರು)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:ମୋର ନାମ|ମୋ ନାଁ)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
-  new RegExp(`(?:എന്റെ പേര്)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
+  new RegExp(`(?:എന്റെ പേര് ആണ്|എന്റെ പേര്)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:ਮੇਰਾ ਨਾਮ)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+ਹੈ)?`, 'i'),
 ]
 
 // Unicode-friendly first-person intro regexes (without \b)
 const I_AM_REGEXES = [
   new RegExp(`(?:^|[\\s,।.\n])(?:I am|I'm)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
-  new RegExp(`(?:^|[\\s,।.\n])(?:मैं|मै|main|mai)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+हूँ|\\s+हुँ|\\s+hoon)?`, 'i'),
+  new RegExp(`(?:^|[\\s,।.\n])(?:मैं हूँ|मैं हूं|मैं|मै|main|mai)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+हूँ|\\s+हुँ|\\s+hoon)?`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:আমি|ami)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:मी|mee)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:నేను|nenu)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
@@ -410,6 +410,15 @@ const I_AM_REGEXES = [
 const GRAMMAR_AND_RELATION_STOPWORDS = new Set([
   'a', 'an', 'the', 'not', 'none', 'unknown', 'filing', 'writing', 'lodging', 'reporting',
   'calling', 'facing', 'complaining', 'victim', 'scammed', 'cheated', 'here', 'now',
+  'and', 'aur', 'from', 'in', 'at', 'to', 'for', 'who', 'whom', 'whose', 'which',
+  'i', 'me', 'my', 'we', 'our', 'he', 'she', 'they', 'it', 'this', 'that',
+  'am', 'is', 'are', 'was', 'were', 'have', 'had', 'has', 'do', 'did', 'does',
+  'got', 'living', 'residing', 'speaking',
+  'someone', 'somebody', 'anyone', 'anybody', 'nobody', 'one', 'two', 'three', 'four', 'five',
+  'yesterday', 'today', 'ago', 'days', 'hours', 'recently', 'there',
+  'bank', 'account', 'hdfc', 'sbi', 'icici', 'axis', 'money', 'rupees', 'rs',
+  'ne', 'se', 'ko', 'ka', 'ki', 'ke', 'mein', 'par', 'pe', 'hai', 'tha', 'thi', 'the',
+  'kya', 'kyun', 'kaise', 'kab', 'kaha', 'kahan', 'wala', 'wali', 'wale',
   // relationship terms
   'father', 'mother', 'brother', 'sister', 'wife', 'husband', 'friend', 'son', 'daughter',
   'বাবা', 'মা', 'ভাই', 'বোন', 'স্ত্রী', 'স্বামী', 'বন্ধু',
@@ -417,12 +426,29 @@ const GRAMMAR_AND_RELATION_STOPWORDS = new Set([
   'నాన్న', 'అమ్మ', 'తమ్ముడు', 'అన్నయ్య', 'చెల్లి', 'భార్య', 'భర్త', 'మా',
   'தந்தை', 'தாய்', 'தம்பி', 'அண்ணன்', 'மனைவி', 'கணவன்', 'என்',
   'પિતા', 'માતા', 'ભાઈ', 'બહેન', 'પત્ની', 'પતિ', 'મારા', 'મારી',
-  'والد', 'والدہ', 'بھائی', 'بہن', 'بیوی', 'شوہر', 'اپنے', 'اپنی',
+  'والد', 'والدہ', 'بھائی', 'بہن', 'بیوی', 'شوہر', 'اپنے', 'अपनी',
   'ತಂದೆ', 'ತಾಯಿ', 'ಸಹೋದರ', 'ಪತ್ನಿ', 'ಪತಿ', 'ನನ್ನ',
   'ବାପା', 'ବୋଉ', 'ଭାଇ', 'ଭଉଣୀ', 'ସ୍ତ୍ରୀ', 'ସ୍ୱାମୀ', 'ମୋ',
   'അച്ഛൻ', 'അമ്മ', 'സഹോദരൻ', 'ഭാര്യ', 'ഭർത്താവ്', 'എന്റെ',
   'ਪਿਤਾ', 'ਮਾਤਾ', 'ਭਰਾ', 'ਭੈਣ', 'ਪਤਨੀ', 'ਪਤੀ', 'ਮੇਰੇ', 'ਮੇਰੀ'
 ])
+
+function cleanExtractedComplainantCandidate(raw: string): string | null {
+  if (!raw) return null
+  let words = raw.trim().split(/\s+/)
+  if (words.length > 1) {
+    const secondWordLower = words[1].toLowerCase().replace(/[।.,!?;:]+$/, '')
+    if (GRAMMAR_AND_RELATION_STOPWORDS.has(secondWordLower)) {
+      words = [words[0]]
+    }
+  }
+  const candidate = words.join(' ').replace(/[।.,!?;:]+$/, '').trim()
+  const firstWordLower = words[0].toLowerCase().replace(/[।.,!?;:]+$/, '')
+  if (GRAMMAR_AND_RELATION_STOPWORDS.has(firstWordLower)) {
+    return null
+  }
+  return candidate.length > 1 ? candidate : null
+}
 
 export function extractMultilingualComplainant(text: string): string | null {
   if (!text) return null
@@ -431,10 +457,8 @@ export function extractMultilingualComplainant(text: string): string | null {
   for (const rx of EXPLICIT_NAME_REGEXES) {
     const match = text.match(rx)
     if (match && match[1]) {
-      const candidate = match[1].replace(/[।.,!?;:]+$/, '').trim()
-      if (!GRAMMAR_AND_RELATION_STOPWORDS.has(candidate.toLowerCase()) && candidate.length > 1) {
-        return candidate
-      }
+      const candidate = cleanExtractedComplainantCandidate(match[1])
+      if (candidate) return candidate
     }
   }
 
@@ -442,11 +466,8 @@ export function extractMultilingualComplainant(text: string): string | null {
   for (const rx of I_AM_REGEXES) {
     const match = text.match(rx)
     if (match && match[1]) {
-      const candidate = match[1].replace(/[।.,!?;:]+$/, '').trim()
-      const firstWord = candidate.split(/\s+/)[0].toLowerCase()
-      if (!GRAMMAR_AND_RELATION_STOPWORDS.has(firstWord) && candidate.length > 1) {
-        return candidate
-      }
+      const candidate = cleanExtractedComplainantCandidate(match[1])
+      if (candidate) return candidate
     }
   }
 
