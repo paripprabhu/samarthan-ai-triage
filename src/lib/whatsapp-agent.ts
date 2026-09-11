@@ -100,6 +100,14 @@ export function getOrCreateSession(phoneNumber: string): WhatsAppSession {
   return session
 }
 
+export function stripAddressPlaceholders(text: string | undefined): string {
+  if (!text) return ''
+  return text
+    .replace(/\s*\[(?:Complainant\s+)?address\s*\/\s*city\s*[-–—]?\s*to be provided\]/gi, '')
+    .replace(/\s*\[(?:शिकायतकर्ता का\s+)?पता\s*\/\s*शहर\s*[-–—]?\s*दिया जाना है\]/gi, '')
+    .trim()
+}
+
 export function detectLanguage(text: string): SupportedLanguage {
   const trimmed = text.trim()
   if (!trimmed) return 'en'
@@ -652,20 +660,28 @@ export async function processWhatsAppTurn(
   const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   session.history.push({ role: 'user', content: voiceTranscript ? `[Voice Note] ${voiceTranscript}` : userInput, timestamp })
 
-  // Seamless Multilingual Detection: If user speaks or writes in Hindi, Tamil, Telugu, English, etc., switch immediately!
-  const rawInput = (voiceTranscript || userInput).trim()
-  const detectedLang = detectLanguage(rawInput)
-  const hasSubstantiveEnglish = /\b(?:the|is|are|was|were|my|on|for|at|to|from|in|update|status|check|please|give|tell|bank|police|complaint|incident|report|fraudster|stolen|lost|account|froze|frozen|money|loss)\b/i.test(rawInput)
-
-  if (detectedLang && detectedLang !== 'en') {
-    session.language = detectedLang
-    if (session.stage === 'SELECT_LANGUAGE') {
-      session.stage = 'AWAITING_INCIDENT'
-    }
-  } else if (hasSubstantiveEnglish && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(rawInput))) {
+  // On WhatsApp, language is strictly English per requirement. Only simulator allows multilingual UI switching.
+  if (!(session as any).isSimulator) {
     session.language = 'en'
     if (session.stage === 'SELECT_LANGUAGE') {
       session.stage = 'AWAITING_INCIDENT'
+    }
+  } else {
+    // Seamless Multilingual Detection for web simulator
+    const rawInput = (voiceTranscript || userInput).trim()
+    const detectedLang = detectLanguage(rawInput)
+    const hasSubstantiveEnglish = /\b(?:the|is|are|was|were|my|on|for|at|to|from|in|update|status|check|please|give|tell|bank|police|complaint|incident|report|fraudster|stolen|lost|account|froze|frozen|money|loss)\b/i.test(rawInput)
+
+    if (detectedLang && detectedLang !== 'en') {
+      session.language = detectedLang
+      if (session.stage === 'SELECT_LANGUAGE') {
+        session.stage = 'AWAITING_INCIDENT'
+      }
+    } else if (hasSubstantiveEnglish && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(rawInput))) {
+      session.language = 'en'
+      if (session.stage === 'SELECT_LANGUAGE') {
+        session.stage = 'AWAITING_INCIDENT'
+      }
     }
   }
 
@@ -702,8 +718,10 @@ export async function processWhatsAppTurn(
       if (rows[0]?.incident_id) {
         session.incidentId = rows[0].incident_id
         session.stage = 'FILED'
-        if (rows[0].language && rows[0].language in LANGUAGE_MAP) {
+        if ((session as any).isSimulator && rows[0].language && rows[0].language in LANGUAGE_MAP) {
           session.language = rows[0].language
+        } else if (!(session as any).isSimulator) {
+          session.language = 'en'
         }
       }
     } catch (e) {
@@ -740,8 +758,10 @@ export async function processWhatsAppTurn(
         session.incidentId = matchedComplaint.incident_id
         session.stage = 'FILED'
         session.forceNewComplaint = false
-        if (matchedComplaint.language && matchedComplaint.language in LANGUAGE_MAP && !detectedLang && !hasSubstantiveEnglish) {
+        if ((session as any).isSimulator && matchedComplaint.language && matchedComplaint.language in LANGUAGE_MAP) {
           session.language = matchedComplaint.language
+        } else if (!(session as any).isSimulator) {
+          session.language = 'en'
         }
       }
     } catch (e) {
@@ -852,8 +872,8 @@ export async function processWhatsAppTurn(
     return sendLanguageGreeting()
   }
 
-  // 12-Language Switch Intent (covers numbers 1-12 and all native scripts/names)
-  const switchedLang = matchLanguageSwitch(trimmed)
+  // 12-Language Switch Intent - only enabled for web simulator, WhatsApp is strictly English
+  const switchedLang = (session as any).isSimulator ? matchLanguageSwitch(trimmed) : null
   if (switchedLang) {
     session.language = switchedLang
     if (session.stage === 'SELECT_LANGUAGE') {
@@ -1253,7 +1273,7 @@ CRITICAL CLASSIFICATION & ROUTING RULES:
    - "Identity Theft" is ONLY for cases where NO money was stolen from the victim's own accounts (e.g. fake profile, forged PAN/Aadhaar used for loan in victim's name).
    - Whenever money was lost or debited (amount > 0 or UTR / UPI / bank mentioned), recommendedChannel MUST be "bank" and recommendedChannelTarget MUST be the victim's bank name (e.g. "HDFC Bank", "SBI") or "the bank".
 2. MANDATORY BANKING DETAILS: If the user provides a 12-digit UPI UTR / transaction reference number, beneficiary UPI handle, or victim's bank name (e.g. HDFC Bank, SBI), extract them into "utrNumber", "upiId", and "bankName", and include them in "frauderContact".
-3. COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"), and leave the address/city as "[Address / city - to be provided]".`,
+3. COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"). Never include or append placeholders like "[Address / city - to be provided]".`,
           },
           { role: 'user', content: incidentText },
         ],
@@ -1353,12 +1373,12 @@ CRITICAL CLASSIFICATION & ROUTING RULES:
         complainantName: finalComplainant,
         amount: finalAmount,
         urgencyLevel: 'CRITICAL',
-        summary: parsed.summary || 'Cyber fraud reported via WhatsApp triage bot.',
-        summaryHi: parsed.summaryHi || 'व्हाट्सएप ट्रायज बॉट के माध्यम से साइबर धोखाधड़ी दर्ज की गई।',
-        summaryRegional: parsed.summaryRegional || (session.language === 'hi' ? parsed.summaryHi : undefined),
-        complaintDraft: parsed.complaintDraft || `Formal complaint regarding unauthorized cyber fraud of ₹${extracted.amount || 0}.`,
-        complaintDraftHi: parsed.complaintDraftHi || `अनधिकृत साइबर धोखाधड़ी की औपचारिक शिकायत।`,
-        complaintDraftRegional: parsed.complaintDraftRegional || (session.language === 'hi' ? parsed.complaintDraftHi : undefined),
+        summary: stripAddressPlaceholders(parsed.summary || 'Cyber fraud reported via WhatsApp triage bot.'),
+        summaryHi: stripAddressPlaceholders(parsed.summaryHi || 'व्हाट्सएप ट्रायज बॉट के माध्यम से साइबर धोखाधड़ी दर्ज की गई।'),
+        summaryRegional: stripAddressPlaceholders(parsed.summaryRegional || (session.language === 'hi' ? parsed.summaryHi : undefined)),
+        complaintDraft: stripAddressPlaceholders(parsed.complaintDraft || `Formal complaint regarding unauthorized cyber fraud of ₹${extracted.amount || 0}.`),
+        complaintDraftHi: stripAddressPlaceholders(parsed.complaintDraftHi || `अनधिकृत साइबर धोखाधड़ी की औपचारिक शिकायत।`),
+        complaintDraftRegional: stripAddressPlaceholders(parsed.complaintDraftRegional || (session.language === 'hi' ? parsed.complaintDraftHi : undefined)),
         language: session.language,
         frauderContact: safeContacts.length > 0 ? safeContacts.join('; ') : 'Not Provided',
         bankName: finalBank,
@@ -1520,9 +1540,9 @@ function generateFallbackResult(text: string, ext: ReturnType<typeof quickExtrac
     summaryHi: `व्हाट्सएप बॉट के माध्यम से ${detectedCategory} (₹${amount.toLocaleString('en-IN')}) दर्ज की गई।${isDigitalArrest ? ' डिजिटल अरेस्ट जबरन वसूली का मामला पहचाना गया।' : ''}`,
     summaryRegional,
     complaintDraft: `To The Station House Officer / Cyber Crime Cell,
-${draftOpenerEn} an unauthorized debit of ₹${amount.toLocaleString('en-IN')} from ${onBehalfOfTarget ? `${onBehalfOfTarget}'s account` : 'my account'}. The beneficiary identifier is ${fraudster}${ext.utr ? ` with transaction reference UTR: ${ext.utr}` : ''}${ext.upi ? `, UPI: ${ext.upi}` : ''}${ext.ifscCode ? `, IFSC: ${ext.ifscCode}` : ''}. I request immediate lien-marking of funds and registration of FIR under Section 66D of Information Technology Act and Section 318(4) of Bharatiya Nyaya Sanhita (BNS 2023).${namedComplainant ? '' : '\n\n[Complainant address / city - to be provided]'}`,
+${draftOpenerEn} an unauthorized debit of ₹${amount.toLocaleString('en-IN')} from ${onBehalfOfTarget ? `${onBehalfOfTarget}'s account` : 'my account'}. The beneficiary identifier is ${fraudster}${ext.utr ? ` with transaction reference UTR: ${ext.utr}` : ''}${ext.upi ? `, UPI: ${ext.upi}` : ''}${ext.ifscCode ? `, IFSC: ${ext.ifscCode}` : ''}. I request immediate lien-marking of funds and registration of FIR under Section 66D of Information Technology Act and Section 318(4) of Bharatiya Nyaya Sanhita (BNS 2023).`,
     complaintDraftHi: `थाना प्रभारी / साइबर अपराध शाखा,
-${draftOpenerHi} ₹${amount.toLocaleString('en-IN')} की अनधिकृत निकासी की औपचारिक शिकायत। आरोपी का पहचानकर्ता ${fraudster} है${ext.utr ? ` (यूटीआर: ${ext.utr})` : ''}${ext.upi ? ` (यूपीआई: ${ext.upi})` : ''}। कृपया आईटी अधिनियम की धारा 66D एवं भारतीय न्याय संहिता (BNS 2023) की धारा 318(4) के तहत कार्रवाई करें।${namedComplainant ? '' : '\n\n[शिकायतकर्ता का पता / शहर - दिया जाना है]'}`,
+${draftOpenerHi} ₹${amount.toLocaleString('en-IN')} की अनधिकृत निकासी की औपचारिक शिकायत। आरोपी का पहचानकर्ता ${fraudster} है${ext.utr ? ` (यूटीआर: ${ext.utr})` : ''}${ext.upi ? ` (यूपीआई: ${ext.upi})` : ''}। कृपया आईटी अधिनियम की धारा 66D एवं भारतीय न्याय संहिता (BNS 2023) की धारा 318(4) के तहत कार्रवाई करें।`,
     complaintDraftRegional,
     language: lang,
     frauderContact: ext.utr ? `Ref UTR: ${ext.utr}${ext.upi ? `; UPI: ${ext.upi}` : ''}; Contact: ${ext.phone || 'Not Provided'}` : (ext.phone || (ext.upi ? `UPI: ${ext.upi}` : 'Not Provided')),

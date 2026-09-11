@@ -21,6 +21,7 @@ import {
 } from '@/lib/i18n/multilingualRegex'
 import OpenAI from 'openai'
 import { Buffer } from 'node:buffer'
+import { NEUTRAL_WHISPER_PROMPT, normalizeSpeechTranscript } from '@/lib/speech-normalizer'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -231,8 +232,8 @@ export async function POST(req: NextRequest) {
       summary: `AI triage summary generated for ${inferredCategory}.${isDigitalArrest ? ' High-priority Digital Arrest extortion scam detected.' : ''}`,
       summaryHi: `${inferredCategory} के लिए AI ट्रायज सारांश।${isDigitalArrest ? ' डिजिटल अरेस्ट जबरन वसूली का मामला पहचाना गया।' : ''}`,
       summaryRegional: `${inferredCategory} - AI Triage Summary`,
-      complaintDraft: `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Cybercrime Complaint regarding ${inferredCategory}\n\nRespected Sir/Madam,\n\nI am filing this complaint regarding a cyber incident (${inferredCategory}). ${cleanAmt > 0 ? `Financial loss: ₹${cleanAmt.toLocaleString('en-IN')}. ` : ''}${detectedUtr ? `Transaction UTR: ${detectedUtr}. ` : ''}${detectedUpi ? `UPI: ${detectedUpi}. ` : ''}${detectedIfsc ? `IFSC: ${detectedIfsc}. ` : ''}Please investigate this matter and take appropriate action under IT Act 2000 and Bharatiya Nyaya Sanhita (BNS 2023).\n\n[Complainant address / city - to be provided]`,
-      complaintDraftHi: `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${inferredCategory} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं ${inferredCategory} से संबंधित एक साइबर घटना की औपचारिक शिकायत दर्ज कर रहा हूँ। ${cleanAmt > 0 ? `नुकसान राशि: ₹${cleanAmt.toLocaleString('en-IN')}। ` : ''}${detectedUtr ? `यूटीआर नंबर: ${detectedUtr}। ` : ''}${detectedUpi ? `यूपीआई: ${detectedUpi}। ` : ''}कृपया मामले की जांच करें और आईटी अधिनियम तथा भारतीय न्याय संहिता (BNS 2023) के तहत उचित कार्रवाई करें।\n\n[शिकायतकर्ता का पता / शहर - दिया जाना है]`,
+      complaintDraft: `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Cybercrime Complaint regarding ${inferredCategory}\n\nRespected Sir/Madam,\n\nI am filing this complaint regarding a cyber incident (${inferredCategory}). ${cleanAmt > 0 ? `Financial loss: ₹${cleanAmt.toLocaleString('en-IN')}. ` : ''}${detectedUtr ? `Transaction UTR: ${detectedUtr}. ` : ''}${detectedUpi ? `UPI: ${detectedUpi}. ` : ''}${detectedIfsc ? `IFSC: ${detectedIfsc}. ` : ''}Please investigate this matter and take appropriate action under IT Act 2000 and Bharatiya Nyaya Sanhita (BNS 2023).`,
+      complaintDraftHi: `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${inferredCategory} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं ${inferredCategory} से संबंधित एक साइबर घटना की औपचारिक शिकायत दर्ज कर रहा हूँ। ${cleanAmt > 0 ? `नुकसान राशि: ₹${cleanAmt.toLocaleString('en-IN')}। ` : ''}${detectedUtr ? `यूटीआर नंबर: ${detectedUtr}। ` : ''}${detectedUpi ? `यूपीआई: ${detectedUpi}। ` : ''}कृपया मामले की जांच करें और आईटी अधिनियम तथा भारतीय न्याय संहिता (BNS 2023) के तहत उचित कार्रवाई करें।`,
       complaintDraftRegional: (targetLanguage && targetLanguage !== 'en')
         ? getRegionalComplaintDraft(targetLanguage as SupportedLanguage, detectedComplainant, detectedOnBehalfOf, inferredCategory, userText || inferredCategory, cleanAmt, detectedUtr || undefined, detectedUpi || undefined, detectedIfsc || undefined)
         : `Formal Cybercrime Complaint regarding ${inferredCategory}.\n\n[Official Police Complaint Draft in selected language]`,
@@ -318,16 +319,21 @@ export async function POST(req: NextRequest) {
             ? targetLanguage
             : undefined
 
-          const INDIC_WHISPER_PROMPT =
-            'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
-
           const transcription = await openai.audio.transcriptions.create({
             file: fileObj,
             model: 'whisper-1',
             ...(whisperLang ? { language: whisperLang } : {}),
-            prompt: INDIC_WHISPER_PROMPT,
+            prompt: NEUTRAL_WHISPER_PROMPT,
           })
-          return typeof transcription === 'string' ? transcription : (transcription as any).text || ''
+          let text = typeof transcription === 'string' ? transcription : (transcription as any).text || ''
+          text = text.trim()
+          if (text) {
+            const normalized = await normalizeSpeechTranscript(text, openai)
+            if (normalized.cleanedTranscript) {
+              text = normalized.cleanedTranscript
+            }
+          }
+          return text
         } catch (audioError: any) {
           console.warn('[triage] Whisper transcription failed:', audioError?.message)
           return ''

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { Buffer } from 'node:buffer'
+import { NEUTRAL_WHISPER_PROMPT, normalizeSpeechTranscript } from '@/lib/speech-normalizer'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 30
@@ -29,18 +30,28 @@ export async function POST(req: NextRequest) {
 
     const VALID_WHISPER_LANGS = ['en', 'hi', 'mr', 'ta', 'kn', 'ur']
     const whisperLang = VALID_WHISPER_LANGS.includes(language.toLowerCase()) && language.toLowerCase() !== 'en' ? language.toLowerCase() : undefined
-    const INDIC_WHISPER_PROMPT =
-      'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, മോസം), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
 
     const transcription = await openai.audio.transcriptions.create({
       file: fileObj,
       model: 'whisper-1',
       ...(whisperLang ? { language: whisperLang } : {}),
-      prompt: INDIC_WHISPER_PROMPT,
+      prompt: NEUTRAL_WHISPER_PROMPT,
     })
 
-    const text = typeof transcription === 'string' ? transcription : (transcription as any).text || ''
-    return NextResponse.json({ text: text.trim() })
+    let text = typeof transcription === 'string' ? transcription : (transcription as any).text || ''
+    text = text.trim()
+
+    // If chunk contains Perso-Arabic characters from unconstrained Hindi audio, normalize to Devanagari
+    if (/[\u0600-\u06FF]/.test(text)) {
+      try {
+        const norm = await normalizeSpeechTranscript(text, openai)
+        if (norm.cleanedTranscript) {
+          text = norm.cleanedTranscript
+        }
+      } catch {}
+    }
+
+    return NextResponse.json({ text })
   } catch (err: any) {
     console.warn('[transcribe-chunk] failed:', err?.message)
     return NextResponse.json({ text: '' })

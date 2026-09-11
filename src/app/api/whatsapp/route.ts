@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getOrCreateSession, processWhatsAppTurn, clearAllWhatsAppSessions } from '@/lib/whatsapp-agent'
 import { SupportedLanguage, LANGUAGE_MAP } from '@/lib/i18n/languages'
 import OpenAI, { toFile } from 'openai'
+import { NEUTRAL_WHISPER_PROMPT, normalizeSpeechTranscript } from '@/lib/speech-normalizer'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -50,13 +51,13 @@ export async function POST(req: NextRequest) {
         mediaUrl = (formData.get('MediaUrl0') as string) || undefined
         const mediaType = (formData.get('MediaContentType0') as string) || ''
 
-        // If it's a voice note, transcribe using Whisper
+        // If it's a voice note, transcribe into English
         if (mediaType.includes('audio') && mediaUrl) {
           try {
             const transcribed = await transcribeAudioUrl(mediaUrl)
-            if (transcribed) {
-              voiceTranscript = transcribed
-              body = body ? `${body} (Voice note: "${transcribed}")` : transcribed
+            if (transcribed?.text) {
+              voiceTranscript = transcribed.text
+              body = body ? `${body} (Voice note: "${transcribed.text}")` : transcribed.text
             }
           } catch (e) {
             console.error('[WhatsApp Webhook] Audio transcription error:', e)
@@ -81,11 +82,14 @@ export async function POST(req: NextRequest) {
       if (json.isSimulator) {
         ;(session as any).isSimulator = true
       }
-      if (json.language && json.language in LANGUAGE_MAP) {
+      if (json.isSimulator && json.language && json.language in LANGUAGE_MAP) {
         session.language = json.language as SupportedLanguage
         if (session.stage === 'SELECT_LANGUAGE') {
           session.stage = 'AWAITING_INCIDENT'
         }
+      } else if (!json.isSimulator) {
+        // Real WhatsApp bot is strictly English per user requirement
+        session.language = 'en'
       }
 
       if (isExplicitReset) {
@@ -120,10 +124,12 @@ export async function POST(req: NextRequest) {
       const audioMimeType = json.audioMimeType || 'audio/webm'
       if (!voiceTranscript && json.audioBase64) {
         try {
-          const transcribed = await transcribeAudioBase64(json.audioBase64, audioMimeType, session.language)
-          if (transcribed) {
-            voiceTranscript = transcribed
-            body = body ? `${body} (Voice Note: "${transcribed}")` : transcribed
+          const transcribed = await transcribeAudioBase64(json.audioBase64, audioMimeType)
+          if (transcribed?.text) {
+            voiceTranscript = transcribed.text
+            body = body ? `${body} (Voice Note: "${transcribed.text}")` : transcribed.text
+            session.language = 'en'
+            if (session.stage === 'SELECT_LANGUAGE') session.stage = 'AWAITING_INCIDENT'
           } else if (!body) {
             body = 'Voice note complaint details'
           }
@@ -181,10 +187,12 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function transcribeAudioUrl(audioUrl: string): Promise<string | null> {
+async function transcribeAudioUrl(
+  audioUrl: string
+): Promise<{ text: string; detectedLanguage: SupportedLanguage } | null> {
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey || apiKey === 'mock-key' || !apiKey.startsWith('sk-')) {
-    return 'Maine 45000 rupaye transfer kiye the ek fraudster ko.'
+    return { text: 'I transferred 45000 rupees to a fraudster.', detectedLanguage: 'en' }
   }
 
   const res = await fetch(audioUrl)
@@ -194,27 +202,33 @@ async function transcribeAudioUrl(audioUrl: string): Promise<string | null> {
   const buffer = Buffer.from(await blob.arrayBuffer())
   const file = await toFile(buffer, 'audio.ogg', { type: 'audio/ogg' })
 
-  const INDIC_WHISPER_PROMPT =
-    'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
-
   const openai = new OpenAI({ apiKey })
-  const transcription = await openai.audio.transcriptions.create({
-    file,
-    model: 'whisper-1',
-    prompt: INDIC_WHISPER_PROMPT,
-  })
 
-  return transcription.text
+  try {
+    // WhatsApp transcription must strictly be in English per user requirement
+    const translation = await openai.audio.translations.create({
+      file,
+      model: 'whisper-1',
+      prompt: NEUTRAL_WHISPER_PROMPT,
+    })
+
+    const text = translation.text.trim()
+    if (!text) return null
+
+    return { text, detectedLanguage: 'en' }
+  } catch (err: any) {
+    console.warn('[transcribeAudioUrl] Whisper translation error:', err?.message)
+    return null
+  }
 }
 
 async function transcribeAudioBase64(
   base64Data: string,
-  mimeType: string = 'audio/webm',
-  language?: SupportedLanguage
-): Promise<string | null> {
+  mimeType: string = 'audio/webm'
+): Promise<{ text: string; detectedLanguage: SupportedLanguage } | null> {
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey || apiKey === 'mock-key' || !apiKey.startsWith('sk-')) {
-    return 'Maine 45000 rupaye transfer kiye the ek fraudster ko.'
+    return { text: 'I transferred 45000 rupees to a fraudster.', detectedLanguage: 'en' }
   }
 
   const buffer = Buffer.from(base64Data, 'base64')
@@ -228,22 +242,21 @@ async function transcribeAudioBase64(
   const file = await toFile(buffer, `voicenote.${ext}`, { type: cleanMime })
 
   const openai = new OpenAI({ apiKey })
-  // OpenAI Whisper API only supports these Indic ISO-639-1 language codes.
-  // Passing 'ml', 'te', 'bn', etc. throws 400 error. Leaving undefined allows Whisper to auto-detect.
-  const VALID_WHISPER_LANGS = ['en', 'hi', 'mr', 'ta', 'kn', 'ur']
-  const whisperLang = language && VALID_WHISPER_LANGS.includes(language) && language !== 'en' ? language : undefined
-  const INDIC_WHISPER_PROMPT =
-    'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
+
   try {
-    const transcription = await openai.audio.transcriptions.create({
+    // WhatsApp transcription must strictly be in English per user requirement
+    const translation = await openai.audio.translations.create({
       file,
       model: 'whisper-1',
-      ...(whisperLang ? { language: whisperLang } : {}),
-      prompt: INDIC_WHISPER_PROMPT,
+      prompt: NEUTRAL_WHISPER_PROMPT,
     })
-    return transcription.text
+
+    const text = translation.text.trim()
+    if (!text) return null
+
+    return { text, detectedLanguage: 'en' }
   } catch (err: any) {
-    console.warn('[transcribeAudioBase64] Whisper error:', err?.message)
+    console.warn('[transcribeAudioBase64] Whisper translation error:', err?.message)
     return null
   }
 }

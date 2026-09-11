@@ -3,39 +3,24 @@ import { TriageResult } from '@/data/scenarios'
 
 export function getWelcomeMessage(): string {
   return `👋 *Hi, I'm the Samarthan AI Cybercrime Triage Bot.*
-नमस्ते! मैं समर्थन (Samarthan) AI साइबर अपराध ट्रायज बॉट हूँ।
 
-I provide 24x7 automated emergency cybercrime triage, golden-hour recovery assistance, and official police FIR complaint drafting across 12 Indian languages under the IT Act 2000.
+I provide 24x7 automated emergency cybercrime triage, golden-hour recovery assistance, and official police complaint drafting under the IT Act 2000.
 
-🛡️ *What I do / मैं आपकी क्या मदद कर सकता हूँ:*
+🛡️ *What I can do for you:*
 1️⃣ *Emergency Action:* Guide you to dial 1930 & freeze stolen funds via bank nodal officers.
-2️⃣ *AI FIR Drafting:* Automatically analyze your incident and draft an official police complaint in English and your regional language.
+2️⃣ *AI FIR Drafting:* Automatically analyze your incident and draft an official complaint.
 3️⃣ *Live Case Tracking:* Provide a live portal tracking link to follow your case updates in real time.
 
-📋 *Information needed / आवश्यक जानकारी:*
+📋 *Information needed:*
 • What happened (fake call, UPI scam, extortion, loan app)
 • Disputed amount lost in ₹
 • Fraudster details (UPI ID, phone, account)
 • 12-digit UTR number from bank SMS or payment app
 
-🌐 *Please select your language / कृपया भाषा चुनें:*
-1️⃣ Reply *1* for English
-2️⃣ Reply *2* for हिन्दी (Hindi)
-3️⃣ Reply *3* for বাংলা (Bengali)
-4️⃣ Reply *4* for मराठी (Marathi)
-5️⃣ Reply *5* for తెలుగు (Telugu)
-6️⃣ Reply *6* for தமிழ் (Tamil)
-7️⃣ Reply *7* for ગુજરાતી (Gujarati)
-8️⃣ Reply *8* for اردو (Urdu)
-9️⃣ Reply *9* for ಕನ್ನಡ (Kannada)
-🔟 Reply *10* for ଓଡ଼ିଆ (Odia)
-1️⃣1️⃣ Reply *11* for മലയാളം (Malayalam)
-1️⃣2️⃣ Reply *12* for ਪੰਜਾਬੀ (Punjabi)
+🎙️ *How to send details:*
+You can send a **Voice Note 🎤**, type your message ✍️, or share a **Screenshot / Receipt 📸**.
 
-🎙️ *How to send details / विवरण कैसे भेजें:*
-You can send a **Voice Note 🎤**, type your message ✍️, or share a **Screenshot / Receipt 📸** in any language!
-
-👉 _Or simply describe what happened right now to proceed directly!_`
+👉 _Please describe what happened right now to proceed!_`
 }
 
 export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?: string): string {
