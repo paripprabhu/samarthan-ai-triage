@@ -306,10 +306,9 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
           }
         </button>
 
-        {/* Live waveform bars, height driven by mic amplitude */}
         <div className={clsx(
           "flex items-end justify-center",
-          isLg ? "gap-1 h-12 w-full max-w-[260px]" : "gap-[3px] h-10 w-full max-w-[220px]"
+          isLg ? "gap-1.5 h-12 w-full max-w-[320px]" : "gap-[3px] h-10 w-full max-w-[220px]"
         )}>
           {levels.map((lvl, i) => (
             <div

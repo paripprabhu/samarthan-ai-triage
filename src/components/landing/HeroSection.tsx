@@ -100,10 +100,10 @@ export default function HeroSection({ language }: HeroSectionProps) {
   return (
     <section className="relative w-full pt-4 pb-8 sm:pt-6 sm:pb-12 md:pt-8 md:pb-14 overflow-hidden isolate">
       <RadialBackground />
-      <div className="relative z-10 max-w-[1060px] mx-auto px-4 sm:px-6">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center justify-center">
-          {/* Left: copy (matching scale and height with rapid intake card) */}
-          <div className="w-full max-w-[500px] mx-auto lg:mx-0 flex flex-col justify-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-10 items-center justify-between">
+          {/* Left: copy */}
+          <div className="w-full lg:col-span-5 flex flex-col justify-center">
             {/* Eyebrow Pill */}
             <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-4 backdrop-blur-sm self-start">
               <span className="flex h-2 w-2 relative">
@@ -167,10 +167,10 @@ export default function HeroSection({ language }: HeroSectionProps) {
             </div>
           </div>
 
-          {/* Right: Studio Window Terminal (matching height and width with left copy) */}
-          <div className="relative w-full max-w-[500px] lg:max-w-[520px] mx-auto lg:mx-0">
+          {/* Right: Studio Window Terminal (widened to fill space) */}
+          <div className="relative w-full lg:col-span-7">
             {/* Outer window frame container */}
-            <div className="rounded-[20px] border border-zinc-200/90 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden">
+            <div className="w-full rounded-[20px] border border-zinc-200/90 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden">
               {/* Terminal Window Top Bar */}
               <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-3.5 border-b border-zinc-100 dark:border-zinc-850 bg-surface shrink-0">
                 <div className="flex items-center gap-2">
@@ -188,7 +188,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
               </div>
 
               {/* Terminal Window Body */}
-              <div className="p-5 sm:p-7 flex-1 flex flex-col justify-between">
+              <div className="p-5 sm:p-7 md:p-8 flex-1 flex flex-col justify-between">
                 <div className="flex-1 flex flex-col justify-center">
                   <p className="text-xs sm:text-[13px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-3 sm:mb-4 text-center">
                     {committed
@@ -220,7 +220,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                     <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2.5">
                       {hi ? 'या त्वरित सिमुलेशन चुनें:' : 'Or test with a 1-click simulation:'}
                     </p>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    <div className="flex flex-wrap gap-2 sm:gap-2.5">
                       {[
                         { en: '₹50,000 lost on UPI link', hi: 'UPI लिंक से ₹50,000 कटे' },
                         { en: 'Loan app blackmail threats', hi: 'लोन ऐप से ब्लैकमेल धमकी' },
@@ -230,7 +230,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                           key={idx}
                           type="button"
                           onClick={() => setCommitted(hi ? sample.hi : sample.en)}
-                          className="text-xs sm:text-[13px] bg-zinc-50 dark:bg-zinc-900 hover:bg-primary-tint border border-zinc-200/80 dark:border-zinc-800 hover:border-primary/30 text-zinc-600 dark:text-zinc-300 hover:text-primary px-3 py-1.5 rounded-lg transition-all font-medium cursor-pointer"
+                          className="flex-1 min-w-[150px] text-center text-xs sm:text-[13px] bg-zinc-50 dark:bg-zinc-900 hover:bg-primary-tint border border-zinc-200/80 dark:border-zinc-800 hover:border-primary/30 text-zinc-600 dark:text-zinc-300 hover:text-primary px-3 py-2 rounded-lg transition-all font-medium cursor-pointer"
                         >
                           &ldquo;{hi ? sample.hi : sample.en}&rdquo;
                         </button>
