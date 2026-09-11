@@ -387,6 +387,7 @@ async function startWhatsAppBot() {
 
       let audioBase64 = undefined
       let voiceTranscript = undefined
+      let detectedAudioLanguage = undefined
 
       // Voice note / audio message handling (PTT or standard audio)
       const isAudio = Boolean(
@@ -408,7 +409,6 @@ async function startWhatsAppBot() {
             console.log(`[Audio Message] Successfully extracted audio (${buffer.length} bytes)`)
 
             // Try Whisper transcription locally using OPENAI_API_KEY with auto-language detection
-            let detectedAudioLanguage = undefined
             if (process.env.OPENAI_API_KEY) {
               try {
                 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
