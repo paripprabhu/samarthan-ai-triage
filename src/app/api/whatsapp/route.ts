@@ -192,8 +192,6 @@ async function transcribeAudioUrl(audioUrl: string): Promise<string | null> {
   const transcription = await openai.audio.transcriptions.create({
     file,
     model: 'whisper-1',
-    language: 'hi',
-    prompt: 'साइबर अपराध, बैंक धोखाधड़ी, UPI ID, UTR नंबर, पैसे कटे, खाता संख्या',
   })
 
   return transcription.text
@@ -220,28 +218,18 @@ async function transcribeAudioBase64(
   const file = await toFile(buffer, `voicenote.${ext}`, { type: cleanMime })
 
   const openai = new OpenAI({ apiKey })
-  const whisperLang = language ? (LANGUAGE_MAP[language]?.whisperCode || 'hi') : 'hi'
+  const VALID_WHISPER_LANGS = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
+  const whisperLang = language && VALID_WHISPER_LANGS.includes(language) ? language : undefined
   try {
     const transcription = await openai.audio.transcriptions.create({
       file,
       model: 'whisper-1',
-      language: whisperLang,
-      prompt: 'साइबर अपराध, बैंक धोखाधड़ी, UPI ID, UTR नंबर, पैसे कटे, खाता संख्या',
+      ...(whisperLang ? { language: whisperLang } : {}),
     })
     return transcription.text
   } catch (err: any) {
-    console.warn('[transcribeAudioBase64] Attempting fallback with Hindi constraint:', err?.message)
-    try {
-      const fileRetry = await toFile(buffer, `voicenote.${ext}`, { type: cleanMime })
-      const transcription = await openai.audio.transcriptions.create({
-        file: fileRetry,
-        model: 'whisper-1',
-        language: 'hi',
-      })
-      return transcription.text
-    } catch {
-      return null
-    }
+    console.warn('[transcribeAudioBase64] Whisper error:', err?.message)
+    return null
   }
 }
 

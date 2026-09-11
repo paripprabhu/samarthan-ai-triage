@@ -172,7 +172,7 @@ export function detectLanguage(text: string): SupportedLanguage {
   // Romanized transliteration heuristics for code-switched text
   if (/\b(?:maru naam|maru name|chhe|lidhu|lidha|thaya|karyu|mate|mathi|aavya|khata|koi e|padavi|gujarati)\b/i.test(trimmed)) return 'gu'
   if (/\b(?:nanna hesaru|nanna name|nanna|hesaru|kottu|thagond|madidare|madi|antha|bedirisi|madisidare|aamele|hana|kaledu|hoyithu|kannada)\b/i.test(trimmed)) return 'kn'
-  if (/\b(?:ente peru|ente name|ente|ninnu|cheythu|cheyyan|undennu|paranju|thattipp|eduthu|panam|poyi|malayalam)\b/i.test(trimmed)) return 'ml'
+  if (/\b(?:ente peru|ente name|ente|njan|njaan|enikku|eniku|paisa|panam|poyi|nashtapettu|nashtamayi|ayachu|thattippu|thattipp|vilichu|paranju|accountil|bankil|chathichu|kallan|parathi|shikayath|ninnu|cheythu|cheyyan|undennu|eduthu|malayalam)\b/i.test(trimmed)) return 'ml'
   if (/\b(?:na peru|naa peru|dabbulu|poyayi|jarigindi|chudandi|chesaru|cheyinchukunnaru|ichi|pettincharu|chesindi|unnaru|vyakthi|naku|telugu)\b/i.test(trimmed)) return 'te'
   if (/\b(?:en peyar|en peyer|ennoda|panam|pochu|yematram|kaasu|pannala|panniduvaanga|thiruditaanga|solli|vandhuchu|pannitan|pannaanga|tamil)\b/i.test(trimmed)) return 'ta'
   if (/\b(?:mora nama|mora na|mora|tanka|katigala|karichanti|kariba|karuchi|threat dei|odia|oriya)\b/i.test(trimmed)) return 'or'
@@ -677,8 +677,8 @@ export async function processWhatsAppTurn(
            OR updates::text ILIKE ${digitPattern}
         ORDER BY saved_at DESC LIMIT 1
       `
-      // If not bound by phone, restore the latest complaint under the same account assumption
-      if (!rows[0]?.incident_id) {
+      // If not bound by phone, restore the latest complaint under the same account assumption (ONLY for web simulator)
+      if (!rows[0]?.incident_id && (session as any).isSimulator) {
         rows = await sql`
           SELECT incident_id, language, summary, summary_hi
           FROM complaints

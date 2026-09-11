@@ -995,6 +995,21 @@ ${trackingLink}
 💡 *Tip:* To start a brand new complaint anytime, reply *NEW*.`
     }
 
+    if (lang === 'ml') {
+      return `✅ *പരാതി (${incidentId}) വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!*
+📌 *ഇൻസിഡന്റ് ഐഡി:* ${incidentId}
+
+🤖 *AI രേഖപ്പെടുത്തിയ വിവരങ്ങൾ:*
+${filledItems.map(f => `• ${f}`).join('\n')}
+
+⚖️ നിങ്ങളുടെ ഔദ്യോഗിക എഫ്.ഐ.ആർ ഡ്രാഫ്റ്റും ബാങ്ക് ഫ്രീസ് നിർദ്ദേശങ്ങളും പുതുക്കി.
+
+📄 *അപ്ഡേറ്റ് ചെയ്ത പരാതി കാണുക:*
+${trackingLink}
+
+💡 *സൂചന:* പുതിയ പരാതി ആരംഭിക്കാൻ *NEW* എന്ന് അയക്കുക.`
+    }
+
     // Regional languages
     const meta = LANGUAGE_MAP[lang]
     return `✅ *Complaint (${incidentId}) Updated / ${meta?.nativeName || ''}*
@@ -1020,6 +1035,16 @@ ${trackingLink}
 ${trackingLink}
 
 💡 *सुझाव:* नई शिकायत शुरू करने के लिए *NEW* लिखें।`
+  }
+
+  if (lang === 'ml') {
+    return `✅ *കൂടുതൽ വിവരങ്ങൾ പഴയ പരാതിയുമായി (${incidentId}) ചേർത്തു.*
+നിങ്ങളുടെ വിവരങ്ങൾ ഇൻസിഡന്റ് ഐഡി *${incidentId}*-ൽ രേഖപ്പെടുത്തി.
+
+📄 *അപ്ഡേറ്റ് ചെയ്ത കേസ് കാണുക:*
+${trackingLink}
+
+💡 *സൂചന:* പുതിയ പരാതിക്കായി *NEW* എന്ന് അയക്കുക.`
   }
 
   return `✅ *Update Recorded on Complaint (${incidentId}).*

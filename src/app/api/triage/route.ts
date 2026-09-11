@@ -312,13 +312,14 @@ export async function POST(req: NextRequest) {
           const fileObj = new File([audioBuffer], audioName, { type: audioFile.type || 'audio/webm' })
 
           const VALID_WHISPER_LANGS = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
-          const whisperLang = VALID_WHISPER_LANGS.includes(targetLanguage) ? targetLanguage : (targetLanguage === 'hi' ? 'hi' : undefined)
+          const whisperLang = targetLanguage && VALID_WHISPER_LANGS.includes(targetLanguage) && targetLanguage !== 'en'
+            ? targetLanguage
+            : undefined
 
           const transcription = await openai.audio.transcriptions.create({
             file: fileObj,
             model: 'whisper-1',
-            ...(whisperLang ? { language: whisperLang } : { language: 'hi' }),
-            prompt: 'साइबर अपराध, बैंक धोखाधड़ी, UPI ID, UTR नंबर, पैसे कटे, खाता संख्या',
+            ...(whisperLang ? { language: whisperLang } : {}),
           })
           return typeof transcription === 'string' ? transcription : (transcription as any).text || ''
         } catch (audioError: any) {

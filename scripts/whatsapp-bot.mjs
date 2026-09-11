@@ -382,16 +382,15 @@ async function startWhatsAppBot() {
             audioBase64 = buffer.toString('base64')
             console.log(`[Audio Message] Successfully extracted audio (${buffer.length} bytes)`)
 
-            // Try Whisper transcription locally using OPENAI_API_KEY
+            // Try Whisper transcription locally using OPENAI_API_KEY with auto-language detection
             if (process.env.OPENAI_API_KEY) {
               try {
                 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
                 const file = await toFile(buffer, 'audio.ogg', { type: 'audio/ogg' })
+                // Do not force 'hi' or Hindi prompt - Whisper-1 natively auto-detects Malayalam, Tamil, Telugu, Hindi, English, etc.
                 const transcription = await openai.audio.transcriptions.create({
                   file,
                   model: 'whisper-1',
-                  language: 'hi',
-                  prompt: 'साइबर अपराध, बैंक धोखाधड़ी, UPI ID, UTR नंबर, पैसे कटे, खाता संख्या',
                 })
                 if (transcription?.text) {
                   voiceTranscript = transcription.text.trim()
@@ -443,9 +442,10 @@ async function startWhatsAppBot() {
 
       try {
         const isExplicitNew =
-          /^(new|start new|file new|new complaint|fresh|naya|nai|नई|नया|नई शिकायत)$/i.test((text || '').trim()) ||
+          /^(new|start new|file new|new complaint|fresh|naya|nai|नई|नया|नई शिकायत|പുതിയ|പുതിയ പരാതി|reset|\/reset|clear|restart)$/i.test((text || '').trim()) ||
           /i want to report a cybercrime incident/i.test(text || '') ||
           /i want to report a cyber incident/i.test(text || '') ||
+          /സൈബർ കുറ്റകൃത്യം|സൈബർ തട്ടിപ്പ്/i.test(text || '') ||
           /साइबर अपराध|साइबर धोखाधड़ी/i.test(text || '') ||
           /^(hi samarthan|hello samarthan|namaste samarthan)/i.test((text || '').trim())
 
