@@ -23,7 +23,7 @@ const FOOTER_I18N: Record<SupportedLanguage, {
   helpline1930: string
   police100: string
   aboutTitle: string
-  hackathonTag: string
+  portalTag: string
   digilockerVerified: string
   poweredBy: string
   disclaimer: string
@@ -41,10 +41,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'Cyber Helpline: 1930',
     police100: 'Police: 100',
     aboutTitle: 'About',
-    hackathonTag: 'Built for Build What Moves India Hackathon',
+    portalTag: 'Citizen Cybercrime Triage Initiative',
     digilockerVerified: 'DigiLocker verified identity',
     poweredBy: 'Powered by GPT-4o',
-    disclaimer: 'Disclaimer: This platform is an AI simulation & prototype developed for the Build What Moves India Hackathon. It is NOT an official government website (the official government portal is cybercrime.gov.in). For real emergency cybercrime assistance, immediately dial 1930.',
+    disclaimer: 'Notice: DigiLocker verification, AI voice triage, legal mapping, and WhatsApp AI assistance are functional live features; police dispatch and bank account freezing are simulated demonstration workflows. Not an official government website (official portal: cybercrime.gov.in). For real emergency assistance, dial 1930.',
   },
   hi: {
     ctaHeadline: 'गोल्डन ऑवर में हर मिनट मायने रखता है।',
@@ -59,10 +59,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'साइबर हेल्पलाइन: 1930',
     police100: 'पुलिस: 100',
     aboutTitle: 'के बारे में',
-    hackathonTag: 'Build What Moves India हैकथॉन के लिए बनाया गया',
+    portalTag: 'नागरिक साइबर अपराध ट्रायज पहल',
     digilockerVerified: 'DigiLocker सत्यापित पहचान',
     poweredBy: 'GPT-4o द्वारा संचालित',
-    disclaimer: 'अस्वीकरण: यह वेबसाइट Build What Moves India हैकथॉन के लिए बनाया गया एक AI सिमुलेशन और प्रोटोटाइप है। यह कोई आधिकारिक सरकारी वेबसाइट नहीं है (आधिकारिक राष्ट्रीय साइबर अपराध पोर्टल cybercrime.gov.in है)। वास्तविक आपातकाल में तत्काल 1930 पर कॉल करें।',
+    disclaimer: 'सूचना: डिजीलॉकर सत्यापन, AI वॉइस ट्रायज, कानूनी धाराएं और व्हाट्सएप AI सहायता सक्रिय फीचर्स हैं; पुलिस डिस्पैच व बैंक खाता फ्रीज सिमुलेटेड वर्कफ़्लो हैं। आधिकारिक राष्ट्रीय पोर्टल cybercrime.gov.in है। आपातकाल में 1930 डायल करें।',
   },
   bn: {
     ctaHeadline: 'গোল্ডেন আওয়ারের প্রতিটি মিনিট মূল্যবান।',
@@ -77,10 +77,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'সাইবার হেল্পলাইন: 1930',
     police100: 'পুলিশ: 100',
     aboutTitle: 'আমাদের সম্পর্কে',
-    hackathonTag: 'Build What Moves India হ্যাকাথনের জন্য নির্মিত',
+    portalTag: 'নাগরিক সাইবার ক্রাইম ট্রায়াজ উদ্যোগ',
     digilockerVerified: 'DigiLocker যাচাইকৃত পরিচয়',
     poweredBy: 'GPT-4o দ্বারা চালিত',
-    disclaimer: 'দাবিত্যাগ: এই প্ল্যাটফর্মটি Build What Moves India হ্যাকাথনের জন্য তৈরি একটি AI সিমুলেশন ও প্রোটোটাইপ। এটি কোনো সরকারি ওয়েবসাইট নয় (সরকারি পোর্টাল হল cybercrime.gov.in)। আসল জরুরি সাইবার ক্রাইম সহায়তার জন্য অবিলম্বে 1930 নম্বরে ডায়াল করুন।',
+    disclaimer: 'বিজ্ঞপ্তি: ডিজিলকার যাচাইকরণ, AI ভয়েস ট্রায়াজ ও অভিযোগ তৈরি কার্যকরী ফিচার; পুলিশ রুট ও ব্যাংক ফ্রিজ সিমুলেটেড ডেমো। সরকারি পোর্টাল cybercrime.gov.in। জরুরি সহায়তায় 1930 ডায়াল করুন।',
   },
   mr: {
     ctaHeadline: 'गोल्डन अवरमध्ये प्रत्येक मिनिट महत्त्वाचा असतो.',
@@ -95,10 +95,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'सायबर हेल्पलाइन: 1930',
     police100: 'पोलीस: 100',
     aboutTitle: 'बद्दल',
-    hackathonTag: 'Build What Moves India हॅकाथॉनसाठी तयार केले',
+    portalTag: 'नागरी सायबर गुन्हे ट्रायज उपक्रम',
     digilockerVerified: 'DigiLocker पडताळलेली ओळख',
     poweredBy: 'GPT-4o द्वारे समर्थित',
-    disclaimer: 'अस्वीकरण: हे व्यासपीठ Build What Moves India हॅकाथॉनसाठी विकसित केलेले AI सिम्युलेशन आणि प्रोटोटाइप आहे. ही कोणतीही अधिकृत सरकारी वेबसाइट नाही (अधिकृत सरकारी पोर्टल cybercrime.gov.in आहे). वास्तविक आपत्कालीन मदतीसाठी त्वरित 1930 वर कॉल करा.',
+    disclaimer: 'सूचना: डिजीलॉकर पडताळणी, AI व्हॉइस ट्रायज आणि तक्रार मसुदा हे कार्यरत फीचर्स आहेत; पोलीस डिस्पॅच व बँक गोठवणे हे सिम्युलेटेड वर्कफ्लो आहेत. अधिकृत पोर्टल cybercrime.gov.in आहे. आणीबाणीत 1930 डायल करा.',
   },
   te: {
     ctaHeadline: 'గోల్డెన్ అవర్‌లో ప్రతి నిమిషం చాలా ముఖ్యం.',
@@ -113,10 +113,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'సైబర్ హెల్ప్‌లైన్: 1930',
     police100: 'పోలీస్: 100',
     aboutTitle: 'గురించి',
-    hackathonTag: 'Build What Moves India హ్యాకథాన్ కోసం రూపొందించబడింది',
+    portalTag: 'పౌర సైబర్ క్రైమ్ ట్రయాజ్ చొరవ',
     digilockerVerified: 'DigiLocker ధృవీకరించబడిన గుర్తింపు',
     poweredBy: 'GPT-4o ద్వారా ఆధారితం',
-    disclaimer: 'నిరాకరణ: ఈ ప్లాట్‌ఫారమ్ Build What Moves India హ్యాకథాన్ కోసం అభివృద్ధి చేయబడిన AI సిమ్యులేషన్ & ప్రోటోటైప్. ఇది అధికారిక ప్రభుత్వ వెబ్‌సైట్ కాదు (అధికారిక ప్రభుత్వ పోర్టల్ cybercrime.gov.in). అత్యవసర సైబర్ క్రైమ్ సహాయం కోసం వెంటనే 1930కి డయల్ చేయండి.',
+    disclaimer: 'గమనిక: డిజిలాకర్ ధృవీకరణ, AI వాయిస్ ట్రయాజ్ మరియు ఫిర్యాదు డ్రాఫ్టింగ్ క్రియాత్మక ఫీచర్లు; పోలీసు రౌటింగ్ & బ్యాంక్ ఫ్రీజ్ సిమ్యులేటెడ్ వర్క్‌ఫ్లోలు. అధికారిక పోర్టల్ cybercrime.gov.in. అత్యవసరంలో 1930 డయల్ చేయండి.',
   },
   ta: {
     ctaHeadline: 'தங்க நேரத்தில் ஒவ்வொரு நிமிடமும் முக்கியமானது.',
@@ -131,10 +131,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'சைபர் உதவி எண்: 1930',
     police100: 'காவல்துறை: 100',
     aboutTitle: 'பற்றி',
-    hackathonTag: 'Build What Moves India ஹேக்கத்தானுக்காக உருவாக்கப்பட்டது',
+    portalTag: 'குடிமக்கள் இணைய குற்ற ட்ரையாஜ் முயற்சி',
     digilockerVerified: 'DigiLocker சரிபார்க்கப்பட்ட அடையாளம்',
     poweredBy: 'GPT-4o மூலம் இயக்கப்படுகிறது',
-    disclaimer: 'மறுப்பு: இந்த தளம் Build What Moves India ஹேக்கத்தானுக்காக உருவாக்கப்பட்ட AI உருவகப்படுத்துதல் மற்றும் மாதிரி வடிவம் ஆகும். இது அதிகாரப்பூர்வ அரசு வலைத்தளம் அல்ல (அதிகாரப்பூர்வ அரசு தளம் cybercrime.gov.in). அவசர உதவிக்கு உடனடியாக 1930 என்ற எண்ணை டயல் செய்யவும்.',
+    disclaimer: 'அறிவிப்பு: டிஜிலாக்கர் சரிபார்ப்பு, AI குரல் ட்ரையாஜ் மற்றும் புகார் வரைவு ஆகியவை நேரடி அம்சங்கள்; காவல் அனுப்புதல் மற்றும் வங்கி முடக்கம் ஆகியவை மாதிரி பணிப்பாய்வுகள். அதிகாரப்பூர்வ தளம் cybercrime.gov.in. அவசர உதவிக்கு 1930 டயல் செய்யவும்.',
   },
   gu: {
     ctaHeadline: 'ગોલ્ડન અવરમાં દરેક મિનિટ મહત્વપૂર્ણ છે.',
@@ -149,10 +149,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'સાયબર હેલ્પલાઇન: 1930',
     police100: 'પોલીસ: 100',
     aboutTitle: 'વિશે',
-    hackathonTag: 'Build What Moves India હેકાથોન માટે બનાવેલ',
+    portalTag: 'નાગરિક સાયબર ક્રાઇમ ટ્રાયાજ પહેલ',
     digilockerVerified: 'DigiLocker પ્રમાણિત ઓળખ',
     poweredBy: 'GPT-4o દ્વારા સંચાલિત',
-    disclaimer: 'અસ્વીકરણ: આ પ્લેટફોર્મ Build What Moves India હેકાથોન માટે વિકસાવવામાં આવેલ AI સિમ્યુલેશન અને પ્રોટોટાઇપ છે. આ કોઈ સત્તાવાર સરકારી વેબસાઇટ નથી (સત્તાવાર સરકારી પોર્ટલ cybercrime.gov.in છે). વાસ્તવિક કટોકટી સહાય માટે તાત્કાલિક 1930 ડાયલ કરો.',
+    disclaimer: 'સૂચના: ડિજીલોકર ચકાસણી, AI વૉઇસ ટ્રાયાજ અને ફરિયાદ ડ્રાફ્ટિંગ સક્રિય સુવિધાઓ છે; પોલીસ રૂટિંગ અને બેંક ફ્રીઝ સિમ્યુલેટેડ વર્કફ્લો છે. સત્તાવાર પોર્ટલ cybercrime.gov.in છે. કટોકટીમાં 1930 ડાયલ કરો.',
   },
   ur: {
     ctaHeadline: 'گولڈن آور میں ہر منٹ قیمتی ہے۔',
@@ -167,10 +167,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'سائبر ہیلپ لائن: 1930',
     police100: 'پولیس: 100',
     aboutTitle: 'تعارف',
-    hackathonTag: 'Build What Moves India ہیکاتھن کے لیے تیار کیا گیا',
+    portalTag: 'شہری سائبر کرائم ٹرائیژ اقدام',
     digilockerVerified: 'ڈیجی لاکر سے تصدیق شدہ شناخت',
     poweredBy: 'GPT-4o کے ذریعے چلنے والا',
-    disclaimer: 'دستبرداری: یہ پلیٹ فارم Build What Moves India ہیکاتھن کے لیے تیار کیا گیا ایک AI سمیولیشن اور پروٹوٹائپ ہے۔ یہ کوئی سرکاری ویب سائٹ نہیں ہے (سرکاری پورٹل cybercrime.gov.in ہے)۔ حقیقی ہنگامی مدد کے لیے فوری طور پر 1930 ڈائل کریں۔',
+    disclaimer: 'نوٹس: ڈیجی لاکر تصدیق، AI وائس ٹرائیژ اور شکایت ڈرافٹنگ فعال فیچرز ہیں؛ پولیس ڈسپیچ اور بینک فریزنگ سمیولیٹڈ ورک فلو ہیں۔ سرکاری پورٹل cybercrime.gov.in ہے۔ ہنگامی صورت میں 1930 ڈائل کریں۔',
   },
   kn: {
     ctaHeadline: 'ಗೋಲ್ಡನ್ ಅವರ್‌ನಲ್ಲಿ ಪ್ರತಿ ನಿಮಿಷವೂ ಅತ್ಯಂತ ಅಮೂಲ್ಯ.',
@@ -185,10 +185,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'ಸೈಬರ್ ಸಹಾಯವಾಣಿ: 1930',
     police100: 'ಪೊಲೀಸ್: 100',
     aboutTitle: 'ಬಗ್ಗೆ',
-    hackathonTag: 'Build What Moves India ಹ್ಯಾಕಥಾನ್‌ಗಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ',
+    portalTag: 'ನಾಗರಿಕ ಸೈಬರ್ ಕ್ರೈಮ್ ಟ್ರಯಾಜ್ ಉಪಕ್ರಮ',
     digilockerVerified: 'DigiLocker ಪರಿಶೀಲಿಸಿದ ಗುರುತು',
     poweredBy: 'GPT-4o ಮೂಲಕ ಚಾಲಿತ',
-    disclaimer: 'ಹಕ್ಕು ನಿರಾಕರಣೆ: ಈ ವೇದಿಕೆಯು Build What Moves India ಹ್ಯಾಕಥಾನ್‌ಗಾಗಿ ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾದ AI ಸಿಮ್ಯುಲೇಶನ್ ಮತ್ತು ಮೂಲಮಾದರಿಯಾಗಿದೆ. ಇದು ಅಧಿಕೃತ ಸರ್ಕಾರಿ ವೆಬ್‌ಸೈಟ್ ಅಲ್ಲ (ಅಧಿಕೃತ ಸರ್ಕಾರಿ ಪೋರ್ಟಲ್ cybercrime.gov.in). ನೈಜ ತುರ್ತು ಸೈಬರ್ ಕ್ರೈಮ್ ಸಹಾಯಕ್ಕಾಗಿ ತಕ್ಷಣ 1930 ಗೆ ಡಯಲ್ ಮಾಡಿ.',
+    disclaimer: 'ಸೂಚನೆ: ಡಿಜಿಲಾಕರ್ ಪರಿಶೀಲನೆ, AI ವಾಯ್ಸ್ ಟ್ರಯಾಜ್ ಮತ್ತು ದೂರು ಡ್ರಾಫ್ಟಿಂಗ್ ಸಕ್ರಿಯ ವೈಶಿಷ್ಟ್ಯಗಳಾಗಿವೆ; ಪೊಲೀಸ್ ರವಾನೆ ಮತ್ತು ಬ್ಯಾಂಕ್ ಖಾತೆ ನಿರ್ಬಂಧವು ಸಿಮ್ಯುಲೇಟೆಡ್ ವರ್ಕ್‌ಫ್ಲೋಗಳಾಗಿವೆ. ಅಧಿಕೃತ ಪೋರ್ಟಲ್ cybercrime.gov.in. ತುರ್ತು ಸಹಾಯಕ್ಕಾಗಿ 1930 ಗೆ ಕರೆ ಮಾಡಿ.',
   },
   or: {
     ctaHeadline: 'ଗୋଲ୍ଡେନ୍ ଆୱାର୍‌ରେ ପ୍ରତ୍ୟେକ ମିନିଟ୍ ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ।',
@@ -203,10 +203,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'ସାଇବର ହେଲ୍ପଲାଇନ: 1930',
     police100: 'ପୋଲିସ: 100',
     aboutTitle: 'ବିବରଣୀ',
-    hackathonTag: 'Build What Moves India ହ୍ୟାକାଥନ୍ ପାଇଁ ନିର୍ମିତ',
+    portalTag: 'ନାଗରିକ ସାଇବର ଅପରାଧ ଟ୍ରାଇଜ୍ ପଦକ୍ଷେପ',
     digilockerVerified: 'DigiLocker ପ୍ରମାଣିତ ପରିଚୟ',
     poweredBy: 'GPT-4o ଦ୍ୱାରା ପରିଚାଳିତ',
-    disclaimer: 'ଦାବିତ୍ୟାଗ: ଏହି ପ୍ଲାଟଫର୍ମଟି Build What Moves India ହ୍ୟାକାଥନ୍ ପାଇଁ ବିକଶିତ ଏକ AI ସିମ୍ୟୁଲେସନ୍ ଏବଂ ପ୍ରୋଟୋଟାଇପ୍। ଏହା କୌଣସି ସରକାରୀ ୱେବସାଇଟ୍ ନୁହେଁ (ସରକାରୀ ପୋର୍ଟାଲ୍ ହେଉଛି cybercrime.gov.in)। ପ୍ରକୃତ ଜରୁରୀ ସାହାଯ୍ୟ ପାଇଁ ତୁରନ୍ତ 1930 ରେ ଡାଏଲ୍ କରନ୍ତୁ।',
+    disclaimer: 'ସୂଚନା: ଡିଜିଲକର ଯାଞ୍ଚ, AI ଭଏସ୍ ଟ୍ରାଇଜ୍ ଏବଂ ଅଭିଯୋଗ ଡ୍ରାଫ୍ଟିଂ କାର୍ଯ୍ୟକ୍ଷମ ଫିଚର; ପୋଲିସ ପ୍ରେରଣ ଏବଂ ବ୍ୟାଙ୍କ ଫ୍ରିଜ୍ ସିମୁଲେଟେଡ୍ ଡେମୋ। ସରକାରୀ ପୋର୍ଟାଲ cybercrime.gov.in। ଜରୁରୀକାଳୀନ ପାଇଁ 1930 ଡାଏଲ୍ କରନ୍ତୁ।',
   },
   ml: {
     ctaHeadline: 'ഗോൾഡൻ അവറിൽ ഓരോ മിനിറ്റും നിർണായകമാണ്.',
@@ -221,10 +221,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'സൈബർ ഹെൽപ്പ്‌ലൈൻ: 1930',
     police100: 'പോലീസ്: 100',
     aboutTitle: 'കുറിച്ച്',
-    hackathonTag: 'Build What Moves India ഹാക്കത്തോണിനായി നിർമ്മിച്ചത്',
+    portalTag: 'പൗര സൈബർ കുറ്റകൃത്യ ട്രയേജ് സംരംഭം',
     digilockerVerified: 'ഡിജിലോക്കർ സ്ഥിരീകരിച്ച തിരിച്ചറിയൽ',
     poweredBy: 'GPT-4o നൽകുന്നത്',
-    disclaimer: 'നിരാകരണം: ഈ പ്ലാറ്റ്‌ഫോം Build What Moves India ഹാക്കത്തോണിനായി വികസിപ്പിച്ചെടുത്ത ഒരു AI സിമുലേഷനും പ്രോട്ടോടൈപ്പുമാണ്. ഇത് ഒരു ഔദ്യോഗിക സർക്കാർ വെബ്‌സൈറ്റല്ല (ഔദ്യോഗിക സർക്കാർ പോർട്ടൽ cybercrime.gov.in ആണ്). അടിയന്തിര സഹായത്തിനായി ഉടൻ 1930 ഡയൽ ചെയ്യുക.',
+    disclaimer: 'അറിയിപ്പ്: ഡിജിലോക്കർ പരിശോധന, AI വോയ്സ് ട്രയേജ്, പരാതി തയ്യാറാക്കൽ എന്നിവ ലൈവ് ഫീച്ചറുകളാണ്; പോലീസ് ഡെസ്പാച്ചും ബാങ്ക് ഫ്രീസ് ചെയ്യലും സിമുലേഷൻ വർക്ക്ഫ്ലോകളാണ്. ഔദ്യോഗിക പോർട്ടൽ cybercrime.gov.in. അടിയന്തര ഘട്ടത്തിൽ 1930 ഡയൽ ചെയ്യുക.',
   },
   pa: {
     ctaHeadline: 'ਗੋਲਡਨ ਆਵਰ ਵਿੱਚ ਹਰ ਮਿੰਟ ਕੀਮਤੀ ਹੈ।',
@@ -239,10 +239,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'ਸਾਈਬਰ ਹੈਲਪਲਾਈਨ: 1930',
     police100: 'ਪੁਲਿਸ: 100',
     aboutTitle: 'ਬਾਰੇ',
-    hackathonTag: 'Build What Moves India ਹੈਕਾਥੌਨ ਲਈ ਬਣਾਇਆ ਗਿਆ',
+    portalTag: 'ਨਾਗਰਿਕ ਸਾਈਬਰ ਕ੍ਰਾਈਮ ਟ੍ਰਾਇਜ ਪਹਿਲਕਦਮੀ',
     digilockerVerified: 'DigiLocker ਪ੍ਰਮਾਣਿਤ ਪਛਾਣ',
     poweredBy: 'GPT-4o ਦੁਆਰਾ ਸੰਚਾਲਿਤ',
-    disclaimer: 'ਬੇਦਾਅਵਾ: ਇਹ ਪਲੇਟਫਾਰਮ Build What Moves India ਹੈਕਾਥੌਨ ਲਈ ਵਿਕਸਤ ਕੀਤਾ ਗਿਆ ਇੱਕ AI ਸਿਮੂਲੇਸ਼ਨ ਅਤੇ ਪ੍ਰੋਟੋਟਾਈਪ ਹੈ। ਇਹ ਕੋਈ ਅਧਿਕਾਰਤ ਸਰਕਾਰੀ ਵੈੱਬਸਾਈਟ ਨਹੀਂ ਹੈ (ਅਧਿਕਾਰਤ ਸਰਕਾਰੀ ਪੋਰਟਲ cybercrime.gov.in ਹੈ)। ਅਸਲ ਐਮਰਜੈਂਸੀ ਸਹਾਇਤਾ ਲਈ ਤੁਰੰਤ 1930 ਡਾਇਲ ਕਰੋ।',
+    disclaimer: 'ਸੂਚਨਾ: ਡਿਜੀਲੌਕਰ ਤਸਦੀਕ, AI ਵੌਇਸ ਟ੍ਰਾਇਜ ਅਤੇ ਸ਼ਿਕਾਇਤ ਡਰਾਫਟਿੰਗ ਕਾਰਜਸ਼ੀਲ ਫੀਚਰ ਹਨ; ਪੁਲਿਸ ਭੇਜਣਾ ਅਤੇ ਬੈਂਕ ਫ੍ਰੀਜ਼ ਕਰਨਾ ਸਿਮੂਲੇਟਿਡ ਵਰਕਫਲੋ ਹਨ। ਅਧਿਕਾਰਤ ਪੋਰਟਲ cybercrime.gov.in ਹੈ। ਐਮਰਜੈਂਸੀ ਲਈ 1930 ਡਾਇਲ ਕਰੋ।',
   },
 }
 
@@ -321,7 +321,7 @@ export default function FooterSection({ language }: FooterSectionProps) {
                 {t.aboutTitle}
               </h4>
               <ul className="space-y-3 text-sm text-zinc-600">
-                <li>{t.hackathonTag}</li>
+                <li>{t.portalTag}</li>
                 <li>{t.digilockerVerified}</li>
                 <li>{t.poweredBy}</li>
               </ul>
@@ -330,7 +330,7 @@ export default function FooterSection({ language }: FooterSectionProps) {
 
           <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 dark:text-zinc-400">
             <p className="max-w-3xl leading-relaxed indic-body">
-              🏆 <strong>Build What Moves India Hackathon Project</strong> • ⚠️ <em>{t.disclaimer}</em>
+              🏛️ <strong>Citizen Portal Simulation Environment</strong> • ⚠️ <em>{t.disclaimer}</em>
             </p>
             <p className="whitespace-nowrap font-medium text-zinc-400">
               Made with ❤️ for India

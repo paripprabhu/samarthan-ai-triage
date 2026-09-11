@@ -5,8 +5,8 @@ import { ThemeProvider } from '@/context/ThemeContext'
 import SmoothScroll from '@/components/SmoothScroll'
 
 export const metadata: Metadata = {
-  title: 'Samarthan - Build What Moves India Hackathon',
-  description: 'AI-powered cybercrime triage platform',
+  title: 'समर्थन Samarthan - Citizen Cybercrime Triage & Reporting Portal',
+  description: 'AI-first citizen cybercrime triage and reporting platform for India. Voice-driven, DigiLocker verified, 60-second NCRP-1930 filing.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

@@ -5,7 +5,7 @@
 > screenshot, on the web **or over WhatsApp** — and in under a minute you get a filed complaint
 > that cites the right law, classifies urgency, and tells you exactly who to call to freeze the money.
 
-Built for **Build What Moves India** — an **Aevy TV × OpenAI** hackathon.
+**AI-Powered Citizen Cybercrime Triage & Incident Reporting Platform.**
 
 ---
 

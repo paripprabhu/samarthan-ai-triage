@@ -117,8 +117,8 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
       <div className="mt-10 border-t-2 border-black pt-3">
         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-700">
           {hi
-            ? '⚠ सिंथेटिक डेमो डेटा • हैकाथॉन प्रोटोटाइप। यह वास्तविक सरकारी दस्तावेज़ नहीं है।'
-            : '⚠ Synthetic Demo Data • Hackathon Prototype. This is not an official government filing.'}
+            ? '⚠ सिंथेटिक डेमो डेटा • सिमुलेटेड पोर्टल इनटेक। यह वास्तविक सरकारी फाइलिंग नहीं है।'
+            : '⚠ Synthetic Demo Data • Simulated Portal Intake. This is not an official government filing.'}
         </p>
         <p className="text-[10px] text-gray-500 mt-1">
           {hi

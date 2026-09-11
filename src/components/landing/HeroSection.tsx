@@ -162,8 +162,8 @@ export default function HeroSection({ language }: HeroSectionProps) {
               {/* Explicit simulation disclaimer notice */}
               <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
                 {hi
-                  ? '⚠️ यह Build What Moves India हैकथॉन के लिए बनाया गया एक सिमुलेशन प्रोटोटाइप है, कोई आधिकारिक सरकारी वेबसाइट नहीं है (आधिकारिक राष्ट्रीय पोर्टल: cybercrime.gov.in)।'
-                  : '⚠️ This is a hackathon simulation and prototype created for the Build What Moves India Hackathon. It is NOT an official government website (official portal: cybercrime.gov.in).'}
+                  ? '⚠️ सिमुलेशन सूचना: AI ट्रायज, वॉइस ट्रांसक्रिप्शन व FIR ड्राफ्टिंग सक्रिय फीचर्स हैं; बैंक फ्रीज व पुलिस रूटिंग डेमो वर्कफ़्लो हैं। आधिकारिक राष्ट्रीय पोर्टल: cybercrime.gov.in।'
+                  : '⚠️ Simulation Notice: AI triage, voice transcription & FIR drafting are functional features; bank freezing & police dispatch are simulated demonstration workflows. Official National Portal: cybercrime.gov.in.'}
               </p>
             </div>
           </div>

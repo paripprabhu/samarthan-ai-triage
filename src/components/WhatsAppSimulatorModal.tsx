@@ -875,7 +875,7 @@ export default function WhatsAppSimulatorModal({
                   GPT-4o API
                 </span>
                 <span className="bg-amber-400/20 text-amber-200 border border-amber-300/30 text-[10px] px-1.5 py-0.5 rounded-full">
-                  Build What Moves India Demo
+                  Interactive Simulator
                 </span>
               </div>
               <p className="text-xs text-emerald-200 dark:text-emerald-300/80">
@@ -883,7 +883,7 @@ export default function WhatsAppSimulatorModal({
                   ? '⚡ GPT-4o is triaging & drafting legal sections...'
                   : activeIncidentId
                   ? `Active Case: ${activeIncidentId} • Auto-Sync Active`
-                  : 'Build What Moves India Hackathon Simulation • Not an Official Govt Website'}
+                  : 'Citizen Portal Simulation • Live GPT-4o & Neon DB • Not an Official Govt Website'}
               </p>
             </div>
           </div>
