@@ -435,14 +435,110 @@ export function formatStatusReport(
   const bank = complaint.bank_name || 'NCRP 1930 Triage'
 
   const updatesList = Array.isArray(complaint.updates) ? complaint.updates : []
+  const history = Array.isArray(complaint.status_history) ? complaint.status_history : []
+  const rawStatus = complaint.status || 'SUBMITTED'
+
+  const bankNotified =
+    rawStatus === 'BANK_NOTIFIED' ||
+    history.some((h: any) => h.status === 'BANK_NOTIFIED') ||
+    updatesList.some((u: any) => /bank|freeze/i.test(u.note || ''))
+
+  const policeNotified =
+    rawStatus === 'FIR_FILED' ||
+    rawStatus === 'UNDER_INVESTIGATION' ||
+    rawStatus === 'RESOLVED' ||
+    history.some((h: any) => h.status === 'FIR_FILED' || h.status === 'UNDER_INVESTIGATION' || h.status === 'RESOLVED') ||
+    updatesList.some((u: any) => /police|fir|cyber crime|cyber cell|station/i.test(u.note || ''))
+
+  let displayEmoji = emoji
+  let displayStatus = curStatus
+
+  if (bankNotified && policeNotified) {
+    displayEmoji = '🚔'
+    displayStatus = 'Bank & Police Escalation Completed (FIR Dispatched)'
+  } else if (policeNotified) {
+    displayEmoji = '🚔'
+    displayStatus = 'Police Cyber Crime Station Notified (FIR Dispatched)'
+  } else if (bankNotified) {
+    displayEmoji = '🏦'
+    displayStatus = 'Bank Nodal Desk Notified (Freeze Pending)'
+  } else if (rawStatus === 'SUBMITTED') {
+    displayEmoji = '🟡'
+    displayStatus = 'Complaint Registered (Awaiting Escalation)'
+  }
+
+  let escalationBlockEn = ''
+  if (bankNotified && policeNotified) {
+    escalationBlockEn = `
+🔔 *SIMULATED CONTROLS & ESCALATION UPDATE:*
+• 🏦 *Bank Nodal Officer:* ✅ NOTIFIED (Freeze notice dispatched to secure beneficiary accounts)
+• 🚔 *Cyber Police Station:* ✅ NOTIFIED (Formal FIR complaint routed & assigned to Cyber Cell)
+
+📢 *OFFICIAL ACTION UPDATE:*
+We have officially notified both your bank nodal officer and the cyber police station to give you an update, freeze the beneficiary accounts, and accelerate your case recovery!`
+  } else if (bankNotified) {
+    escalationBlockEn = `
+🔔 *SIMULATED CONTROLS & ESCALATION UPDATE:*
+• 🏦 *Bank Nodal Officer:* ✅ NOTIFIED (Freeze notice dispatched to secure beneficiary accounts)
+• 🚔 *Cyber Police Station:* ⏳ Pending dispatch
+
+📢 *OFFICIAL ACTION UPDATE:*
+We made this change to give you an update — your bank nodal officer has been notified to freeze the fraudulent beneficiary account.`
+  } else if (policeNotified) {
+    escalationBlockEn = `
+🔔 *SIMULATED CONTROLS & ESCALATION UPDATE:*
+• 🏦 *Bank Nodal Officer:* ⏳ Pending dispatch
+• 🚔 *Cyber Police Station:* ✅ NOTIFIED (Formal FIR complaint routed & assigned to Cyber Cell)
+
+📢 *OFFICIAL ACTION UPDATE:*
+We made this change to give you an update — your case has been routed to the Cyber Police Station for formal FIR investigation.`
+  } else {
+    escalationBlockEn = `
+🔔 *ESCALATION DISPATCH STATUS:*
+• 🏦 *Bank Nodal Desk:* ⏳ Pending dispatch
+• 🚔 *Cyber Police Cell:* ⏳ Pending dispatch`
+  }
+
+  let escalationBlockHi = ''
+  if (bankNotified && policeNotified) {
+    escalationBlockHi = `
+🔔 *कार्रवाई और सिमुलेशन अपडेट:*
+• 🏦 *बैंक नोडल अधिकारी:* ✅ सूचित किया गया (खाता फ्रीज नोटिस भेजा गया)
+• 🚔 *साइबर पुलिस स्टेशन:* ✅ सूचित किया गया (प्राथमिकी/FIR साइबर सेल को प्रेषित)
+
+📢 *आधिकारिक स्थिति अपडेट:*
+हमने आपके मामले में त्वरित कार्रवाई करते हुए आपके बैंक नोडल अधिकारी और साइबर पुलिस स्टेशन दोनों को आधिकारिक रूप से सूचित कर दिया है।`
+  } else if (bankNotified) {
+    escalationBlockHi = `
+🔔 *कार्रवाई और सिमुलेशन अपडेट:*
+• 🏦 *बैंक नोडल अधिकारी:* ✅ सूचित किया गया (खाता फ्रीज नोटिस भेजा गया)
+• 🚔 *साइबर पुलिस स्टेशन:* ⏳ प्रेषण लंबित
+
+📢 *आधिकारिक स्थिति अपडेट:*
+हमने आपके बैंक नोडल अधिकारी को लाभार्थी खाते को तुरंत फ्रीज करने के लिए सूचित कर दिया है।`
+  } else if (policeNotified) {
+    escalationBlockHi = `
+🔔 *कार्रवाई और सिमुलेशन अपडेट:*
+• 🏦 *बैंक नोडल अधिकारी:* ⏳ प्रेषण लंबित
+• 🚔 *साइबर पुलिस स्टेशन:* ✅ सूचित किया गया (प्राथमिकी/FIR साइबर सेल को प्रेषित)
+
+📢 *आधिकारिक स्थिति अपडेट:*
+आपकी शिकायत साइबर पुलिस स्टेशन को औपचारिक एफआईआर जांच हेतु भेज दी गई है।`
+  } else {
+    escalationBlockHi = `
+🔔 *कार्रवाई स्थिति:*
+• 🏦 *बैंक नोडल डेस्क:* ⏳ प्रेषण लंबित
+• 🚔 *साइबर पुलिस सेल:* ⏳ प्रेषण लंबित`
+  }
+
   let formattedUpdatesEn = ''
   let formattedUpdatesHi = ''
   if (updatesList.length > 0) {
-    formattedUpdatesEn = updatesList.slice(-3).map((u: any) => {
+    formattedUpdatesEn = updatesList.slice(-4).map((u: any) => {
       const time = u.timestamp ? new Date(u.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : ''
       return `• ${time ? `[${time}] ` : ''}${u.note}`
     }).join('\n')
-    formattedUpdatesHi = updatesList.slice(-3).map((u: any) => {
+    formattedUpdatesHi = updatesList.slice(-4).map((u: any) => {
       const time = u.timestamp ? new Date(u.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : ''
       return `• ${time ? `[${time}] ` : ''}${u.note}`
     }).join('\n')
@@ -456,12 +552,13 @@ export function formatStatusReport(
       return `📊 *शिकायत स्थिति रिपोर्ट (CASE STATUS)*
 ━━━━━━━━━━━━━━━━━━━━
 📌 *घटना आईडी:* ${id}
-${emoji} *वर्तमान स्थिति:* *${curStatus}*
+${displayEmoji} *वर्तमान स्थिति:* *${displayStatus}*
 🏷️ *श्रेणी:* ${complaint.fraud_type || 'वित्तीय धोखाधड़ी'}
 💰 *धोखाधड़ी राशि:* ${amountStr}
 👤 *आरोपी विवरण:* ${fraudster}
 🏦 *बैंक / नोडल:* ${bank}
 🕒 *दर्ज तिथि:* ${dateStr}
+${escalationBlockHi}
 
 📝 *दर्ज टाइमलाइन अपडेट:*
 ${formattedUpdatesHi}
@@ -669,12 +766,13 @@ ${trackingLink}
       return `📊 *CASE STATUS REPORT*
 ━━━━━━━━━━━━━━━━━━━━
 📌 *Incident ID:* ${id}
-${emoji} *Current Status:* *${curStatus}*
+${displayEmoji} *Current Status:* *${displayStatus}*
 🏷️ *Category:* ${complaint.fraud_type || 'Financial Fraud'}
 💰 *Disputed Amount:* ${amountStr}
 👤 *Fraudster Ref:* ${fraudster}
 🏦 *Bank / Nodal Desk:* ${bank}
 🕒 *Filed At:* ${dateStr}
+${escalationBlockEn}
 
 📝 *Timeline Updates on Record:*
 ${formattedUpdatesEn}

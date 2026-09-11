@@ -333,18 +333,39 @@ function DashboardContent() {
     if (!triageResult) return
     const next = await setStatusAtLeast(triageResult.incidentId, 'BANK_NOTIFIED')
     if (next) setStatus(next)
+    const newUpdates = await addUpdate(
+      triageResult.incidentId,
+      'Bank Nodal Officer Notified: Beneficiary account freeze request dispatched to banking nodal desk.',
+      ['Freeze requested for beneficiary account', 'Bank nodal cyber desk tracking initiated'],
+      ['लाभार्थी खाते को फ्रीज करने का अनुरोध भेजा गया', 'बैंक नोडल साइबर डेस्क ट्रैकिंग शुरू की गई']
+    )
+    if (newUpdates) setUpdates(newUpdates)
   }
 
   const handlePlatformReported = async () => {
     if (!triageResult) return
     const next = await setStatusAtLeast(triageResult.incidentId, 'PLATFORM_REPORTED')
     if (next) setStatus(next)
+    const newUpdates = await addUpdate(
+      triageResult.incidentId,
+      'Platform / Agency Desk Notified: Takedown and preservation request submitted to Trust & Safety.',
+      ['Platform Trust & Safety alerted', 'Fraudulent profile takedown requested'],
+      ['प्लेटफ़ॉर्म ट्रस्ट एंड सेफ्टी को सूचित किया गया', 'फर्जी प्रोफाइल हटाने का अनुरोध किया गया']
+    )
+    if (newUpdates) setUpdates(newUpdates)
   }
 
   const handlePoliceRouted = async () => {
     if (!triageResult) return
     const next = await setStatusAtLeast(triageResult.incidentId, 'FIR_FILED')
     if (next) setStatus(next)
+    const newUpdates = await addUpdate(
+      triageResult.incidentId,
+      'Cyber Police Station Notified: Case dossier and formal FIR complaint routed to local Cyber Crime Cell.',
+      ['Police Station jurisdiction assigned', 'Formal FIR registration initiated'],
+      ['साइबर पुलिस स्टेशन अधिकार क्षेत्र सौंपा गया', 'औपचारिक प्राथमिकी (FIR) पंजीकरण शुरू किया गया']
+    )
+    if (newUpdates) setUpdates(newUpdates)
   }
 
   if (loadingRecord || (!triageResult && paramId)) {

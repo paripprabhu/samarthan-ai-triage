@@ -638,6 +638,10 @@ export async function handleStatusQuery(
   const statusEmojis: Record<string, string> = {
     DRAFT: '📝',
     SUBMITTED: '🟡',
+    BANK_NOTIFIED: '🏦',
+    PLATFORM_REPORTED: '📱',
+    FIR_FILED: '🚔',
+    UNDER_INVESTIGATION: '🔍',
     ASSIGNED: '🔵',
     UNDER_REVIEW: '🟣',
     ACTION_TAKEN: '🟠',
