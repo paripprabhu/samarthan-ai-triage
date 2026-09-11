@@ -704,10 +704,9 @@ export function formatComplaintFiledReply(
   const hasAmount = triageResult.amount > 0
   const formattedAmt = hasAmount ? `₹${triageResult.amount.toLocaleString('en-IN')}` : null
 
+  // Voice notes are always translated to English on WhatsApp, so always show English header
   const voiceHeader = voiceTranscript
-    ? (lang === 'en'
-        ? `🎙️ *Voice Note Heard & Transcribed:*\n"${voiceTranscript}"\n\n`
-        : `🎙️ *Voice Note Heard / आवाज सुनी गई:*\n"${voiceTranscript}"\n\n`)
+    ? `🎙️ *Voice Note Heard & Transcribed:*\n"${voiceTranscript}"\n\n`
     : ''
 
   switch (lang) {

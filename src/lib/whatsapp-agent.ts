@@ -201,7 +201,9 @@ export function detectLanguage(text: string): SupportedLanguage {
   if (/\b(?:da misuse|ton|kadheya|mang leya|de naa te|ban ke|laaye|pind|gall|ch paise|chite|kiti|punjabi)\b/i.test(trimmed)) return 'pa'
   if (/\b(?:majhe naav|mazhe naav|majhe|mazhe|ahe|aahe|kela|pathvun|maagat|ahet|sathi|chori|jhale|gela|gele|fusavli|takraar|karnyachya|marathi)\b/i.test(trimmed)) return 'mr'
   if (/^(?:ur|urdu|اردو)$/i.test(trimmed.trim())) return 'ur'
-  if (/\b(?:mera|meri|mere|naam|name|kiya|diya|liya|huye|hua|hai|hain|tha|thi|paise|paisa|rupaye|rupay|karo|karein|karna|bhai|sahab|dhokha|thagi|maine|apne|karwaya|shukriya|janab|kya|kyun|kaise|batao|bataiye|de do|kardo|gaya|gayi|gaye|fraud|shikayat|madad|chahiye|nahi|nhi|bolo|boliye|bataye)\b/i.test(trimmed)) return 'hi'
+  // Only trigger Hindi detection on words that are distinctly Hindi/Hindustani and would
+  // NOT appear in a purely English sentence (exclude: name, my, fraud, account, bank, etc.)
+  if (/\b(?:mera|meri|mere|mujhe|humne|humara|humari|kiya|diya|liya|huye|hua|hai|hain|tha|thi|paise|paisa|rupaye|rupay|karo|karein|karna|bhai|sahab|dhokha|thagi|maine|apne|karwaya|shukriya|janab|kyun|kaise|batao|bataiye|de do|kardo|gaya|gayi|gaye|shikayat|madad|chahiye|nahi|nhi|bolo|boliye|bataye)\b/i.test(trimmed)) return 'hi'
 
   return 'en'
 }
@@ -955,7 +957,8 @@ export async function processWhatsAppTurn(
       session.history.push({ role: 'assistant', content: askMsg, timestamp })
       return { reply: askMsg }
     }
-    session.language = detectLanguage(newText || voiceTranscript || '')
+    // WhatsApp is strictly English — only detect language for the simulator
+    session.language = (session as any).isSimulator ? detectLanguage(newText || voiceTranscript || '') : 'en'
     session.stage = 'AWAITING_INCIDENT'
     const narrative = [session.accumulatedText, newText].filter(Boolean).join(' ').trim()
     session.accumulatedText = narrative
@@ -970,7 +973,8 @@ export async function processWhatsAppTurn(
     console.log(`\n⚡ [WhatsApp Agent] DIRECT INCIDENT PROMPT DETECTED from +${session.phoneNumber}!`)
     console.log(`[WhatsApp Agent] Skipping intermediate menus and filing complaint directly...`)
 
-    session.language = detectLanguage(fullIncidentText)
+    // WhatsApp is strictly English — only detect language for the simulator
+    session.language = (session as any).isSimulator ? detectLanguage(fullIncidentText) : 'en'
     session.stage = 'AWAITING_INCIDENT'
     session.accumulatedText = fullIncidentText
     session.pendingUpdateText = undefined
@@ -991,7 +995,8 @@ export async function processWhatsAppTurn(
       return sendLanguageGreeting()
     }
 
-    session.language = detectLanguage(voiceTranscript || trimmed)
+    // WhatsApp is strictly English — only detect language for the simulator
+    session.language = (session as any).isSimulator ? detectLanguage(voiceTranscript || trimmed) : 'en'
     session.stage = 'AWAITING_INCIDENT'
   }
 
