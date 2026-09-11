@@ -311,7 +311,9 @@ export async function POST(req: NextRequest) {
           const audioName = audioFile.name || 'recording.webm'
           const fileObj = new File([audioBuffer], audioName, { type: audioFile.type || 'audio/webm' })
 
-          const VALID_WHISPER_LANGS = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
+          // OpenAI Whisper API only supports these Indic ISO-639-1 language codes.
+          // Passing 'ml', 'te', 'bn', etc. throws 400 error. Leaving undefined allows Whisper to auto-detect.
+          const VALID_WHISPER_LANGS = ['en', 'hi', 'mr', 'ta', 'kn', 'ur']
           const whisperLang = targetLanguage && VALID_WHISPER_LANGS.includes(targetLanguage) && targetLanguage !== 'en'
             ? targetLanguage
             : undefined

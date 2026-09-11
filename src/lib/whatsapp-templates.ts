@@ -716,6 +716,8 @@ export function formatComplaintFiledReply(
   const isRegional = lang !== 'en' && lang !== 'hi'
   const summaryText = (isRegional ? triageResult.summaryRegional : null) || (isHi ? triageResult.summaryHi : null) || triageResult.summary
   const utrRef = extractedUtr || 'Pending'
+  const hasAmount = triageResult.amount > 0
+  const formattedAmt = hasAmount ? `₹${triageResult.amount.toLocaleString('en-IN')}` : null
 
   const voiceHeader = voiceTranscript
     ? (lang === 'en'
@@ -728,7 +730,7 @@ export function formatComplaintFiledReply(
       return `${voiceHeader}🚨 *नई शिकायत सफलतापूर्वक दर्ज की गई!*
 📌 *घटना आईडी:* ${triageResult.incidentId}
 ⚖️ *लागू कानून:* ${lawsList}
-💰 *राशि:* ₹${triageResult.amount.toLocaleString('en-IN')}
+💰 *राशि:* ${formattedAmt || 'दर्ज नहीं (अपडेट के लिए राशि लिखकर भेजें)'}
 👤 *आरोपी:* ${triageResult.fraudsterIdentifier}
 
 📋 *शिकायत का विवरण:*
@@ -899,7 +901,7 @@ ${trackingLink}
       return `${voiceHeader}🚨 *പുതിയ പരാതി വിജയകരമായി ഫയൽ ചെയ്തു!*
 📌 *ഇൻസിഡന്റ് ഐഡി:* ${triageResult.incidentId}
 ⚖️ *ബാധകമായ നിയമങ്ങൾ:* ${lawsList}
-💰 *തുക:* ₹${triageResult.amount.toLocaleString('en-IN')}
+💰 *തുക:* ${formattedAmt || 'രേഖപ്പെടുത്തിയിട്ടില്ല (തുക ചേർക്കാൻ മറുപടി നൽകുക)'}
 👤 *പ്രതി:* ${triageResult.fraudsterIdentifier}
 
 📋 *പരാതിയുടെ സംഗ്രഹം:*
@@ -912,13 +914,13 @@ ${summaryText}
 📄 *തത്സമയ സ്റ്റാറ്റസും ഔദ്യോഗിക എഫ്.ഐ.ആർ ഡ്രാഫ്റ്റും കാണുക:*
 ${trackingLink}
 
-💡 *സൂചന:* ഈ പരാതിയിലേക്ക് കൂടുതൽ വിവരങ്ങൾ ചേർക്കാൻ എപ്പോൾ വേണമെങ്കിലും സന്ദേശമയക്കാം, പുതിയ പരാതിക്കായി *NEW* എന്ന് അയക്കുക.`
+💡 *സൂചന:* നഷ്ടപ്പെട്ട തുകയോ ബാങ്ക് വിവരങ്ങളോ നൽകാൻ നേരിട്ട് മെസ്സേജ് അയക്കുക (ഉദാ: ₹25,000 HDFC Bank). പുതിയ പരാതിക്കായി *NEW* എന്ന് അയക്കുക.`
 
     case 'pa':
       return `${voiceHeader}🚨 *ਨਵੀਂ ਸ਼ਿਕਾਇਤ ਸਫਲਤਾਪੂਰਵਕ ਦਰਜ ਕੀਤੀ ਗਈ ਹੈ!*
 📌 *ਘਟਨਾ ਆਈਡੀ:* ${triageResult.incidentId}
 ⚖️ *ਲਾਗੂ ਕਾਨੂੰਨ:* ${lawsList}
-💰 *ਰਕਮ:* ₹${triageResult.amount.toLocaleString('en-IN')}
+💰 *ਰਕਮ:* ${formattedAmt || 'ਦਰਜ ਨਹੀਂ (ਰਕਮ ਜੋੜਨ ਲਈ ਜਵਾਬ ਦਿਓ)'}
 👤 *ਦੋਸ਼ੀ:* ${triageResult.fraudsterIdentifier}
 
 📋 *ਸ਼ਿਕਾਇਤ ਦਾ ਸਾਰ:*
@@ -938,7 +940,7 @@ ${trackingLink}
       return `${voiceHeader}🚨 *NEW COMPLAINT FILED IN ITS ENTIRETY!*
 📌 *Incident ID:* ${triageResult.incidentId}
 ⚖️ *Applicable Laws:* ${lawsList}
-💰 *Amount:* ₹${triageResult.amount.toLocaleString('en-IN')}
+💰 *Amount:* ${formattedAmt || 'Not Specified (Reply with amount to update)'}
 👤 *Reported Against:* ${triageResult.fraudsterIdentifier}
 
 📋 *Official Summary:*
@@ -951,7 +953,7 @@ ${summaryText}
 📄 *Track Live & Download Formal Complaint:*
 ${trackingLink}
 
-💡 *Tip:* Send updates (like UTRs) anytime to add to this case, or reply *NEW* for another case.`
+💡 *Tip:* Send updates (like amount lost or bank UTR) anytime to update this case, or reply *NEW* for another case.`
   }
 }
 

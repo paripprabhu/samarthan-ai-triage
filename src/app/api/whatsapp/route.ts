@@ -223,7 +223,9 @@ async function transcribeAudioBase64(
   const file = await toFile(buffer, `voicenote.${ext}`, { type: cleanMime })
 
   const openai = new OpenAI({ apiKey })
-  const VALID_WHISPER_LANGS = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
+  // OpenAI Whisper API only supports these Indic ISO-639-1 language codes.
+  // Passing 'ml', 'te', 'bn', etc. throws 400 error. Leaving undefined allows Whisper to auto-detect.
+  const VALID_WHISPER_LANGS = ['en', 'hi', 'mr', 'ta', 'kn', 'ur']
   const whisperLang = language && VALID_WHISPER_LANGS.includes(language) && language !== 'en' ? language : undefined
   const INDIC_WHISPER_PROMPT =
     'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'

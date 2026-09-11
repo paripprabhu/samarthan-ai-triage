@@ -27,13 +27,16 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await audioFile.arrayBuffer())
     const fileObj = new File([buffer], audioFile.name || 'chunk.webm', { type: audioFile.type || 'audio/webm' })
 
-    const VALID_WHISPER_LANGS = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
-    const whisperLang = VALID_WHISPER_LANGS.includes(language.toLowerCase()) ? language.toLowerCase() : undefined
+    const VALID_WHISPER_LANGS = ['en', 'hi', 'mr', 'ta', 'kn', 'ur']
+    const whisperLang = VALID_WHISPER_LANGS.includes(language.toLowerCase()) && language.toLowerCase() !== 'en' ? language.toLowerCase() : undefined
+    const INDIC_WHISPER_PROMPT =
+      'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, മോസം), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
 
     const transcription = await openai.audio.transcriptions.create({
       file: fileObj,
       model: 'whisper-1',
       ...(whisperLang ? { language: whisperLang } : {}),
+      prompt: INDIC_WHISPER_PROMPT,
     })
 
     const text = typeof transcription === 'string' ? transcription : (transcription as any).text || ''

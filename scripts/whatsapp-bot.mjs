@@ -413,9 +413,11 @@ async function startWhatsAppBot() {
               try {
                 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
                 const file = await toFile(buffer, 'audio.ogg', { type: 'audio/ogg' })
-                const userLang = getUserLanguage(senderPhone)
-                const validLangs = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
-                const whisperLang = userLang && validLangs.includes(userLang) && userLang !== 'en' ? userLang : undefined
+                // OpenAI Whisper API natively only supports this specific subset of Indic ISO-639-1 language codes.
+                // Passing unsupported codes like 'ml', 'te', 'bn', 'gu', 'pa', 'or' throws HTTP 400 'Language not supported'.
+                // Leaving language undefined allows Whisper to auto-detect and transcribe them cleanly with INDIC_PROMPT.
+                const validWhisperLangs = ['en', 'hi', 'mr', 'ta', 'kn', 'ur']
+                const whisperLang = userLang && validWhisperLangs.includes(userLang) && userLang !== 'en' ? userLang : undefined
                 const INDIC_PROMPT =
                   'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
 
