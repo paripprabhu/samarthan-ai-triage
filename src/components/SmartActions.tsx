@@ -26,12 +26,21 @@ interface SmartActionsProps {
   onPoliceRouted?: () => void
 }
 
-const BANK_EMAIL_MAP: Record<string, string> = {
-  'HDFC': 'cyberfraud@hdfcbank.com',
-  'ICICI': 'antifraud@icicibank.com',
-  'SBI': 'report.phishing@sbi.co.in',
-  'Axis': 'nodal.officer@axisbank.com',
-  'Kotak': 'fraud.control@kotak.com',
+function resolveBankInfo(bankName?: string) {
+  const raw = String(bankName || '').trim()
+  const lower = raw.toLowerCase()
+  if (lower.includes('hdfc')) return { name: raw || 'HDFC Bank', email: 'cyberfraud@hdfcbank.com' }
+  if (lower.includes('icici')) return { name: raw || 'ICICI Bank', email: 'antifraud@icicibank.com' }
+  if (lower.includes('sbi') || lower.includes('state bank')) return { name: raw || 'State Bank of India', email: 'report.phishing@sbi.co.in' }
+  if (lower.includes('axis')) return { name: raw || 'Axis Bank', email: 'nodal.officer@axisbank.com' }
+  if (lower.includes('kotak')) return { name: raw || 'Kotak Mahindra Bank', email: 'fraud.control@kotak.com' }
+  if (lower.includes('pnb') || lower.includes('punjab national')) return { name: raw || 'Punjab National Bank', email: 'nodalofficer@pnb.co.in' }
+  if (lower.includes('baroda')) return { name: raw || 'Bank of Baroda', email: 'nodal@bankofbaroda.co.in' }
+  if (raw && raw !== 'Not Provided' && raw !== 'Bank Nodal Desk') {
+    const slug = raw.toLowerCase().replace(/[^a-z0-9]/g, '')
+    return { name: raw, email: `cyberfraud@${slug || 'bank'}.com` }
+  }
+  return { name: 'Bank', email: 'nodal.officer@rbi.org.in' }
 }
 
 export default function SmartActions({
@@ -44,52 +53,63 @@ export default function SmartActions({
   const loc = SMART_ACTIONS_I18N[lang] || SMART_ACTIONS_I18N.en
   const [locating, setLocating] = useState(false)
   const [policeStation, setPoliceStation] = useState<string | null>(null)
+  const [primarySimulating, setPrimarySimulating] = useState(false)
   const [primaryDone, setPrimaryDone] = useState(false)
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const [primaryConfirmedTarget, setPrimaryConfirmedTarget] = useState<string | null>(null)
+  const primaryTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const policeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
   React.useEffect(() => {
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      if (primaryTimeoutRef.current) clearTimeout(primaryTimeoutRef.current)
+      if (policeTimeoutRef.current) clearTimeout(policeTimeoutRef.current)
     }
   }, [])
 
   const ch = getEscalationChannel(recommendedChannel, recommendedChannelTarget)
+  const kind = ch.kind
+  const bankInfo = resolveBankInfo(bankName)
   const followUpText = followUpPoints.length > 0
     ? `\n\nAdditional updates since filing:\n${followUpPoints.map(p => `- ${p}`).join('\n')}`
     : ''
 
-  const handleBankEmail = () => {
-    const cleanBankName = Object.keys(BANK_EMAIL_MAP).find(k => String(bankName || '').toLowerCase().includes(k.toLowerCase())) || 'Unknown'
-    const nodalEmail = cleanBankName !== 'Unknown' ? BANK_EMAIL_MAP[cleanBankName] : 'nodal.officer@rbi.org.in'
-    const subject = encodeURIComponent(`URGENT: Fraud Reporting - Incident ${incidentId}`)
-    const utrLine = utrNumber ? `\nTransaction Reference (UTR): ${utrNumber}` : ''
-    const upiLine = upiId ? `\nBeneficiary UPI ID: ${upiId}` : ''
-    const body = encodeURIComponent(`Dear Nodal Officer,\n\nI am reporting a cyber fraud on my account.\nIncident ID: ${incidentId}\nAmount: Rs ${amount}${utrLine}${upiLine}\n\nPlease freeze the beneficiary account immediately.${followUpText}\n\nRegards,`)
-    window.open(`mailto:${nodalEmail}?subject=${subject}&body=${body}`, '_blank')
-    setPrimaryDone(true)
-    onBankNotified?.()
-  }
+  const handlePrimarySimulate = () => {
+    if (primarySimulating || primaryDone) return
+    setPrimarySimulating(true)
 
-  const handlePlatformOrAgencyReport = () => {
-    const target = recommendedChannelTarget || 'the platform'
-    const offender = fraudsterIdentifier && fraudsterIdentifier !== 'Not Identified' ? fraudsterIdentifier : 'the reported account'
-    const draft = [
-      `Report to: ${target}`,
-      `Incident ID: ${incidentId}`,
-      `Reported account / entity: ${offender}`,
-      summary ? `\nWhat happened:\n${summary}` : '',
-      followUpText,
-      `\nRequested action: Take down / block the account and preserve records for law enforcement (NCRP).`,
-    ].join('\n')
-    navigator.clipboard?.writeText(draft).catch(() => {})
-    if (ch.portalUrl) window.open(ch.portalUrl, '_blank', 'noopener,noreferrer')
-    setPrimaryDone(true)
-    onPlatformReported?.()
+    if (kind === 'bank') {
+      primaryTimeoutRef.current = setTimeout(() => {
+        setPrimaryConfirmedTarget(bankInfo.email)
+        setPrimarySimulating(false)
+        setPrimaryDone(true)
+        onBankNotified?.()
+      }, 2000)
+    } else {
+      const target = recommendedChannelTarget || (kind === 'platform' ? 'Platform Cyber Cell' : 'Agency Desk')
+      const offender = fraudsterIdentifier && fraudsterIdentifier !== 'Not Identified' ? fraudsterIdentifier : 'the reported account'
+      const draft = [
+        `Report to: ${target}`,
+        `Incident ID: ${incidentId}`,
+        `Reported account / entity: ${offender}`,
+        summary ? `\nWhat happened:\n${summary}` : '',
+        followUpText,
+        `\nRequested action: Take down / block the account and preserve records for law enforcement (NCRP).`,
+      ].join('\n')
+      navigator.clipboard?.writeText(draft).catch(() => {})
+
+      primaryTimeoutRef.current = setTimeout(() => {
+        setPrimaryConfirmedTarget(target)
+        setPrimarySimulating(false)
+        setPrimaryDone(true)
+        onPlatformReported?.()
+      }, 2000)
+    }
   }
 
   const handleRoutePolice = () => {
+    if (locating || policeStation) return
     setLocating(true)
-    timeoutRef.current = setTimeout(() => {
+    policeTimeoutRef.current = setTimeout(() => {
       const stations = ['Cyber Crime Station, Bandra', 'Cyber Cell, HSR Layout', 'Cyber Police, Connaught Place']
       setPoliceStation(stations[Math.floor(Math.random() * stations.length)])
       setLocating(false)
@@ -97,18 +117,67 @@ export default function SmartActions({
     }, 2000)
   }
 
-  const kind = ch.kind
-  const primaryIcon = primaryDone
-    ? <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
-    : kind === 'bank' ? <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-    : kind === 'platform' ? <Instagram className="w-5 h-5 text-pink-600 dark:text-pink-400" />
-    : kind === 'agency' ? <Landmark className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-    : <Phone className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+  const primaryIcon = primarySimulating ? (
+    <Loader2 className="w-5 h-5 text-blue-600 dark:text-blue-400 animate-spin" />
+  ) : primaryDone ? (
+    <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
+  ) : kind === 'bank' ? (
+    <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+  ) : kind === 'platform' ? (
+    <Instagram className="w-5 h-5 text-pink-600 dark:text-pink-400" />
+  ) : kind === 'agency' ? (
+    <Landmark className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+  ) : (
+    <Phone className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+  )
 
-  const primaryAction = kind === 'bank' ? handleBankEmail : handlePlatformOrAgencyReport
-  const primaryDoneText = kind === 'bank'
-    ? loc.bankActionDone
-    : (lang === 'hi' ? 'रिपोर्ट का मसौदा तैयार — क्लिपबोर्ड पर कॉपी (डेमो)' : 'Report drafted & copied to clipboard (demo)')
+  // 1) Idle description
+  let idleDesc = ''
+  if (kind === 'bank') {
+    idleDesc = lang === 'hi'
+      ? `${bankInfo.name} के नोडल अधिकारी को तत्काल फ्रीज नोटिस भेजें (डेमो)`
+      : (loc.bankActionDesc || `Simulates sending freeze notice to ${bankInfo.name} nodal desk`)
+  } else if (kind === 'platform') {
+    idleDesc = lang === 'hi'
+      ? `${recommendedChannelTarget || 'प्लेटफ़ॉर्म'} के लिए टेकडाउन रिपोर्ट भेजने का सिमुलेशन (डेमो)`
+      : `Simulates filing takedown report with ${recommendedChannelTarget || 'the platform'}`
+  } else {
+    idleDesc = lang === 'hi'
+      ? `${recommendedChannelTarget || 'एजेंसी'} को विवरण भेजने का सिमुलेशन (डेमो)`
+      : `Simulates escalating dossier to ${recommendedChannelTarget || 'the agency'}`
+  }
+
+  // 2) Simulating description
+  let simulatingDesc = ''
+  if (kind === 'bank') {
+    simulatingDesc = lang === 'hi'
+      ? `${bankInfo.name} नोडल साइबर डेस्क से संपर्क किया जा रहा है (डेमो)...`
+      : (loc.bankActionSimulating || `Connecting to ${bankInfo.name} nodal cyber desk (demo)...`)
+  } else if (kind === 'platform') {
+    simulatingDesc = lang === 'hi'
+      ? `${recommendedChannelTarget || 'प्लेटफ़ॉर्म'} को विवरण भेजा जा रहा है (डेमो)...`
+      : `Transmitting incident report to ${recommendedChannelTarget || 'the platform'} (demo)...`
+  } else {
+    simulatingDesc = lang === 'hi'
+      ? `${recommendedChannelTarget || 'एजेंसी'} को विवरण भेजा जा रहा है (डेमो)...`
+      : `Transmitting incident dossier to ${recommendedChannelTarget || 'the agency'} (demo)...`
+  }
+
+  // 3) Done description
+  let doneDesc = ''
+  if (kind === 'bank') {
+    doneDesc = lang === 'hi'
+      ? `${bankInfo.name} नोडल अधिकारी को सूचित किया गया • खाता फ्रीज दर्ज (डेमो)`
+      : `Notified ${primaryConfirmedTarget || bankInfo.email} • Freeze logged (demo)`
+  } else if (kind === 'platform') {
+    doneDesc = lang === 'hi'
+      ? `${primaryConfirmedTarget || 'प्लेटफ़ॉर्म'} को रिपोर्ट दर्ज की गई (डेमो)`
+      : `Report logged with ${primaryConfirmedTarget || 'platform'} Trust & Safety (demo)`
+  } else {
+    doneDesc = lang === 'hi'
+      ? `${primaryConfirmedTarget || 'एजेंसी'} को रिपोर्ट दर्ज की गई (डेमो)`
+      : `Dossier submitted to ${primaryConfirmedTarget || 'agency'} (demo)`
+  }
 
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 sm:p-6 shadow-sm">
@@ -118,17 +187,17 @@ export default function SmartActions({
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">{lang === 'hi' ? ch.descHi : ch.desc}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Primary channel-driven action */}
+        {/* Primary channel-driven action — Fully Simulated, Never takes user away */}
         <button
-          onClick={primaryDone ? undefined : primaryAction}
-          disabled={primaryDone}
+          onClick={primaryDone || primarySimulating ? undefined : handlePrimarySimulate}
+          disabled={primarySimulating || primaryDone}
           className={`flex flex-col items-start gap-3 p-4 rounded-lg border transition-all text-left ${
             primaryDone
               ? 'border-green-300 dark:border-green-800 bg-green-50 dark:bg-green-950/30'
               : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/40 dark:hover:bg-blue-950/20'
           }`}
         >
-          <div className={`w-10 h-10 rounded-md flex items-center justify-center ${
+          <div className={`w-10 h-10 rounded-md flex items-center justify-center transition-colors ${
             primaryDone
               ? 'bg-green-100 dark:bg-green-950/60'
               : kind === 'platform' ? 'bg-pink-100 dark:bg-pink-950/60'
@@ -144,21 +213,19 @@ export default function SmartActions({
                 {loc.simulatedBadge}
               </span>
             </h4>
-            {primaryDone ? (
-              <p className="text-xs text-green-700 dark:text-green-400 font-medium">{primaryDoneText}</p>
+            {primarySimulating ? (
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">{simulatingDesc}</p>
+            ) : primaryDone ? (
+              <p className="text-xs text-green-700 dark:text-green-400 font-medium">{doneDesc}</p>
             ) : (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {kind === 'bank'
-                  ? (lang === 'hi' ? `${bankName} के नोडल अधिकारी को ड्राफ्ट ईमेल खोलें (डेमो पता)` : `Opens a drafted email to a demo nodal-officer address for ${bankName}`)
-                  : (lang === 'hi' ? `${recommendedChannelTarget || 'प्लेटफ़ॉर्म'} के लिए रिपोर्ट का मसौदा तैयार करें` : `Drafts a takedown report for ${recommendedChannelTarget || 'the platform'}`)}
-              </p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">{idleDesc}</p>
             )}
           </div>
         </button>
 
         {/* Route to Police — Beautiful in both Light and Dark Mode */}
         <button
-          onClick={policeStation ? undefined : handleRoutePolice}
+          onClick={policeStation || locating ? undefined : handleRoutePolice}
           disabled={locating || !!policeStation}
           className={`flex flex-col items-start gap-3 p-4 rounded-lg border transition-all text-left ${
             policeStation
