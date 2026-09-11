@@ -12,6 +12,7 @@ interface AudioRecorderProps {
   onAudioReady: (blob: Blob) => void
   onLiveTranscript?: (text: string) => void
   theme?: 'light' | 'dark'
+  size?: 'default' | 'lg'
 }
 
 const MAX_SECONDS = 60
@@ -48,9 +49,10 @@ const AUDIO_READY_I18N: Record<SupportedLanguage, string> = {
   pa: '✓ ਰਿਕਾਰਡਿੰਗ ਤਿਆਰ ਹੈ',
 }
 
-export default function AudioRecorder({ language, onAudioReady, onLiveTranscript, theme = 'light' }: AudioRecorderProps) {
+export default function AudioRecorder({ language, onAudioReady, onLiveTranscript, theme = 'light', size = 'default' }: AudioRecorderProps) {
   const t = getTranslation(language)
   const isDark = theme === 'dark'
+  const isLg = size === 'lg'
 
   const [recording, setRecording] = useState(false)
   const [seconds, setSeconds] = useState(0)
@@ -276,13 +278,14 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
   }
 
   return (
-    <div className="space-y-3 h-full flex flex-col">
+    <div className={clsx("h-full flex flex-col", isLg ? "space-y-4" : "space-y-3")}>
       {/* Record button + live waveform */}
-      <div className="flex flex-col items-center gap-3 flex-1 justify-center">
+      <div className={clsx("flex flex-col items-center flex-1 justify-center", isLg ? "gap-4 py-3 sm:py-5" : "gap-3")}>
         <button
           onClick={recording ? stopRecording : startRecording}
           className={clsx(
-            'relative w-16 h-16 rounded-full flex items-center justify-center transition-transform duration-150 shadow-sm border',
+            'relative rounded-full flex items-center justify-center transition-transform duration-150 shadow-sm border',
+            isLg ? 'w-20 h-20' : 'w-16 h-16',
             'focus:outline-none focus:ring-2 focus:ring-offset-2',
             isDark ? 'focus:ring-offset-zinc-950 border-primary/50' : 'focus:ring-offset-white border-primary-active',
             recording
@@ -298,22 +301,25 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
             />
           )}
           {recording
-            ? <Square className="w-6 h-6 text-white fill-white relative" />
-            : <Mic className="w-6 h-6 relative text-white" />
+            ? <Square className={clsx("text-white fill-white relative", isLg ? "w-7 h-7" : "w-6 h-6")} />
+            : <Mic className={clsx("relative text-white", isLg ? "w-8 h-8" : "w-6 h-6")} />
           }
         </button>
 
         {/* Live waveform bars, height driven by mic amplitude */}
-        <div className="flex items-end justify-center gap-[3px] h-10 w-full max-w-[220px]">
+        <div className={clsx(
+          "flex items-end justify-center",
+          isLg ? "gap-1 h-12 w-full max-w-[260px]" : "gap-[3px] h-10 w-full max-w-[220px]"
+        )}>
           {levels.map((lvl, i) => (
             <div
               key={i}
               className={clsx(
-                'w-[3px] rounded-full',
+                isLg ? 'w-1 rounded-full' : 'w-[3px] rounded-full',
                 recording ? 'bg-primary' : (isDark ? 'bg-zinc-700' : 'bg-zinc-200')
               )}
               style={{
-                height: `${Math.max(3, lvl * 40)}px`,
+                height: `${Math.max(3, lvl * (isLg ? 48 : 40))}px`,
                 transition: recording ? 'height 60ms linear' : 'height 200ms ease-out',
               }}
             />
@@ -327,7 +333,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
           </div>
         )}
 
-        <p className={clsx("text-xs text-center", isDark ? "text-white/60" : "text-gray-500")}>
+        <p className={clsx("text-center", isLg ? "text-xs sm:text-sm font-medium" : "text-xs", isDark ? "text-white/60" : "text-zinc-500")}>
           {recording
             ? t.intake.stopRecording
             : t.intake.startRecording}
