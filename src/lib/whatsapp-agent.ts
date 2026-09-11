@@ -528,12 +528,16 @@ export async function handleStatusQuery(
   query: string,
   preloadedComplaint?: any
 ): Promise<{ reply: string; incidentId?: string }> {
-  // Multilingual query language alignment: if user typed Hindi, Tamil, Telugu, etc., switch immediately!
+  // Multilingual query language alignment: only for simulator; WhatsApp is strictly English
   const queryLang = detectLanguage(query)
   const hasEnglishWords = /\b(?:status|update|case|complaint|check|tell|give|incident|track|progress|report)\b/i.test(query)
-  if (queryLang && queryLang !== 'en') {
-    session.language = queryLang
-  } else if (hasEnglishWords && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(query))) {
+  if ((session as any).isSimulator) {
+    if (queryLang && queryLang !== 'en') {
+      session.language = queryLang
+    } else if (hasEnglishWords && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(query))) {
+      session.language = 'en'
+    }
+  } else {
     session.language = 'en'
   }
 
@@ -624,9 +628,11 @@ export async function handleStatusQuery(
   session.stage = 'FILED'
   session.forceNewComplaint = false
 
-  // Adopt complaint language if user sent bare number
-  if (complaint.language && complaint.language in LANGUAGE_MAP && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(query)) && !hasEnglishWords) {
+  // Adopt complaint language if user sent bare number — but WhatsApp is strictly English
+  if ((session as any).isSimulator && complaint.language && complaint.language in LANGUAGE_MAP && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(query)) && !hasEnglishWords) {
     session.language = complaint.language
+  } else if (!(session as any).isSimulator) {
+    session.language = 'en'
   }
 
   const statusEmojis: Record<string, string> = {
@@ -822,7 +828,10 @@ export async function processWhatsAppTurn(
         return await updateExistingComplaint(session, session.incidentId!, autoUpdateText)
       } else {
         session.pendingVisionEvidence = visionEvidence
-        session.language = detectLanguage(trimmed || visionEvidence.summary) === 'hi' ? 'hi' : 'en'
+        // WhatsApp is strictly English — only detect language for the simulator
+        session.language = (session as any).isSimulator
+          ? (detectLanguage(trimmed || visionEvidence.summary) === 'hi' ? 'hi' : 'en')
+          : 'en'
         const combinedText = [
           `Disputed transaction of ₹${visionEvidence.amount || 25000}`,
           visionEvidence.utr ? `UTR: ${visionEvidence.utr}` : '',
@@ -1103,9 +1112,14 @@ async function updateExistingComplaint(
 ): Promise<{ reply: string; incidentId: string }> {
   const detectedNoteLang = detectLanguage(noteText)
   const hasEnglishWords = /\b(?:status|update|case|complaint|check|tell|give|incident|track|progress|report|account|bank|police|froze|frozen|money|amount|loss|cheated|stolen|scam)\b/i.test(noteText)
-  if (detectedNoteLang && detectedNoteLang !== 'en') {
-    session.language = detectedNoteLang
-  } else if (hasEnglishWords && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(noteText))) {
+  // WhatsApp is strictly English — only detect language for the simulator
+  if ((session as any).isSimulator) {
+    if (detectedNoteLang && detectedNoteLang !== 'en') {
+      session.language = detectedNoteLang
+    } else if (hasEnglishWords && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(noteText))) {
+      session.language = 'en'
+    }
+  } else {
     session.language = 'en'
   }
   const isHi = session.language === 'hi'
