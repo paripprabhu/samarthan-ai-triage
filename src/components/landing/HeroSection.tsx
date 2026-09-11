@@ -100,72 +100,72 @@ export default function HeroSection({ language }: HeroSectionProps) {
   return (
     <section className="relative w-full pt-4 pb-8 sm:pt-6 sm:pb-12 md:pt-8 md:pb-14 overflow-hidden isolate">
       <RadialBackground />
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Eyebrow Pill */}
-        <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-4 sm:mb-5 backdrop-blur-sm">
-          <span className="flex h-2 w-2 relative">
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-          </span>
-          <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 tracking-tight">
-            {trans.hero.badge}
-          </span>
-        </div>
+      <div className="relative z-10 max-w-[1020px] mx-auto px-4 sm:px-6">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 items-center justify-center">
+          {/* Left: copy (matching thickness with rapid intake card) */}
+          <div className="w-full max-w-[480px] mx-auto lg:mx-0">
+            {/* Eyebrow Pill */}
+            <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-4 backdrop-blur-sm">
+              <span className="flex h-2 w-2 relative">
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 tracking-tight">
+                {trans.hero.badge}
+              </span>
+            </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
-          {/* Left: copy */}
-          <div>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-white leading-[1.22] indic-headline">
-              <span className="block py-1">{trans.hero.headline1}</span>
-              <span className="block text-primary mt-1 py-1">{trans.hero.headline2}</span>
+            <h1 className="text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] font-extrabold tracking-tight text-zinc-950 dark:text-white leading-[1.14] indic-headline">
+              <span className="block py-0.5">{trans.hero.headline1}</span>
+              <span className="block text-primary mt-1 py-0.5">{trans.hero.headline2}</span>
             </h1>
 
-          <p className="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg text-zinc-600 dark:text-zinc-300 max-w-lg leading-relaxed">
-            {trans.hero.subtitle}
-          </p>
+            <p className="mt-3.5 sm:mt-4 text-sm sm:text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
+              {trans.hero.subtitle}
+            </p>
 
-          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <button
-              onClick={goToIntake}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white rounded-lg px-6 sm:px-7 py-3.5 text-sm font-semibold transition-colors shadow-sm min-h-[44px]"
-            >
-              <span>{cleanCtaReport}</span>
-              <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-            </button>
-            <a
-              href="#how-it-works"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-200 rounded-lg px-6 py-3.5 text-sm font-medium transition-colors shadow-2xs min-h-[44px]"
-            >
-              <span>{cleanCtaLearnMore}</span>
-              <ArrowDown className="w-4 h-4 text-zinc-400" />
-            </a>
+            <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+              <button
+                onClick={goToIntake}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white rounded-lg px-5 sm:px-6 py-3 text-sm font-semibold transition-colors shadow-sm min-h-[42px]"
+              >
+                <span>{cleanCtaReport}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </button>
+              <a
+                href="#how-it-works"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-200 rounded-lg px-5 sm:px-6 py-3 text-sm font-medium transition-colors shadow-2xs min-h-[42px]"
+              >
+                <span>{cleanCtaLearnMore}</span>
+                <ArrowDown className="w-4 h-4 text-zinc-400" />
+              </a>
+            </div>
+
+            {/* Micro trust indicators */}
+            <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-zinc-200/70 dark:border-zinc-800/80 flex flex-wrap items-center gap-y-1.5 gap-x-3.5 sm:gap-x-4 text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                {hi ? 'डिजीलॉकर प्रमाणित पहचान' : 'DigiLocker Verified'}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                {hi ? 'IT एक्ट व BNS वैधानिक मैपिंग' : 'IT Act & BNS Statutory Routing'}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                {hi ? '1930 NCRP गोल्डन ऑवर मानक' : '1930 NCRP Golden Hour Protocol'}
+              </span>
+            </div>
+
+            {/* Explicit simulation disclaimer notice */}
+            <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
+              {hi
+                ? '⚠️ यह Build What Moves India हैकथॉन के लिए बनाया गया एक सिमुलेशन प्रोटोटाइप है, कोई आधिकारिक सरकारी वेबसाइट नहीं है (आधिकारिक राष्ट्रीय पोर्टल: cybercrime.gov.in)।'
+                : '⚠️ This is a hackathon simulation and prototype created for the Build What Moves India Hackathon. It is NOT an official government website (official portal: cybercrime.gov.in).'}
+            </p>
           </div>
 
-          {/* Micro trust indicators */}
-          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-zinc-200/70 dark:border-zinc-800/80 flex flex-wrap items-center gap-y-2 gap-x-4 sm:gap-x-5 text-xs text-zinc-500 dark:text-zinc-400 font-medium">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              {hi ? 'डिजीलॉकर प्रमाणित पहचान' : 'DigiLocker Verified'}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              {hi ? 'IT एक्ट व BNS वैधानिक मैपिंग' : 'IT Act & BNS Statutory Routing'}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              {hi ? '1930 NCRP गोल्डन ऑवर मानक' : '1930 NCRP Golden Hour Protocol'}
-            </span>
-          </div>
-
-          {/* Explicit simulation disclaimer notice */}
-          <p className="mt-3.5 text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
-            {hi
-              ? '⚠️ यह Build What Moves India हैकथॉन के लिए बनाया गया एक सिमुलेशन प्रोटोटाइप है, कोई आधिकारिक सरकारी वेबसाइट नहीं है (आधिकारिक राष्ट्रीय पोर्टल: cybercrime.gov.in)।'
-              : '⚠️ This is a hackathon simulation and prototype created for the Build What Moves India Hackathon. It is NOT an official government website (official portal: cybercrime.gov.in).'}
-          </p>
-        </div>
-
-        {/* Right: Studio Window Terminal */}
-        <div className="relative">
+          {/* Right: Studio Window Terminal (matching thickness with left copy) */}
+          <div className="relative w-full max-w-[480px] mx-auto lg:mx-0">
           {/* Outer window frame container */}
           <div className="rounded-[18px] border border-zinc-200/90 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden">
             {/* Terminal Window Top Bar */}
