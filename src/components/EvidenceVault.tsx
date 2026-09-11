@@ -45,7 +45,7 @@ export default function EvidenceVault({ hi, language, images, onAdd, onRemove }:
             <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
             {loc.header}
           </h3>
-          <span className="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/50 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+          <span className="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/50 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
             {loc.badge}
           </span>
         </div>

@@ -390,6 +390,8 @@ async function startWhatsAppBot() {
                 const transcription = await openai.audio.transcriptions.create({
                   file,
                   model: 'whisper-1',
+                  language: 'hi',
+                  prompt: 'साइबर अपराध, बैंक धोखाधड़ी, UPI ID, UTR नंबर, पैसे कटे, खाता संख्या',
                 })
                 if (transcription?.text) {
                   voiceTranscript = transcription.text.trim()

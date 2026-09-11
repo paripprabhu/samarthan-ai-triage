@@ -17,7 +17,7 @@ export const StatsBento = () => {
             </h3>
           </div>
           <p className="text-white/80 text-sm max-w-sm mt-6 leading-relaxed">
-            From panic to formal cybercrime report in under a minute - aligned with the national 1930 Golden Hour response protocol.
+            From panic to formal cybercrime report in under a minute, aligned with the national 1930 Golden Hour response protocol.
           </p>
         </div>
 

@@ -72,7 +72,7 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
         <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">
           {hi ? 'पावती संख्या' : 'Acknowledgement Number'}
         </p>
-        <p className="text-2xl font-bold font-mono tracking-wider">{formatAckNumber(result.incidentId)}</p>
+        <p className="text-2xl font-bold font-sans tracking-wider">{formatAckNumber(result.incidentId)}</p>
       </div>
 
       <table className="w-full text-xs border-collapse mb-6">
@@ -98,7 +98,7 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
         <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2 border-b border-gray-300 pb-1">
           {hi ? 'शिकायत विवरण' : 'Complaint Details'}
         </p>
-        <pre className="whitespace-pre-wrap leading-relaxed text-xs font-mono">{draft}</pre>
+        <pre className="whitespace-pre-wrap leading-relaxed text-xs font-sans">{draft}</pre>
       </div>
 
       <div className="mb-6">
@@ -117,8 +117,8 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
       <div className="mt-10 border-t-2 border-black pt-3">
         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-700">
           {hi
-            ? '⚠ सिंथेटिक डेमो डेटा - हैकाथॉन प्रोटोटाइप। यह वास्तविक सरकारी दस्तावेज़ नहीं है।'
-            : '⚠ Synthetic Demo Data - Hackathon Prototype. This is not an official government filing.'}
+            ? '⚠ सिंथेटिक डेमो डेटा • हैकाथॉन प्रोटोटाइप। यह वास्तविक सरकारी दस्तावेज़ नहीं है।'
+            : '⚠ Synthetic Demo Data • Hackathon Prototype. This is not an official government filing.'}
         </p>
         <p className="text-[10px] text-gray-500 mt-1">
           {hi

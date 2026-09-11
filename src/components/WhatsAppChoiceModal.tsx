@@ -84,7 +84,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
     defaultText: 'Hi Samarthan, I want to report a cybercrime incident.',
     simTitle: 'In-App WhatsApp Simulator',
     recommended: 'Recommended',
-    simDesc: 'Interactive WhatsApp mockup running inside this app. Zero phone needed - test voice notes, screenshot triage, and live complaint generation on the identical GPT-4o engine.',
+    simDesc: 'Interactive WhatsApp mockup running inside this app. Zero phone needed: test voice notes, screenshot triage, and live complaint generation on the identical GPT-4o engine.',
     simLaunch: 'Launch In-App Simulator',
     realTitle: 'Open Real WhatsApp App',
     realTag: 'WhatsApp AI Agent',
@@ -381,7 +381,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
                     <span className="font-bold text-sm sm:text-base text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors indic-headline">
                       {t.simTitle}
                     </span>
-                    <span className="bg-emerald-200/80 dark:bg-emerald-800/60 text-emerald-900 dark:text-emerald-200 text-[10px] font-mono font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    <span className="bg-emerald-200/80 dark:bg-emerald-800/60 text-emerald-900 dark:text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                       {t.recommended}
                     </span>
                   </div>

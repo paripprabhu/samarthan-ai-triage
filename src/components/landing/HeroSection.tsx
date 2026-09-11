@@ -98,11 +98,11 @@ export default function HeroSection({ language }: HeroSectionProps) {
   const cleanCtaLearnMore = trans.hero.ctaLearnMore.replace(/[\s↓▼]+$/, '').trim()
 
   return (
-    <section className="relative w-full pt-5 pb-12 sm:pt-8 sm:pb-20 md:pt-10 md:pb-24 overflow-hidden isolate">
+    <section className="relative w-full pt-4 pb-8 sm:pt-6 sm:pb-12 md:pt-8 md:pb-14 overflow-hidden isolate">
       <RadialBackground />
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
         {/* Eyebrow Pill */}
-        <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-5 sm:mb-6 backdrop-blur-sm">
+        <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-4 sm:mb-5 backdrop-blur-sm">
           <span className="flex h-2 w-2 relative">
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
@@ -111,7 +111,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
           </span>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-14 items-start">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
           {/* Left: copy */}
           <div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-white leading-[1.22] indic-headline">

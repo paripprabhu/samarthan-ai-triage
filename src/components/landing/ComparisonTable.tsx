@@ -191,10 +191,10 @@ export default function ComparisonTable({ language }: ComparisonTableProps) {
   }
 
   return (
-    <section id="comparison" className="py-14 sm:py-24 bg-white border-t border-zinc-200">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+    <section id="comparison" className="py-10 sm:py-14 md:py-16 bg-white border-t border-zinc-200">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Top Centered Pill Badge */}
-        <div className="flex justify-center mb-4 sm:mb-5">
+        <div className="flex justify-center mb-3 sm:mb-4">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-zinc-200 rounded-md shadow-xs text-xs font-semibold text-zinc-800 tracking-tight">
             <ShieldCheck className="w-3.5 h-3.5 text-zinc-900" />
             <span>{loc.eyebrow}</span>
@@ -202,11 +202,11 @@ export default function ComparisonTable({ language }: ComparisonTableProps) {
         </div>
 
         {/* Headline & Subheadline */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-zinc-950 tracking-tight leading-tight indic-headline">
             {loc.headline}
           </h2>
-          <p className="text-zinc-500 text-sm md:text-base mt-3 sm:mt-4 leading-relaxed">
+          <p className="text-zinc-500 text-sm md:text-base mt-2.5 sm:mt-3 leading-relaxed">
             {loc.subheadline}
           </p>
         </div>

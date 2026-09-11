@@ -86,8 +86,8 @@ function targetIs(target: string | undefined, ...needles: string[]): boolean {
 
 const HELPLINE: EscalationChannelCopy = {
   kind: 'helpline',
-  title: 'Call 1930 - Cyber Helpline',
-  titleHi: '1930 पर कॉल करें - साइबर हेल्पलाइन',
+  title: 'Call 1930: Cyber Helpline',
+  titleHi: '1930 पर कॉल करें: साइबर हेल्पलाइन',
   desc: 'Report this incident to the national cybercrime helpline and file on the NCRP portal.',
   descHi: 'इस घटना की राष्ट्रीय साइबर हेल्पलाइन पर रिपोर्ट करें और NCRP पोर्टल पर दर्ज करें।',
   hotline: '1930',
@@ -102,8 +102,8 @@ const BANK: EscalationChannelCopy = {
   kind: 'bank',
   title: '1-Click Bank Email',
   titleHi: 'बैंक को ईमेल करें',
-  desc: 'This is bank / UPI fraud - notify the bank nodal officer and call 1930 within the golden hour.',
-  descHi: 'यह बैंक / UPI धोखाधड़ी है - बैंक नोडल अधिकारी को सूचित करें और गोल्डन ऑवर में 1930 पर कॉल करें।',
+  desc: 'This is bank / UPI fraud: notify the bank nodal officer and call 1930 within the golden hour.',
+  descHi: 'यह बैंक / UPI धोखाधड़ी है: बैंक नोडल अधिकारी को सूचित करें और गोल्डन ऑवर में 1930 पर कॉल करें।',
   hotline: '1930',
   hotlineLabel: 'Cyber Helpline 1930',
   hotlineLabelHi: 'साइबर हेल्पलाइन 1930',
@@ -123,8 +123,8 @@ export function getEscalationChannel(
         kind: 'platform',
         title: `Report to ${name}`,
         titleHi: `${name} को रिपोर्ट करें`,
-        desc: `This is online harassment / impersonation - report the account to ${name} and the cyber cell's Women & Child wing.`,
-        descHi: `यह ऑनलाइन उत्पीड़न / प्रतिरूपण है - खाते की ${name} और साइबर सेल की महिला व बाल शाखा को रिपोर्ट करें।`,
+        desc: `This is online harassment / impersonation: report the account to ${name} and the cyber cell's Women & Child wing.`,
+        descHi: `यह ऑनलाइन उत्पीड़न / प्रतिरूपण है: खाते की ${name} और साइबर सेल की महिला व बाल शाखा को रिपोर्ट करें।`,
         hotline: '1098',
         hotlineLabel: 'Childline 1098',
         hotlineLabelHi: 'चाइल्डलाइन 1098',
@@ -132,8 +132,8 @@ export function getEscalationChannel(
         hotline2Label: 'Women Helpline 181',
         hotline2LabelHi: 'महिला हेल्पलाइन 181',
         portalUrl: CYBERCRIME_PORTAL,
-        portalLabel: 'NCRP - Report Crime against Women / Child',
-        portalLabelHi: 'NCRP - महिला / बाल अपराध रिपोर्ट करें',
+        portalLabel: 'NCRP: Report Crime against Women / Child',
+        portalLabelHi: 'NCRP: महिला / बाल अपराध रिपोर्ट करें',
       }
     }
 
@@ -143,14 +143,14 @@ export function getEscalationChannel(
           kind: 'agency',
           title: 'Escalate to UIDAI',
           titleHi: 'UIDAI को भेजें',
-          desc: 'Your Aadhaar is being misused - lock your Aadhaar with UIDAI and report the identity theft.',
-          descHi: 'आपके आधार का दुरुपयोग हो रहा है - UIDAI के साथ आधार लॉक करें और पहचान की चोरी की रिपोर्ट करें।',
+          desc: 'Your Aadhaar is being misused: lock your Aadhaar with UIDAI and report the identity theft.',
+          descHi: 'आपके आधार का दुरुपयोग हो रहा है: UIDAI के साथ आधार लॉक करें और पहचान की चोरी की रिपोर्ट करें।',
           hotline: '1947',
           hotlineLabel: 'UIDAI Helpline 1947',
           hotlineLabelHi: 'UIDAI हेल्पलाइन 1947',
           portalUrl: 'https://resident.uidai.gov.in/aadhaar-lockunlock',
-          portalLabel: 'UIDAI - Lock / Unlock Aadhaar',
-          portalLabelHi: 'UIDAI - आधार लॉक / अनलॉक',
+          portalLabel: 'UIDAI: Lock / Unlock Aadhaar',
+          portalLabelHi: 'UIDAI: आधार लॉक / अनलॉक',
         }
       }
       if (targetIs(target, 'income tax', 'pan')) {

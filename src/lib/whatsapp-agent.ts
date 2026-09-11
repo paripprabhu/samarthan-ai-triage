@@ -122,8 +122,18 @@ export function detectLanguage(text: string): SupportedLanguage {
   const guMatches = trimmed.match(/[\u0A80-\u0AFF]/g)
   if (guMatches) addCount('gu', guMatches.length)
 
+  // In Indian cybercrime reporting, spoken Hindi/Hindustani audio is frequently transcribed
+  // by Whisper into Perso-Arabic/Urdu script unless constrained. To prevent Hindi reports from
+  // mistakenly being classified as Urdu, treat Perso-Arabic text as Hindi ('hi') unless the user
+  // explicitly chooses Urdu from the menu or sends an explicit Urdu switch command.
   const urMatches = trimmed.match(/[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF]/g)
-  if (urMatches) addCount('ur', urMatches.length)
+  if (urMatches) {
+    if (/^(?:ur|urdu|اردو)$/i.test(trimmed.trim())) {
+      addCount('ur', urMatches.length)
+    } else {
+      addCount('hi', urMatches.length)
+    }
+  }
 
   const knMatches = trimmed.match(/[\u0C80-\u0CFF]/g)
   if (knMatches) addCount('kn', knMatches.length)
@@ -168,8 +178,8 @@ export function detectLanguage(text: string): SupportedLanguage {
   if (/\b(?:amar name|amar naam|amar|amader|ekta|kore|korche|hoyechhe|hoyeche|geche|katlo|katse|thokano|niyechhe|bengali|bangla)\b/i.test(trimmed)) return 'bn'
   if (/\b(?:da misuse|ton|kadheya|mang leya|de naa te|ban ke|laaye|pind|gall|ch paise|chite|kiti|punjabi)\b/i.test(trimmed)) return 'pa'
   if (/\b(?:majhe naav|mazhe naav|majhe|mazhe|ahe|aahe|kela|pathvun|maagat|ahet|sathi|chori|jhale|gela|gele|fusavli|takraar|karnyachya|marathi)\b/i.test(trimmed)) return 'mr'
-  if (/\b(?:tariq|zeeshan|arshad|faraad|khuda|shukriya|janab|urdu)\b/i.test(trimmed)) return 'ur'
-  if (/\b(?:mera naam|mera name|kiya|diya|liya|huye|hua|hai|hain|tha|thi|paise|karo|bhai|sahab|dhokha|thagi|maine|apne|karwaya)\b/i.test(trimmed)) return 'hi'
+  if (/^(?:ur|urdu|اردو)$/i.test(trimmed.trim())) return 'ur'
+  if (/\b(?:mera naam|mera name|kiya|diya|liya|huye|hua|hai|hain|tha|thi|paise|karo|bhai|sahab|dhokha|thagi|maine|apne|karwaya|shukriya|janab)\b/i.test(trimmed)) return 'hi'
 
   return 'en'
 }
@@ -420,8 +430,11 @@ export async function handleStatusQuery(
   query: string
 ): Promise<{ reply: string; incidentId?: string }> {
   const isHi = session.language === 'hi'
+  const utrRes = extractMultilingualUTR(query)
+  const queryUtr = utrRes.utr || query.match(/\b\d{12}\b/)?.[0]
   const matchedId = query.match(/INC-\d{4}-\d{4}/i)?.[0]?.toUpperCase()
-  const targetId = matchedId || session.incidentId
+  const numericId = query.match(/\b\d{14}\b/)?.[0]
+  const targetId = matchedId || numericId || session.incidentId
 
   let complaint: any = null
 
@@ -430,20 +443,49 @@ export async function handleStatusQuery(
       const { neon } = await import('@neondatabase/serverless')
       const sql = neon(process.env.DATABASE_URL)
 
-      if (targetId) {
+      // 1. If a 12-digit UTR or transaction ID is present, search specifically by UTR across all fields
+      if (queryUtr) {
+        const utrPattern = `%${queryUtr}%`
+        const utrRows = await sql`
+          SELECT * FROM complaints
+          WHERE incident_id = ${queryUtr}
+             OR frauder_contact ILIKE ${utrPattern}
+             OR updates::text ILIKE ${utrPattern}
+             OR summary ILIKE ${utrPattern}
+             OR complaint_draft ILIKE ${utrPattern}
+             OR account_number ILIKE ${utrPattern}
+             OR upi_id ILIKE ${utrPattern}
+          ORDER BY saved_at DESC LIMIT 1
+        `
+        if (utrRows[0]) complaint = utrRows[0]
+      }
+
+      // 2. Lookup by incident ID if available
+      if (!complaint && targetId) {
         const rows = await sql`SELECT * FROM complaints WHERE incident_id = ${targetId} LIMIT 1`
         if (rows[0]) complaint = rows[0]
       }
 
-      if (!complaint && session.phoneNumber && !session.phoneNumber.startsWith('sim')) {
+      // 3. Same Account Assumption: Lookup by citizen phone or fallback to latest complaint in Neon DB
+      if (!complaint) {
         const phonePattern = `%${session.phoneNumber}%`
+        const cleanDigits = session.phoneNumber.replace(/[^0-9]/g, '')
+        const digitPattern = cleanDigits.length >= 10 ? `%${cleanDigits.slice(-10)}%` : phonePattern
         const rows = await sql`
           SELECT * FROM complaints
-          WHERE status_history::text ILIKE ${phonePattern}
+          WHERE citizen_phone = ${session.phoneNumber}
+             OR citizen_phone ILIKE ${digitPattern}
+             OR status_history::text ILIKE ${phonePattern}
              OR updates::text ILIKE ${phonePattern}
           ORDER BY saved_at DESC LIMIT 1
         `
-        if (rows[0]) complaint = rows[0]
+        if (rows[0]) {
+          complaint = rows[0]
+        } else {
+          // Unified account assumption: restore the latest complaint filed (e.g. from web or simulator)
+          const latestRows = await sql`SELECT * FROM complaints ORDER BY saved_at DESC LIMIT 1`
+          if (latestRows[0]) complaint = latestRows[0]
+        }
       }
     } catch (dbErr) {
       console.error('[Status Query DB Error]:', dbErr)
@@ -493,13 +535,9 @@ export async function processWhatsAppTurn(
   const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   session.history.push({ role: 'user', content: voiceTranscript ? `[Voice Note] ${voiceTranscript}` : userInput, timestamp })
 
-  // Auto-restore previous incident from Neon DB if server restarted and memory was cleared
-  // SKIP this if the session was explicitly reset (user said NEW) - the _skipDbRestore flag is set by the API route
-  // ALSO skip while the sticky forceNewComplaint flag is set - otherwise the very next
-  // message after "NEW" would resurrect the old incident from the DB and update it.
-  // ALSO skip for simulator sessions (sim-*) so simulations do NOT dredge up historical test cases.
-  const isSimSession = session.phoneNumber.startsWith('sim') || (session as any).isSimulator
-  if (!session.incidentId && !session.forceNewComplaint && !isSimSession && process.env.DATABASE_URL && !(session as any)._skipDbRestore) {
+  // Same Account Assumption: auto-restore active incident from Neon DB across web, WhatsApp bot, & simulator
+  // SKIP only if session was explicitly reset (user said NEW) or forceNewComplaint is active.
+  if (!session.incidentId && !session.forceNewComplaint && process.env.DATABASE_URL && !(session as any)._skipDbRestore) {
     try {
       const { neon } = await import('@neondatabase/serverless')
       const sql = neon(process.env.DATABASE_URL)
@@ -507,7 +545,7 @@ export async function processWhatsAppTurn(
       const cleanDigits = session.phoneNumber.replace(/[^0-9]/g, '')
       const digitPattern = cleanDigits.length >= 10 ? `%${cleanDigits.slice(-10)}%` : phonePattern
 
-      const rows = await sql`
+      let rows = await sql`
         SELECT incident_id, language, summary, summary_hi
         FROM complaints
         WHERE citizen_phone = ${session.phoneNumber}
@@ -518,6 +556,15 @@ export async function processWhatsAppTurn(
            OR updates::text ILIKE ${digitPattern}
         ORDER BY saved_at DESC LIMIT 1
       `
+      // If not bound by phone, restore the latest complaint under the same account assumption
+      if (!rows[0]?.incident_id) {
+        rows = await sql`
+          SELECT incident_id, language, summary, summary_hi
+          FROM complaints
+          ORDER BY saved_at DESC LIMIT 1
+        `
+      }
+
       if (rows[0]?.incident_id) {
         session.incidentId = rows[0].incident_id
         session.stage = 'FILED'
@@ -532,12 +579,66 @@ export async function processWhatsAppTurn(
   // Clear the skip flag after this turn so future turns can auto-restore if needed
   delete (session as any)._skipDbRestore
 
-  // Case Status Check Intent
-  const isStatusQuery =
-    /^(status|track|tracking|check|kya hua|update kya|progress|mera case|meri complaint|check status|case status|complaint status|स्थिति|ट्रैक)$/i.test(trimmed) ||
-    /^(status|track|check status)\s+INC-\d{4}-\d{4}$/i.test(trimmed) ||
-    /^(what is the status|what is my case status|kya update hai|case ka status|check my case|check my complaint)/i.test(trimmed) ||
-    (/^INC-\d{4}-\d{4}$/i.test(trimmed) && session.stage !== 'AWAITING_INCIDENT')
+  // Extract any UTR, transaction reference, or incident ID from the user's message
+  const utrCheck = extractMultilingualUTR(trimmed)
+  const msgUtr = utrCheck.utr || trimmed.match(/\b\d{12}\b/)?.[0]
+  const msgInc = trimmed.match(/INC-\d{4}-\d{4}/i)?.[0]?.toUpperCase() || trimmed.match(/\b\d{14}\b/)?.[0]
+
+  // If a specific transaction ID or UTR is mentioned, immediately bind session to THAT complaint
+  if ((msgUtr || msgInc) && process.env.DATABASE_URL) {
+    try {
+      const { neon } = await import('@neondatabase/serverless')
+      const sql = neon(process.env.DATABASE_URL)
+      const searchKey = msgUtr || msgInc
+      const searchPattern = `%${searchKey}%`
+      const matched = await sql`
+        SELECT incident_id, language, summary, summary_hi
+        FROM complaints
+        WHERE incident_id = ${searchKey}
+           OR frauder_contact ILIKE ${searchPattern}
+           OR updates::text ILIKE ${searchPattern}
+           OR summary ILIKE ${searchPattern}
+           OR complaint_draft ILIKE ${searchPattern}
+           OR account_number ILIKE ${searchPattern}
+           OR upi_id ILIKE ${searchPattern}
+        ORDER BY saved_at DESC LIMIT 1
+      `
+      if (matched[0]?.incident_id) {
+        session.incidentId = matched[0].incident_id
+        session.stage = 'FILED'
+        if (matched[0].language === 'hi' || matched[0].language === 'en') {
+          session.language = matched[0].language
+        }
+      }
+    } catch (e) {
+      console.error('[WhatsApp Agent] Specific UTR lookup error:', e)
+    }
+  }
+
+  // Case Status / Update Inquiry Intent
+  const isBareId = Boolean(
+    /^(?:INC-\d{4}-\d{4}|\d{12}|\d{14})$/i.test(trimmed) ||
+    /^(?:utr|txn|ref|transaction\s*id|reference\s*no|reference\s*number)[:\s]*(\d{12})/i.test(trimmed)
+  )
+
+  const hasUpdateOrStatusWord = /(?:\b(?:status|update|updates|track|tracking|progress|check|report)\b|(?:kya hua|kya update|update kya|batao|स्थिति|स्टेटस|प्रगति|क्या हुआ|अपडेट))/i.test(trimmed)
+  const hasFilingIndicators = Boolean(
+    /(?:debited|lost|transferred|stolen|cheated|looted|fraudster|threat|blackmail|scam|gaye|kaat|liye)\b/i.test(trimmed) &&
+    /\d{3,}/.test(trimmed)
+  )
+
+  const isStatusQuery = Boolean(
+    (isBareId && session.stage !== 'AWAITING_INCIDENT') ||
+    (hasUpdateOrStatusWord && (
+      Boolean(msgUtr) ||
+      Boolean(msgInc) ||
+      (trimmed.length <= 45 && !hasFilingIndicators) ||
+      /(?:case|complaint|incident|shikayat|तक्रार|केस|शिकायत|mera|meri|my)/i.test(trimmed) ||
+      /^(?:what(?:'s|\s+is)?\s+(?:the\s+)?(?:status|update)|give\s+(?:me\s+)?(?:an\s+)?update|any\s+update|tell\s+me\s+(?:the\s+)?(?:status|update)|check\s+(?:the\s+)?(?:status|update)|can\s+you\s+(?:give|check|tell)\s+(?:me\s+)?(?:the\s+)?update)/i.test(trimmed) ||
+      /(?:update|status)\s+(?:on|for|of|regarding|about)\s+/i.test(trimmed) ||
+      /(?:का|की)\s*(?:स्थिति|अपडेट|स्टेटस)/i.test(trimmed)
+    ))
+  )
 
   if (isStatusQuery) {
     return await handleStatusQuery(session, trimmed)
@@ -876,12 +977,34 @@ async function updateExistingComplaint(
   session.pendingVisionEvidence = undefined
   session.pendingMediaUrl = undefined
 
+  let targetIncidentId = incidentId
+
   if (process.env.DATABASE_URL) {
     try {
       const { neon } = await import('@neondatabase/serverless')
       const sql = neon(process.env.DATABASE_URL)
 
-      const existing = await sql`SELECT updates, frauder_contact, bank_name, upi_id, account_number, amount, complaint_draft, complaint_draft_hi, complainant_name, fraudster_identifier FROM complaints WHERE incident_id = ${incidentId} LIMIT 1`
+      // If the update note contains a UTR, verify that we update the specific complaint matching this UTR
+      if (extractedUpdate.utr) {
+        const utrPat = `%${extractedUpdate.utr}%`
+        const utrMatch = await sql`
+          SELECT incident_id FROM complaints
+          WHERE incident_id = ${extractedUpdate.utr}
+             OR frauder_contact ILIKE ${utrPat}
+             OR updates::text ILIKE ${utrPat}
+             OR summary ILIKE ${utrPat}
+             OR complaint_draft ILIKE ${utrPat}
+             OR account_number ILIKE ${utrPat}
+             OR upi_id ILIKE ${utrPat}
+          ORDER BY saved_at DESC LIMIT 1
+        `
+        if (utrMatch[0]?.incident_id) {
+          targetIncidentId = utrMatch[0].incident_id
+          session.incidentId = targetIncidentId
+        }
+      }
+
+      const existing = await sql`SELECT updates, frauder_contact, bank_name, upi_id, account_number, amount, complaint_draft, complaint_draft_hi, complainant_name, fraudster_identifier FROM complaints WHERE incident_id = ${targetIncidentId} LIMIT 1`
 
       if (existing[0]) {
         const row = existing[0]
@@ -942,7 +1065,7 @@ async function updateExistingComplaint(
             updates = ${JSON.stringify(curUpdates)},
             complaint_draft = ${updatedDraft},
             complaint_draft_hi = ${updatedDraftHi}
-          WHERE incident_id = ${incidentId}
+          WHERE incident_id = ${targetIncidentId}
         `
       }
     } catch (dbErr) {
@@ -950,12 +1073,12 @@ async function updateExistingComplaint(
     }
   }
 
-  const trackingLink = `${APP_URL}/dashboard?id=${incidentId}`
-  const reply = formatUpdateConfirmation(session.language, incidentId, filledItems, trackingLink)
+  const trackingLink = `${APP_URL}/dashboard?id=${targetIncidentId}`
+  const reply = formatUpdateConfirmation(session.language, targetIncidentId, filledItems, trackingLink)
 
   const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   session.history.push({ role: 'assistant', content: reply, timestamp })
-  return { reply, incidentId }
+  return { reply, incidentId: targetIncidentId }
 }
 
 // Helper: Create a brand new complaint from scratch in Neon DB

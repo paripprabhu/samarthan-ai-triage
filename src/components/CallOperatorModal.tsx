@@ -173,7 +173,7 @@ export default function CallOperatorModal({
                   {hi ? `${hotline} पर वास्तविक कॉल करें` : `Actually dial ${hotline}`}
                 </a>
                 <p className="text-center text-xs text-zinc-400 mt-2">
-                  {hi ? 'यह डेमो है - ऑपरेटर को डेटा वास्तव में नहीं भेजा गया' : 'This is a demo - no data was actually transmitted to a real operator'}
+                  {hi ? 'यह डेमो है • ऑपरेटर को डेटा वास्तव में नहीं भेजा गया' : 'This is a demo • no data was actually transmitted to a real operator'}
                 </p>
               </div>
             )}

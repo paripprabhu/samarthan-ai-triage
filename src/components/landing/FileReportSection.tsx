@@ -291,7 +291,7 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
   ]
 
   return (
-    <section id="file-report" className="py-12 sm:py-20 md:py-24 bg-surface border-t border-zinc-200">
+    <section id="file-report" className="py-10 sm:py-14 md:py-16 bg-surface border-t border-zinc-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="mb-6 sm:mb-10">
           <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2 sm:mb-3">

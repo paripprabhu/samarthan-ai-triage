@@ -128,7 +128,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-zinc-900">Sign in with DigiLocker</h2>
-                      <p className="text-xs text-zinc-500">Government of India - MeitY Sandbox</p>
+                      <p className="text-xs text-zinc-500">Government of India • MeitY Sandbox</p>
                     </div>
                   </div>
 

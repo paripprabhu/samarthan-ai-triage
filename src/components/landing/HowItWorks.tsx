@@ -117,32 +117,32 @@ export default function HowItWorks({ language }: HowItWorksProps) {
   ]
 
   return (
-    <section id="how-it-works" className="py-14 sm:py-20 md:py-24 bg-surface border-t border-zinc-200/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how-it-works" className="py-10 sm:py-14 md:py-16 bg-surface border-t border-zinc-200/80">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="mb-10 sm:mb-14 md:mb-16 max-w-2xl mx-auto text-center">
-          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">
+        <div className="mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto text-center">
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-1.5 sm:mb-2">
             {t.howItWorks.eyebrow}
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
             {t.howItWorks.title}
           </h2>
-          <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
+          <p className="mt-2 sm:mt-2.5 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
             {subtitle}
           </p>
         </div>
 
         {/* 3 Step Cards */}
-        <div className="space-y-16 sm:space-y-24 md:space-y-36">
+        <div className="space-y-12 sm:space-y-16 md:space-y-20">
           {steps.map((step, i) => (
             <div
               key={step.n}
-              className={`grid lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-16 items-center ${i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''}`}
+              className={`grid lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center ${i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''}`}
             >
               {/* Text column (5 cols) */}
               <div className="lg:col-span-5">
-                <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
-                  <span className="text-sm sm:text-base font-mono font-extrabold text-primary bg-primary-tint border border-primary/20 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg">
+                <div className="flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-3">
+                  <span className="text-sm sm:text-base font-sans font-extrabold text-primary bg-primary-tint border border-primary/20 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg">
                     {step.n}
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-850 border border-zinc-200 dark:border-zinc-700 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg shadow-2xs">
@@ -152,14 +152,14 @@ export default function HowItWorks({ language }: HowItWorksProps) {
                 </div>
 
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-tight leading-snug">{step.title}</h3>
-                <p className="mt-3 sm:mt-4 text-zinc-600 dark:text-zinc-300 leading-relaxed text-sm sm:text-base md:text-[17px]">{step.body}</p>
+                <p className="mt-2.5 sm:mt-3 text-zinc-600 dark:text-zinc-300 leading-relaxed text-sm sm:text-base">{step.body}</p>
 
                 {/* Grounded feature point list */}
-                <div className="mt-5 sm:mt-7 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                <div className="mt-4 sm:mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                   {step.points.map((point, ptIdx) => (
                     <div
                       key={ptIdx}
-                      className="flex items-start gap-2 sm:gap-2.5 p-2.5 sm:p-3 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 text-xs sm:text-[13px] font-medium text-zinc-700 dark:text-zinc-300 shadow-2xs"
+                      className="flex items-start gap-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 text-xs sm:text-[13px] font-medium text-zinc-700 dark:text-zinc-300 shadow-2xs"
                     >
                       <span className="shrink-0 mt-0.5">{point.icon}</span>
                       <span className="leading-snug">{point.text}</span>
@@ -168,7 +168,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
                 </div>
               </div>
 
-              {/* Screenshot column: 7 cols (Generous width & natural height, noticeable details) */}
+              {/* Screenshot column: 7 cols */}
               <div className="lg:col-span-7">
                 <div className="rounded-xl sm:rounded-[18px] border border-zinc-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.04)] sm:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12),0_4px_16px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-300 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.18),0_8px_24px_rgba(0,0,0,0.06)] group">
                   {/* Browser top chrome bar */}
@@ -178,7 +178,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
                       <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-600 block" />
                       <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-600 block" />
                     </div>
-                    <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 tracking-tight select-none">
+                    <span className="text-xs font-sans font-medium text-zinc-400 dark:text-zinc-500 tracking-tight select-none">
                       {step.n === '01' ? 'samarthan.gov.in/intake' : step.n === '02' ? 'samarthan.gov.in/dossier' : 'samarthan.gov.in/complaints'}
                     </span>
                     <span className="w-3" />

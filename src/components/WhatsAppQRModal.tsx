@@ -138,7 +138,7 @@ export default function WhatsAppQRModal({
                   {hi ? 'व्हाट्सएप बॉट लिंक करें' : 'Link WhatsApp Cybercrime Bot'}
                 </h3>
                 <p className="text-xs text-zinc-500">
-                  {hi ? '100% फ्री - बिना किसी सशुल्क सेवा के' : '100% Free - Direct WhatsApp Multi-Device'}
+                  {hi ? '100% फ्री • बिना किसी सशुल्क सेवा के' : '100% Free • Direct WhatsApp Multi-Device'}
                 </p>
               </div>
             </div>
