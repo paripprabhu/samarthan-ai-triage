@@ -72,6 +72,14 @@ export interface WhatsAppSession {
 // In-memory session store (keyed by phone number) with 2-hour TTL
 const SESSIONS = new Map<string, WhatsAppSession>()
 
+export function clearAllWhatsAppSessions(): void {
+  SESSIONS.clear()
+}
+
+export function clearWhatsAppSession(phoneNumber: string): void {
+  SESSIONS.delete(phoneNumber)
+}
+
 export function getOrCreateSession(phoneNumber: string): WhatsAppSession {
   const existing = SESSIONS.get(phoneNumber)
   const now = Date.now()
@@ -190,7 +198,8 @@ export function matchLanguageSwitch(trimmed: string): SupportedLanguage | null {
     return 'en'
   }
 
-  if (/^(?:hi|hindi|हिंदी|हिन्दी)(?:\s+(?:please|plz|bhasha|language))?$/i.test(t) ||
+  if (/^(?:hindi|हिंदी|हिन्दी)(?:\s+(?:please|plz|bhasha|language))?$/i.test(t) ||
+      /^(?:hi\s+(?:please|plz|bhasha|language))$/i.test(t) ||
       /(?:hindi|हिन्दी|हिंदी)\s*(?:mai|me|mein|pe)?\s*(?:baat|bat|bolo|bol|batao|karo|kijiye|help|support|me)/i.test(t) ||
       /(?:talk|speak|converse|reply|chat)\s*(?:in\s+)?(?:hindi|हिन्दी|हिंदी)/i.test(t) ||
       /(?:change|switch|set)\s*(?:language\s*)?(?:to\s*)?(?:hindi|हिंदी|हिन्दी)/i.test(t)) {
@@ -575,7 +584,7 @@ export async function processWhatsAppTurn(
   }
 
   const isResetCommand = /^(reset|\/reset|restart|\/restart|clear)$/i.test(trimmed)
-  const isInitialGreeting = /^(hi|hello|hey|namaste|help|madad|pranam|hlo|hii|hi samarthan[a-z0-9\s,.]*)$/i.test(trimmed)
+  const isInitialGreeting = /^(?:hi|hello|hey|namaste|help|madad|pranam|hlo|hii|hiya|good\s*(?:morning|afternoon|evening)|hi samarthan|hello samarthan|namaste samarthan)[\s!.,?]*$/i.test(trimmed)
   const isWebsiteDefaultMsg =
     trimmed.toLowerCase().includes('i want to report a cybercrime incident') ||
     trimmed.toLowerCase().includes('i want to report a cyber incident') ||
@@ -598,8 +607,9 @@ export async function processWhatsAppTurn(
     return { reply: welcomeMsg }
   }
 
-  // Hard reset or fresh website link click -> Always reset to brand new greeting
-  if (isResetCommand || isWebsiteDefaultMsg) {
+  // Hard reset, fresh website link click, or initial greeting without an active complaint
+  // -> Always reset to brand new greeting with language selection
+  if (isResetCommand || isWebsiteDefaultMsg || (!session.incidentId && isInitialGreeting)) {
     return sendLanguageGreeting()
   }
 
@@ -612,7 +622,7 @@ export async function processWhatsAppTurn(
     }
 
     const ext = quickExtract(trimmed)
-    const isBareLangPick = /^(?:[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|en|english|angrezi|angreji|hi|hindi|हिंदी|हिन्दी|bn|bengali|bangla|বাংলা|mr|marathi|मराठी|te|telugu|తెలుగు|ta|tamil|தமிழ்|gu|gujarati|ગુજરાતી|ur|urdu|اردو|kn|kannada|ಕನ್ನಡ|or|odia|oriya|ଓଡ଼ିଆ|ml|malayalam|മലയാളം|pa|punjabi|ਪੰਜਾਬੀ|hinglish)$/i.test(trimmed)
+    const isBareLangPick = /^(?:[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|en|english|angrezi|angreji|hindi|हिंदी|हिन्दी|bn|bengali|bangla|বাংলা|mr|marathi|मराठी|te|telugu|తెలుగు|ta|tamil|தமிழ்|gu|gujarati|ગુજરાતી|ur|urdu|اردو|kn|kannada|ಕನ್ನಡ|or|odia|oriya|ଓଡ଼ିଆ|ml|malayalam|മലയാളം|pa|punjabi|ਪੰਜਾਬੀ|hinglish)$/i.test(trimmed)
     const hasRealAmount = Boolean(ext.amount && (ext.amount >= 100 || /(?:rs\.?|inr|₹|rupees|rupaye|taka|paisa|paise|dabbulu|panam)/i.test(trimmed)))
     const hasIncidentDetails = !isBareLangPick && Boolean(
       voiceTranscript || hasRealAmount || ext.upi || ext.phone || ext.utr || trimmed.length > 55
@@ -718,7 +728,7 @@ export async function processWhatsAppTurn(
   // STAGE 1: SELECT_LANGUAGE
   if (session.stage === 'SELECT_LANGUAGE') {
     const ext = quickExtract(trimmed)
-    const isBareLangPick = /^(?:[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|en|english|hi|hindi|bn|bengali|mr|marathi|te|telugu|ta|tamil|gu|gujarati|ur|urdu|kn|kannada|or|odia|ml|malayalam|pa|punjabi)$/i.test(trimmed)
+    const isBareLangPick = /^(?:[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|en|english|hindi|bn|bengali|mr|marathi|te|telugu|ta|tamil|gu|gujarati|ur|urdu|kn|kannada|or|odia|ml|malayalam|pa|punjabi)$/i.test(trimmed)
     const hasIncidentDetails = !isBareLangPick && Boolean(voiceTranscript || ext.amount || ext.upi || ext.phone || trimmed.length > 40)
 
     if (!hasIncidentDetails) {
@@ -971,7 +981,9 @@ async function createAndSaveNewComplaint(
         messages: [
           {
             role: 'system',
-            content: `You are an Indian cybercrime triage officer. Return ONLY JSON matching TriageResult schema. Fields: fraudType (Financial Fraud, Women/Children Related Crime, Extortion & Blackmail, Identity Theft, E-Commerce Scams, Investment Scam, Other Cyber Crime), fraudsterIdentifier, complainantName, amount (number), bankName, accountNumber, upiId, timeline, summary (2 sentences in English), summaryHi (2 sentences in Hindi), summaryRegional (2 sentences in ${targetLangName} / ${targetNative}), complaintDraft (formal police complaint in English), complaintDraftHi (formal police complaint in Hindi), complaintDraftRegional (formal police complaint in ${targetLangName} / ${targetNative}), freezeSteps (string[]), applicableLaws (string[]), frauderContact, recommendedChannel ("bank"|"agency"|"platform"|"helpline"), recommendedChannelTarget.
+            content: `You are an Indian cybercrime triage officer. Return ONLY JSON matching TriageResult schema. Fields: fraudType (Financial Fraud, Women/Children Related Crime, Extortion & Blackmail, Identity Theft, E-Commerce Scams, Investment Scam, Other Cyber Crime), fraudsterIdentifier, complainantName, amount (number), bankName, accountNumber, upiId, ifscCode, utrNumber, timeline, summary (2 sentences in English), summaryHi (2 sentences in Hindi), summaryRegional (2 sentences in ${targetLangName} / ${targetNative}), complaintDraft (formal police complaint in English), complaintDraftHi (formal police complaint in Hindi), complaintDraftRegional (formal police complaint in ${targetLangName} / ${targetNative}), freezeSteps (string[]), applicableLaws (string[]), frauderContact, recommendedChannel ("bank"|"agency"|"platform"|"helpline"), recommendedChannelTarget.
+
+MANDATORY BANKING DETAILS: If the user provides a 12-digit UPI UTR / transaction reference number, beneficiary UPI handle, or victim's bank name (e.g. HDFC Bank, SBI), extract them into "utrNumber", "upiId", and "bankName", and include them in "frauderContact".
 
 COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"), and leave the address/city as "[Address / city — to be provided]".`,
           },
@@ -1021,10 +1033,39 @@ COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a rea
         ? parsed.applicableLaws
         : defaultLaws
 
+      const safeContacts: string[] = []
+      if (parsed.frauderContact && !parsed.frauderContact.toLowerCase().includes('not provided')) {
+        safeContacts.push(parsed.frauderContact)
+      }
+      if (extracted.phone && !safeContacts.some(c => c.includes(extracted.phone!))) {
+        safeContacts.push(`Phone: ${extracted.phone}`)
+      }
+      if (extracted.upi && !safeContacts.some(c => c.includes(extracted.upi!))) {
+        safeContacts.push(`UPI: ${extracted.upi}`)
+      }
+      const finalUtr = (parsed.utrNumber && !parsed.utrNumber.toLowerCase().includes('not provided'))
+        ? parsed.utrNumber.trim()
+        : (extracted.utr || undefined)
+      if (finalUtr && !safeContacts.some(c => c.includes(finalUtr))) {
+        safeContacts.push(`UTR: ${finalUtr}`)
+      }
+      const finalBank = (parsed.bankName && !parsed.bankName.toLowerCase().includes('not provided') && !parsed.bankName.toLowerCase().includes('bank nodal desk'))
+        ? parsed.bankName
+        : (extracted.bankName || 'Not Provided')
+      const finalAccount = (parsed.accountNumber && !parsed.accountNumber.toLowerCase().includes('not provided'))
+        ? parsed.accountNumber
+        : (extracted.accountNumber || 'Not Provided')
+      const finalIfsc = (parsed.ifscCode && !parsed.ifscCode.toLowerCase().includes('not provided'))
+        ? parsed.ifscCode.trim().toUpperCase()
+        : (extracted.ifscCode || undefined)
+      const finalUpi = (parsed.upiId && !parsed.upiId.toLowerCase().includes('not provided'))
+        ? parsed.upiId.trim()
+        : (extracted.upi || undefined)
+
       triageResult = {
         incidentId,
         fraudType,
-        fraudsterIdentifier: parsed.fraudsterIdentifier || extracted.upi || extracted.phone || 'Not Identified',
+        fraudsterIdentifier: parsed.fraudsterIdentifier || extracted.fraudster || extracted.upi || extracted.phone || 'Not Identified',
         complainantName: finalComplainant,
         amount: Number(parsed.amount) || extracted.amount || 0,
         urgencyLevel: 'CRITICAL',
@@ -1035,10 +1076,12 @@ COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a rea
         complaintDraftHi: parsed.complaintDraftHi || `अनधिकृत साइबर धोखाधड़ी की औपचारिक शिकायत।`,
         complaintDraftRegional: parsed.complaintDraftRegional || (session.language === 'hi' ? parsed.complaintDraftHi : undefined),
         language: session.language,
-        frauderContact: parsed.frauderContact || (extracted.utr ? `UTR: ${extracted.utr}` : 'Not Provided'),
-        bankName: parsed.bankName || 'Not Provided',
-        accountNumber: parsed.accountNumber || 'Not Provided',
-        upiId: parsed.upiId || extracted.upi || 'Not Provided',
+        frauderContact: safeContacts.length > 0 ? safeContacts.join('; ') : 'Not Provided',
+        bankName: finalBank,
+        accountNumber: finalAccount,
+        upiId: finalUpi,
+        ifscCode: finalIfsc,
+        utrNumber: finalUtr,
         timeline: new Date().toLocaleString(),
         freezeSteps,
         applicableLaws,
@@ -1058,8 +1101,13 @@ COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a rea
     if (vision.amount && (!triageResult.amount || triageResult.amount === 0)) {
       triageResult.amount = vision.amount
     }
-    if (vision.utr && (!triageResult.frauderContact || triageResult.frauderContact.includes('Not Provided'))) {
-      triageResult.frauderContact = `UTR: ${vision.utr}`
+    if (vision.utr) {
+      triageResult.utrNumber = vision.utr
+      if (!triageResult.frauderContact || triageResult.frauderContact.includes('Not Provided')) {
+        triageResult.frauderContact = `UTR: ${vision.utr}`
+      } else if (!triageResult.frauderContact.includes(vision.utr)) {
+        triageResult.frauderContact = `${triageResult.frauderContact}; UTR: ${vision.utr}`
+      }
     }
     if (vision.upiId && (!triageResult.upiId || triageResult.upiId.includes('Not Provided'))) {
       triageResult.upiId = vision.upiId
@@ -1198,6 +1246,7 @@ ${draftOpenerHi} ₹${amount.toLocaleString('en-IN')} की अनधिकृ�
     accountNumber: ext.accountNumber || 'Not Provided',
     upiId: ext.upi || 'Not Provided',
     ifscCode: ext.ifscCode,
+    utrNumber: ext.utr || undefined,
     isDigitalArrest: isDigitalArrest || undefined,
     digitalArrestAdvisory,
     timeline: new Date().toLocaleString(),

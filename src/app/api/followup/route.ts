@@ -69,6 +69,7 @@ YOUR TASKS:
    - "bankName": victim's bank name from which money debited (e.g. HDFC, SBI, ICICI, etc.) (string or null)
    - "accountNumber": victim's account number or card if mentioned (string or null)
    - "upiId": scammer's or beneficiary's UPI VPA (containing @) (string or null)
+   - "ifscCode": beneficiary bank IFSC code if mentioned (string or null)
    - "fraudsterIdentifier": fraudster's name, phone, handle, or identity (string or null)
    - "amount": disputed fraud amount in INR if updated (number or null)
    - "amountIsAdditional": boolean. Set to TRUE if the user describes a NEW/FURTHER/SECOND debit or extra loss on top of existing ("another 10k debited", "और 5000 ले लिए", "आणखी 15000"). Set to FALSE if user is CORRECTING the total amount ("actually 80k not 60k", "एकूण 50000").
@@ -88,6 +89,7 @@ Return STRICT JSON matching this schema:
     "bankName": null,
     "accountNumber": null,
     "upiId": null,
+    "ifscCode": null,
     "fraudsterIdentifier": null,
     "amount": null,
     "amountIsAdditional": false,
@@ -172,6 +174,7 @@ NEW UPDATE FROM VICTIM:
       bankName: parsed.extracted?.bankName || fbExtracted.bankName || null,
       accountNumber: parsed.extracted?.accountNumber || fbExtracted.accountNumber || null,
       upiId: parsed.extracted?.upiId || fbExtracted.upiId || null,
+      ifscCode: parsed.extracted?.ifscCode || fbExtracted.ifscCode || null,
       fraudsterIdentifier: parsed.extracted?.fraudsterIdentifier || fbExtracted.fraudsterIdentifier || null,
       amount: typeof parsed.extracted?.amount === 'number' ? parsed.extracted.amount : fbExtracted.amount,
       amountIsAdditional:

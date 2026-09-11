@@ -42,6 +42,16 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
     ['Incident Timeline', 'समयरेखा', result.timeline],
   ]
 
+  if (result.utrNumber) {
+    summaryRows.push(['Transaction Ref / UTR', 'लेनदेन यूटीआर संदर्भ', result.utrNumber])
+  }
+  if (result.upiId) {
+    summaryRows.push(['Beneficiary UPI / VPA', 'लाभार्थी यूपीआई / वीपीए', result.upiId])
+  }
+  if (result.ifscCode) {
+    summaryRows.push(['Beneficiary IFSC Code', 'आईएफएससी कोड', result.ifscCode])
+  }
+
   return (
     <div className="print-only bg-white p-10 font-sans text-sm text-black">
       <div className="text-center mb-6">

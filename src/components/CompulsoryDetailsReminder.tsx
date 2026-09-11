@@ -18,19 +18,32 @@ export function getCompulsoryFields(r: TriageResult): CompulsoryField[] {
   const isFinancial = /financial|upi|otp|banking|investment|e-commerce|scam/i.test(r.fraudType)
 
   // 1. UTR / Txn Reference
+  let detectedUtrVal = (r.utrNumber && !r.utrNumber.toLowerCase().includes('not provided')) ? r.utrNumber.trim() : ''
+  if (!detectedUtrVal) {
+    const utrMatch = (r.frauderContact || '').match(/(?:utr|ref|txn|transaction|imps|neft)?[ :#-]*([0-9]{12})\b/i)
+      || (r.complaintDraft || '').match(/(?:utr|ref|transaction)?[ :#-]*([0-9]{12})\b/i)
+    if (utrMatch) detectedUtrVal = utrMatch[1]
+  }
+
   const hasUtr = Boolean(
-    r.frauderContact &&
-    !r.frauderContact.toLowerCase().includes('not provided') &&
-    /(?:utr|ref|txn|transaction|imps|neft|[0-9]{12})/i.test(r.frauderContact)
+    detectedUtrVal ||
+    (r.frauderContact &&
+      !r.frauderContact.toLowerCase().includes('not provided') &&
+      /(?:utr|ref|txn|transaction|imps|neft|[0-9]{12})/i.test(r.frauderContact))
   )
 
   // 2. Bank Name
-  const hasBank = Boolean(
-    r.bankName &&
+  let detectedBankVal = (r.bankName &&
     !r.bankName.toLowerCase().includes('not provided') &&
     !r.bankName.toLowerCase().includes('pending') &&
-    !r.bankName.toLowerCase().includes('bank nodal desk')
-  )
+    !r.bankName.toLowerCase().includes('bank nodal desk')) ? r.bankName.trim() : ''
+  if (!detectedBankVal) {
+    const bankMatch = (r.complaintDraft || '').match(/\b(hdfc|sbi|state bank|icici|axis|kotak|pnb|punjab national|bank of baroda|canara|union bank|indusind|yes bank|idfc)\b/i)
+      || (r.summary || '').match(/\b(hdfc|sbi|state bank|icici|axis|kotak|pnb|punjab national|bank of baroda|canara|union bank|indusind|yes bank|idfc)\b/i)
+    if (bankMatch) detectedBankVal = bankMatch[0].toUpperCase() + (bankMatch[0].toLowerCase().includes('bank') ? '' : ' Bank')
+  }
+
+  const hasBank = Boolean(detectedBankVal)
 
   // 3. Fraudster / Beneficiary Handle
   const hasFraudster = Boolean(
@@ -60,7 +73,7 @@ export function getCompulsoryFields(r: TriageResult): CompulsoryField[] {
       label: '12-Digit Transaction UTR Number',
       labelHi: '12-अंकों का UPI UTR / लेनदेन संदर्भ संख्या',
       isFilled: hasUtr,
-      value: hasUtr ? r.frauderContact : undefined,
+      value: hasUtr ? (detectedUtrVal ? `UTR: ${detectedUtrVal}` : r.frauderContact) : undefined,
       importance: 'Mandatory for bank & NPCI golden-hour fund freeze',
       importanceHi: 'बैंक और NPCI द्वारा फंड फ्रीज करने के लिए अनिवार्य',
     })
@@ -70,7 +83,7 @@ export function getCompulsoryFields(r: TriageResult): CompulsoryField[] {
       label: 'Debited Bank Name',
       labelHi: 'बैंक का नाम (जिससे पैसे कटे)',
       isFilled: hasBank,
-      value: hasBank ? r.bankName : undefined,
+      value: hasBank ? detectedBankVal : undefined,
       importance: 'Required to notify source Bank Nodal Officer',
       importanceHi: 'बैंक नोडल अधिकारी को तत्काल सूचित करने के लिए आवश्यक',
     })

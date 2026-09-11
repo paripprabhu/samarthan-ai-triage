@@ -95,6 +95,8 @@ function DashboardContent() {
             bankName: record.bankName,
             accountNumber: record.accountNumber,
             upiId: record.upiId,
+            ifscCode: record.ifscCode,
+            utrNumber: record.utrNumber,
             timeline: record.timeline,
             freezeSteps: record.freezeSteps,
             applicableLaws: record.applicableLaws,
@@ -145,6 +147,8 @@ function DashboardContent() {
     bankName: r.bankName,
     accountNumber: r.accountNumber,
     upiId: r.upiId,
+    ifscCode: r.ifscCode,
+    utrNumber: r.utrNumber,
     timeline: r.timeline,
     freezeSteps: r.freezeSteps,
     applicableLaws: r.applicableLaws,
@@ -227,6 +231,8 @@ function DashboardContent() {
           bankName: triageResult.bankName,
           accountNumber: triageResult.accountNumber,
           upiId: triageResult.upiId,
+          ifscCode: triageResult.ifscCode,
+          utrNumber: triageResult.utrNumber,
           amount: triageResult.amount,
           complaintDraft: triageResult.complaintDraft,
           complaintDraftHi: triageResult.complaintDraftHi,
@@ -275,6 +281,7 @@ function DashboardContent() {
         ...(extracted?.accountNumber ? { accountNumber: extracted.accountNumber } : {}),
         ...(extracted?.upiId ? { upiId: extracted.upiId } : {}),
         ...(extracted?.ifscCode ? { ifscCode: extracted.ifscCode } : {}),
+        ...(extracted?.utr ? { utrNumber: extracted.utr } : {}),
         ...(extracted?.fraudsterIdentifier ? { fraudsterIdentifier: extracted.fraudsterIdentifier } : {}),
         amount: updatedAmount,
         ...(extracted?.complainantName ? { complainantName: extracted.complainantName } : {}),
@@ -584,15 +591,60 @@ function DashboardContent() {
                   />
                 </div>
 
-                {/* UPI ID & Bank IFSC */}
+                {/* Debited Bank & Account (Complainant's Bank) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
+                    <label htmlFor="bank-name" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
+                      {hi ? 'डेबिटेड बैंक का नाम (आपका बैंक)' : 'Debited Bank Name (Your Bank)'}
+                    </label>
+                    <input
+                      id="bank-name"
+                      type="text"
+                      value={r.bankName || ''}
+                      onChange={(e) => handleUpdate('bankName', e.target.value)}
+                      placeholder={hi ? 'उदा. HDFC Bank, SBI' : 'e.g. HDFC Bank, SBI'}
+                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="account-number" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
+                      {hi ? 'खाता / कार्ड नंबर' : 'Account / Card Number'}
+                    </label>
+                    <input
+                      id="account-number"
+                      type="text"
+                      value={r.accountNumber || ''}
+                      onChange={(e) => handleUpdate('accountNumber', e.target.value)}
+                      placeholder={hi ? 'उदा. XXXX-XXXX-5102' : 'e.g. XXXX-XXXX-5102'}
+                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
+                    />
+                  </div>
+                </div>
+
+                {/* Transaction Ref / UTR, UPI ID & Bank IFSC */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label htmlFor="utr-number" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                      <span>{hi ? 'लेनदेन यूटीआर संदर्भ' : 'Transaction Ref / UTR'}</span>
+                      <span className="text-[10px] text-amber-600 font-semibold uppercase">{hi ? 'फ्रीज हेतु अनिवार्य' : 'Mandatory'}</span>
+                    </label>
+                    <input
+                      id="utr-number"
+                      type="text"
+                      value={r.utrNumber || ''}
+                      onChange={(e) => handleUpdate('utrNumber', e.target.value)}
+                      placeholder={hi ? 'उदा. 123456789012' : 'e.g. 123456789012'}
+                      className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
+                    />
+                  </div>
+                  <div>
                     <label htmlFor="upi-id" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      Beneficiary UPI / VPA
+                      {hi ? 'लाभार्थी यूपीआई / वीपीए' : 'Beneficiary UPI / VPA'}
                     </label>
                     <input
                       id="upi-id"
-                      type="text" value={r.upiId || ''}
+                      type="text"
+                      value={r.upiId || ''}
                       onChange={(e) => handleUpdate('upiId', e.target.value)}
                       placeholder="e.g. fraudster@okhdfcbank"
                       className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
@@ -600,11 +652,12 @@ function DashboardContent() {
                   </div>
                   <div>
                     <label htmlFor="ifsc-code" className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">
-                      Beneficiary IFSC Code
+                      {hi ? 'आईएफएससी कोड' : 'Beneficiary IFSC Code'}
                     </label>
                     <input
                       id="ifsc-code"
-                      type="text" value={r.ifscCode || ''}
+                      type="text"
+                      value={r.ifscCode || ''}
                       onChange={(e) => handleUpdate('ifscCode', e.target.value.toUpperCase())}
                       placeholder="e.g. SBIN0001234"
                       className="w-full border border-zinc-200 rounded-md p-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono uppercase"
@@ -773,6 +826,7 @@ function DashboardContent() {
               <SmartActions
                 bankName={r.bankName} incidentId={r.incidentId} amount={r.amount} hi={hi} language={language}
                 fraudsterIdentifier={r.fraudsterIdentifier} summary={hi ? r.summaryHi : r.summary}
+                utrNumber={r.utrNumber} upiId={r.upiId}
                 recommendedChannel={r.recommendedChannel}
                 recommendedChannelTarget={r.recommendedChannelTarget}
                 followUpPoints={allFollowUpPoints}

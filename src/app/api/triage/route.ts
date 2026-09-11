@@ -96,6 +96,8 @@ CRITICAL INSTRUCTIONS:
   "bankName": "The VICTIM's bank name, or 'Not Provided'",
   "accountNumber": "The VICTIM's OWN bank account number, exactly as they gave it including any masking (e.g. 'XXXX-XXXX-5102'). Do NOT prefix words like 'masked'. If the victim only gave the FRAUDSTER's / beneficiary's account number (not their own), that belongs in frauderContact, and this field is 'Not Provided'. Use 'Not Provided' if the victim's own account number is absent.",
   "upiId": "string or 'Not Provided'",
+  "ifscCode": "Beneficiary bank IFSC code if mentioned, or 'Not Provided'",
+  "utrNumber": "12-digit UPI UTR number or transaction reference ID if mentioned, or 'Not Provided'",
   "timeline": "date/time string if mentioned/visible, else 'Not Provided'",
   "summary": "2-sentence English summary of the facts including any specific platforms/details",
   "summaryHi": "2-sentence Hindi summary of the facts",
@@ -221,6 +223,7 @@ export async function POST(req: NextRequest) {
       accountNumber: detectedAccount,
       upiId: detectedUpi || undefined,
       ifscCode: detectedIfsc || undefined,
+      utrNumber: detectedUtr || undefined,
       isDigitalArrest: isDigitalArrest || undefined,
       digitalArrestAdvisory,
       timeline: new Date().toLocaleString('en-IN'),
@@ -503,8 +506,15 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
       'Financial Fraud', 'Women/Children Related Crime', 'Extortion & Blackmail',
       'Identity Theft', 'E-Commerce Scams', 'Investment Scam', 'Other Cyber Crime',
     ]
-    const str = (v: unknown, fallback: string) =>
-      (typeof v === 'string' && v.trim()) ? v.trim() : fallback
+    const str = (v: unknown, fallback: string) => {
+      if (typeof v === 'string' && v.trim()) {
+        const lower = v.trim().toLowerCase()
+        if (lower !== 'not provided' && lower !== 'not identified' && lower !== 'unknown' && lower !== 'n/a' && lower !== 'none') {
+          return v.trim()
+        }
+      }
+      return fallback
+    }
     const num = (v: unknown) => {
       const n = typeof v === 'number' ? v : parseInt(String(v ?? '').replace(/[^\d]/g, ''), 10)
       return Number.isFinite(n) && n >= 0 ? n : 0
@@ -553,10 +563,15 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
       amount: finalAmount,
       bankName: str(parsed.bankName, detectedBank || 'Not Provided'),
       accountNumber: str(parsed.accountNumber, detectedAccount || 'Not Provided'),
-      upiId: typeof parsed.upiId === 'string' && parsed.upiId.trim() && !parsed.upiId.includes('Not Provided')
+      upiId: typeof parsed.upiId === 'string' && parsed.upiId.trim() && !parsed.upiId.toLowerCase().includes('not provided')
         ? parsed.upiId.trim()
         : (detectedUpi || undefined),
-      ifscCode: detectedIfsc || undefined,
+      ifscCode: typeof parsed.ifscCode === 'string' && parsed.ifscCode.trim() && !parsed.ifscCode.toLowerCase().includes('not provided')
+        ? parsed.ifscCode.trim().toUpperCase()
+        : (detectedIfsc || undefined),
+      utrNumber: typeof parsed.utrNumber === 'string' && parsed.utrNumber.trim() && !parsed.utrNumber.toLowerCase().includes('not provided')
+        ? parsed.utrNumber.trim()
+        : (detectedUtr || undefined),
       isDigitalArrest: isDigitalArrest || undefined,
       digitalArrestAdvisory,
       timeline: str(parsed.timeline, 'Not Provided'),

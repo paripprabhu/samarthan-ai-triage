@@ -82,6 +82,7 @@ export interface TriageResult {
   accountNumber: string
   upiId?: string
   ifscCode?: string
+  utrNumber?: string
   isDigitalArrest?: boolean
   digitalArrestAdvisory?: string
   timeline: string

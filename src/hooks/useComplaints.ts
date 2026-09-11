@@ -40,6 +40,8 @@ export interface SavedComplaint {
   bankName: string
   accountNumber: string
   upiId?: string
+  ifscCode?: string
+  utrNumber?: string
   timeline: string
   freezeSteps: FreezeStep[]
   applicableLaws: ApplicableLaw[]
@@ -76,6 +78,9 @@ function normalize(c: Partial<SavedComplaint>): SavedComplaint {
     frauderContact: c.frauderContact ?? 'Not Provided',
     bankName: c.bankName ?? 'Not Provided',
     accountNumber: c.accountNumber ?? 'Not Provided',
+    upiId: c.upiId,
+    ifscCode: c.ifscCode,
+    utrNumber: c.utrNumber,
     timeline: c.timeline ?? 'Not Provided',
     language: c.language ?? 'en',
     savedAt: c.savedAt ?? new Date().toISOString(),
@@ -97,6 +102,27 @@ function normalize(c: Partial<SavedComplaint>): SavedComplaint {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fromRow(row: Record<string, any>): SavedComplaint {
   const isRegional = row.language && row.language !== 'en' && row.language !== 'hi'
+
+  const resolvedUtr = row.utr_number ||
+    (row.frauder_contact || '').match(/(?:utr|ref|txn|transaction|imps|neft)?[ :#-]*([0-9]{12})\b/i)?.[1] ||
+    (row.complaint_draft || '').match(/(?:utr|ref|transaction)?[ :#-]*([0-9]{12})\b/i)?.[1] ||
+    undefined
+
+  const resolvedIfsc = row.ifsc_code ||
+    (row.frauder_contact || '').match(/\b([A-Z]{4}0[A-Z0-9]{6})\b/)?.[1] ||
+    (row.complaint_draft || '').match(/\b([A-Z]{4}0[A-Z0-9]{6})\b/)?.[1] ||
+    undefined
+
+  const resolvedUpi = row.upi_id ||
+    (row.frauder_contact || '').match(/[\w.-]+@[\w.-]+/)?.[0] ||
+    (row.complaint_draft || '').match(/[\w.-]+@[\w.-]+/)?.[0] ||
+    undefined
+
+  const detectedBankMatch = (row.complaint_draft || row.summary || '').match(/\b(hdfc|sbi|state bank|icici|axis|kotak|pnb|punjab national|bank of baroda|canara|union bank|indusind|yes bank|idfc)\b/i)
+  const resolvedBank = (row.bank_name && !row.bank_name.toLowerCase().includes('not provided') && !row.bank_name.toLowerCase().includes('bank nodal desk'))
+    ? row.bank_name
+    : (detectedBankMatch ? detectedBankMatch[0].toUpperCase() + (detectedBankMatch[0].toLowerCase().includes('bank') ? '' : ' Bank') : row.bank_name)
+
   return normalize({
     incidentId: row.incident_id,
     fraudType: row.fraud_type,
@@ -111,9 +137,11 @@ function fromRow(row: Record<string, any>): SavedComplaint {
     complaintDraftHi: row.complaint_draft_hi,
     complaintDraftRegional: row.complaint_draft_regional || (isRegional ? row.complaint_draft_hi : undefined),
     frauderContact: row.frauder_contact,
-    bankName: row.bank_name,
+    bankName: resolvedBank || 'Not Provided',
     accountNumber: row.account_number,
-    upiId: row.upi_id ?? undefined,
+    upiId: resolvedUpi,
+    ifscCode: resolvedIfsc,
+    utrNumber: resolvedUtr,
     timeline: row.timeline,
     freezeSteps: row.freeze_steps,
     applicableLaws: row.applicable_laws,

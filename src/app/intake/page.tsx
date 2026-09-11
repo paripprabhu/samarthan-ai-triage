@@ -18,6 +18,9 @@ import {
   extractMultilingualOnBehalfOf,
   extractMultilingualAmount,
   extractMultilingualFraudster,
+  extractMultilingualUTR,
+  extractMultilingualUPI,
+  extractMultilingualIFSC,
   inferCategoryFromMultilingualText,
   normalizeCategoryHint,
   getRegionalComplaintDraft
@@ -76,6 +79,9 @@ function IntakeContent() {
       const mappedCat = normalizeCategoryHint(rawCat) || inferCategoryFromMultilingualText(finalTxt)
       const cleanAmount = extractMultilingualAmount(finalTxt)
       const detectedFraudster = extractMultilingualFraudster(finalTxt)
+      const utrRes = extractMultilingualUTR(finalTxt)
+      const detectedUpi = extractMultilingualUPI(finalTxt) || finalTxt.match(/[\w.-]+@[\w.-]+/)?.[0]
+      const detectedIfsc = extractMultilingualIFSC(finalTxt)
       const idNum = generateId()
       const inferred = inferChannelFromFraudType(mappedCat)
 
@@ -93,7 +99,9 @@ function IntakeContent() {
         amount: cleanAmount || (mappedCat === 'Financial Fraud' ? 15000 : 0),
         bankName: finalTxt.match(/sbi|hdfc|icici|axis|kotak|pnb/i)?.[0]?.toUpperCase() || 'N/A',
         accountNumber: 'N/A',
-        upiId: finalTxt.match(/[\w.-]+@[\w.-]+/)?.[0] || undefined,
+        upiId: detectedUpi || undefined,
+        ifscCode: detectedIfsc || undefined,
+        utrNumber: utrRes.utr || undefined,
         timeline: new Date().toLocaleString('en-IN'),
         summary: finalTxt.length > 20 ? finalTxt.substring(0, 180) + '...' : `Cyber incident reported under ${mappedCat}.`,
         summaryHi: `${mappedCat} के तहत साइबर घटना दर्ज की गई।`,

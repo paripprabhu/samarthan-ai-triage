@@ -16,6 +16,8 @@ interface SmartActionsProps {
   language?: SupportedLanguage
   fraudsterIdentifier?: string
   summary?: string
+  utrNumber?: string
+  upiId?: string
   recommendedChannel?: RecommendedChannel
   recommendedChannelTarget?: string
   followUpPoints?: string[]
@@ -34,6 +36,7 @@ const BANK_EMAIL_MAP: Record<string, string> = {
 
 export default function SmartActions({
   bankName, incidentId, amount, hi, language, fraudsterIdentifier, summary,
+  utrNumber, upiId,
   recommendedChannel, recommendedChannelTarget,
   followUpPoints = [], onBankNotified, onPlatformReported, onPoliceRouted,
 }: SmartActionsProps) {
@@ -59,7 +62,9 @@ export default function SmartActions({
     const cleanBankName = Object.keys(BANK_EMAIL_MAP).find(k => String(bankName || '').toLowerCase().includes(k.toLowerCase())) || 'Unknown'
     const nodalEmail = cleanBankName !== 'Unknown' ? BANK_EMAIL_MAP[cleanBankName] : 'nodal.officer@rbi.org.in'
     const subject = encodeURIComponent(`URGENT: Fraud Reporting - Incident ${incidentId}`)
-    const body = encodeURIComponent(`Dear Nodal Officer,\n\nI am reporting a cyber fraud on my account.\nIncident ID: ${incidentId}\nAmount: Rs ${amount}\n\nPlease freeze the beneficiary account immediately.${followUpText}\n\nRegards,`)
+    const utrLine = utrNumber ? `\nTransaction Reference (UTR): ${utrNumber}` : ''
+    const upiLine = upiId ? `\nBeneficiary UPI ID: ${upiId}` : ''
+    const body = encodeURIComponent(`Dear Nodal Officer,\n\nI am reporting a cyber fraud on my account.\nIncident ID: ${incidentId}\nAmount: Rs ${amount}${utrLine}${upiLine}\n\nPlease freeze the beneficiary account immediately.${followUpText}\n\nRegards,`)
     window.open(`mailto:${nodalEmail}?subject=${subject}&body=${body}`, '_blank')
     setPrimaryDone(true)
     onBankNotified?.()
