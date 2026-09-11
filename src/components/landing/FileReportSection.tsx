@@ -352,7 +352,7 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
               <button
                 type="button"
                 onClick={() => setIsChoiceModalOpen(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#1fa851] active:scale-[0.99] text-white rounded-xl px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-bold transition-all shadow-md hover:shadow-lg cursor-pointer min-h-[44px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#1fa851] active:scale-[0.99] text-white rounded-xl px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-semibold transition-all shadow-md hover:shadow-lg cursor-pointer min-h-[44px]"
               >
                 <MessageCircle className="w-5 h-5 fill-white" />
                 <span>{loc.waBtn}</span>
@@ -360,7 +360,7 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
               </button>
             </div>
 
-            <div className="mt-5 inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-md bg-emerald-50 border border-emerald-200 text-[11px] sm:text-xs font-mono text-emerald-800">
+            <div className="mt-5 inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-md bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-800">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>{loc.waActive}</span>
             </div>
@@ -372,7 +372,7 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
             <input type="file" ref={fileRef} onChange={handleFileSelect} className="hidden" accept="image/*,.pdf" />
             <div className="rounded-xl border border-zinc-300 bg-white shadow-xs overflow-hidden flex flex-col focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
               <textarea
-                className="w-full p-3.5 sm:p-4 min-h-[110px] sm:min-h-[120px] outline-none resize-none text-zinc-800 placeholder:text-zinc-400 text-base sm:text-sm"
+                className="w-full p-3.5 sm:p-4 min-h-[110px] sm:min-h-[120px] outline-none resize-none text-zinc-800 placeholder:text-zinc-400 text-sm"
                 placeholder={t.fileReport.placeholder}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}

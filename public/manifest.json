@@ -1,7 +1,7 @@
 {
   "name": "Samarthan",
   "short_name": "Samarthan",
-  "description": "Golden Hour Fraud Triage — Report scams instantly with AI",
+  "description": "Golden Hour Fraud Triage - Report scams instantly with AI",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1A3A6B",

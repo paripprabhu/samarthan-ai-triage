@@ -494,8 +494,8 @@ export async function processWhatsAppTurn(
   session.history.push({ role: 'user', content: voiceTranscript ? `[Voice Note] ${voiceTranscript}` : userInput, timestamp })
 
   // Auto-restore previous incident from Neon DB if server restarted and memory was cleared
-  // SKIP this if the session was explicitly reset (user said NEW) — the _skipDbRestore flag is set by the API route
-  // ALSO skip while the sticky forceNewComplaint flag is set — otherwise the very next
+  // SKIP this if the session was explicitly reset (user said NEW) - the _skipDbRestore flag is set by the API route
+  // ALSO skip while the sticky forceNewComplaint flag is set - otherwise the very next
   // message after "NEW" would resurrect the old incident from the DB and update it.
   // ALSO skip for simulator sessions (sim-*) so simulations do NOT dredge up historical test cases.
   const isSimSession = session.phoneNumber.startsWith('sim') || (session as any).isSimulator
@@ -641,7 +641,7 @@ export async function processWhatsAppTurn(
   // ACTIVE COMPLAINT FLOW:
   // When citizen ALREADY has an active complaint on file, any message sent should automatically
   // update their existing complaint (unless they ask for status, greeting, or explicit new complaint).
-  // Suppressed entirely while forceNewComplaint is set — the user is mid-way through filing a fresh case.
+  // Suppressed entirely while forceNewComplaint is set - the user is mid-way through filing a fresh case.
   if (!session.forceNewComplaint && session.incidentId && (session.stage === 'FILED' || session.stage === 'AWAITING_UPDATE_OR_NEW')) {
     const noteText = (voiceTranscript || userInput).trim()
 
@@ -918,8 +918,8 @@ async function updateExistingComplaint(
         const updatedFraudster = extractedUpdate.fraudsterIdentifier || row.fraudster_identifier
 
         const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
-        let updatedDraft = (row.complaint_draft || '') + `\n\n[SUPPLEMENTARY STATEMENT — ${timeStr}]\nVictim update via WhatsApp (${session.phoneNumber}): ${noteToSave}`
-        let updatedDraftHi = (row.complaint_draft_hi || '') + `\n\n[पूरक बयान — ${timeStr}]\nव्हाट्सएप द्वारा नया विवरण (${session.phoneNumber}): ${noteToSave}`
+        let updatedDraft = (row.complaint_draft || '') + `\n\n[SUPPLEMENTARY STATEMENT - ${timeStr}]\nVictim update via WhatsApp (${session.phoneNumber}): ${noteToSave}`
+        let updatedDraftHi = (row.complaint_draft_hi || '') + `\n\n[पूरक बयान - ${timeStr}]\nव्हाट्सएप द्वारा नया विवरण (${session.phoneNumber}): ${noteToSave}`
 
         if (extractedUpdate.fraudsterIdentifier && row.fraudster_identifier) {
           updatedDraft = updatedDraft.replaceAll(row.fraudster_identifier, extractedUpdate.fraudsterIdentifier)
@@ -988,7 +988,7 @@ CRITICAL CLASSIFICATION & ROUTING RULES:
    - "Identity Theft" is ONLY for cases where NO money was stolen from the victim's own accounts (e.g. fake profile, forged PAN/Aadhaar used for loan in victim's name).
    - Whenever money was lost or debited (amount > 0 or UTR / UPI / bank mentioned), recommendedChannel MUST be "bank" and recommendedChannelTarget MUST be the victim's bank name (e.g. "HDFC Bank", "SBI") or "the bank".
 2. MANDATORY BANKING DETAILS: If the user provides a 12-digit UPI UTR / transaction reference number, beneficiary UPI handle, or victim's bank name (e.g. HDFC Bank, SBI), extract them into "utrNumber", "upiId", and "bankName", and include them in "frauderContact".
-3. COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"), and leave the address/city as "[Address / city — to be provided]".`,
+3. COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"), and leave the address/city as "[Address / city - to be provided]".`,
           },
           { role: 'user', content: incidentText },
         ],
@@ -1183,7 +1183,7 @@ CRITICAL CLASSIFICATION & ROUTING RULES:
   session.incidentId = triageResult.incidentId
   session.extractedData = triageResult
   session.accumulatedText = incidentText
-  // New complaint is filed — the sticky "NEW" flag has done its job.
+  // New complaint is filed - the sticky "NEW" flag has done its job.
   session.forceNewComplaint = false
 
   const trackingLink = `${APP_URL}/dashboard?id=${triageResult.incidentId}`
@@ -1237,7 +1237,7 @@ function generateFallbackResult(text: string, ext: ReturnType<typeof quickExtrac
   let complaintDraftRegional: string | undefined = undefined
 
   if (lang !== 'en' && lang !== 'hi') {
-    summaryRegional = `${meta.nativeName}: ${detectedCategory} — ₹${amount.toLocaleString('en-IN')} WhatsApp AI Triage incident report.`
+    summaryRegional = `${meta.nativeName}: ${detectedCategory} - ₹${amount.toLocaleString('en-IN')} WhatsApp AI Triage incident report.`
     complaintDraftRegional = getRegionalComplaintDraft(lang, complainantName, onBehalfOfTarget, detectedCategory, text || detectedCategory, amount, ext.utr, ext.upi, ext.ifscCode)
   }
 
@@ -1255,9 +1255,9 @@ function generateFallbackResult(text: string, ext: ReturnType<typeof quickExtrac
     summaryHi: `व्हाट्सएप बॉट के माध्यम से ${detectedCategory} (₹${amount.toLocaleString('en-IN')}) दर्ज की गई।${isDigitalArrest ? ' डिजिटल अरेस्ट जबरन वसूली का मामला पहचाना गया।' : ''}`,
     summaryRegional,
     complaintDraft: `To The Station House Officer / Cyber Crime Cell,
-${draftOpenerEn} an unauthorized debit of ₹${amount.toLocaleString('en-IN')} from ${onBehalfOfTarget ? `${onBehalfOfTarget}'s account` : 'my account'}. The beneficiary identifier is ${fraudster}${ext.utr ? ` with transaction reference UTR: ${ext.utr}` : ''}${ext.upi ? `, UPI: ${ext.upi}` : ''}${ext.ifscCode ? `, IFSC: ${ext.ifscCode}` : ''}. I request immediate lien-marking of funds and registration of FIR under Section 66D of Information Technology Act and Section 318(4) of Bharatiya Nyaya Sanhita (BNS 2023).${namedComplainant ? '' : '\n\n[Complainant address / city — to be provided]'}`,
+${draftOpenerEn} an unauthorized debit of ₹${amount.toLocaleString('en-IN')} from ${onBehalfOfTarget ? `${onBehalfOfTarget}'s account` : 'my account'}. The beneficiary identifier is ${fraudster}${ext.utr ? ` with transaction reference UTR: ${ext.utr}` : ''}${ext.upi ? `, UPI: ${ext.upi}` : ''}${ext.ifscCode ? `, IFSC: ${ext.ifscCode}` : ''}. I request immediate lien-marking of funds and registration of FIR under Section 66D of Information Technology Act and Section 318(4) of Bharatiya Nyaya Sanhita (BNS 2023).${namedComplainant ? '' : '\n\n[Complainant address / city - to be provided]'}`,
     complaintDraftHi: `थाना प्रभारी / साइबर अपराध शाखा,
-${draftOpenerHi} ₹${amount.toLocaleString('en-IN')} की अनधिकृत निकासी की औपचारिक शिकायत। आरोपी का पहचानकर्ता ${fraudster} है${ext.utr ? ` (यूटीआर: ${ext.utr})` : ''}${ext.upi ? ` (यूपीआई: ${ext.upi})` : ''}। कृपया आईटी अधिनियम की धारा 66D एवं भारतीय न्याय संहिता (BNS 2023) की धारा 318(4) के तहत कार्रवाई करें।${namedComplainant ? '' : '\n\n[शिकायतकर्ता का पता / शहर — दिया जाना है]'}`,
+${draftOpenerHi} ₹${amount.toLocaleString('en-IN')} की अनधिकृत निकासी की औपचारिक शिकायत। आरोपी का पहचानकर्ता ${fraudster} है${ext.utr ? ` (यूटीआर: ${ext.utr})` : ''}${ext.upi ? ` (यूपीआई: ${ext.upi})` : ''}। कृपया आईटी अधिनियम की धारा 66D एवं भारतीय न्याय संहिता (BNS 2023) की धारा 318(4) के तहत कार्रवाई करें।${namedComplainant ? '' : '\n\n[शिकायतकर्ता का पता / शहर - दिया जाना है]'}`,
     complaintDraftRegional,
     language: lang,
     frauderContact: ext.utr ? `Ref UTR: ${ext.utr}${ext.upi ? `; UPI: ${ext.upi}` : ''}; Contact: ${ext.phone || 'Not Provided'}` : (ext.phone || (ext.upi ? `UPI: ${ext.upi}` : 'Not Provided')),

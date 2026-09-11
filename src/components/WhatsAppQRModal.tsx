@@ -195,7 +195,7 @@ export default function WhatsAppQRModal({
                     className="cursor-pointer group flex items-center justify-between bg-zinc-900 text-zinc-200 text-xs font-mono px-3.5 py-2.5 rounded-md border border-zinc-800 hover:border-zinc-700 transition-colors"
                   >
                     <span>npm run whatsapp-bot</span>
-                    <span className="text-[11px] text-zinc-400 group-hover:text-white">
+                    <span className="text-xs text-zinc-400 group-hover:text-white">
                       {copiedCmd ? 'Copied!' : 'Copy'}
                     </span>
                   </div>
@@ -222,7 +222,7 @@ export default function WhatsAppQRModal({
             {state.isRunning && state.status === 'SCAN_QR' && state.qrDataUrl && (
               <div className="space-y-5">
                 <div className="text-center">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     {hi ? 'लाइव QR कोड तैयार है' : 'Live QR Ready to Scan'}
                   </span>
@@ -238,7 +238,7 @@ export default function WhatsAppQRModal({
                       className="w-56 h-56 md:w-64 md:h-64 object-contain rounded-md"
                     />
                   </div>
-                  <p className="text-[11px] text-zinc-400 mt-2.5">
+                  <p className="text-xs text-zinc-400 mt-2.5">
                     {hi ? 'सुरक्षा: QR कोड हर 40 सेकंड में स्वतः रिफ्रेश होता है' : 'Auto-refreshes periodically. Encrypted end-to-end.'}
                   </p>
                 </div>

@@ -70,7 +70,7 @@ export default function ComplaintUpdates({ hi, language, updates = [], onAdd }: 
         </div>
       </div>
 
-      {/* Follow-Up Action Box — High contrast, crystal clear in both light and dark mode */}
+      {/* Follow-Up Action Box - High contrast, crystal clear in both light and dark mode */}
       {allActionPoints.length > 0 && (
         <div className="mb-4 border border-amber-300 dark:border-amber-500/40 bg-amber-50/90 dark:bg-amber-950/40 rounded-xl p-4 shadow-xs">
           <p className="text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wide flex items-center gap-2 mb-2.5">
@@ -100,7 +100,7 @@ export default function ComplaintUpdates({ hi, language, updates = [], onAdd }: 
                 <div className="flex-1">
                   <p className="text-zinc-800 dark:text-zinc-200 font-medium leading-relaxed">{u.note}</p>
                   {formattedDate && (
-                    <p className="text-zinc-400 dark:text-zinc-500 text-[11px] mt-0.5">{formattedDate}</p>
+                    <p className="text-zinc-400 dark:text-zinc-500 text-[10px] mt-0.5">{formattedDate}</p>
                   )}
                   {points && points.length > 0 && (
                     <ul className="mt-1.5 space-y-1">

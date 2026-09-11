@@ -120,9 +120,9 @@ export const IT_ACT_SECTIONS: Record<string, { title: string; titleHi: string }>
   '43': { title: 'Penalty for unauthorized access/damage to a computer system', titleHi: 'कंप्यूटर सिस्टम तक अनधिकृत पहुंच/क्षति के लिए दंड' },
   '66': { title: 'Computer-related offences (hacking)', titleHi: 'कंप्यूटर संबंधी अपराध (हैकिंग)' },
   '66B': { title: 'Dishonestly receiving stolen computer resource or communication device', titleHi: 'चोरी के कंप्यूटर संसाधन या संचार उपकरण को बेईमानी से प्राप्त करना' },
-  '66C': { title: 'Identity theft — fraudulent use of password, digital signature, or unique ID', titleHi: 'पहचान की चोरी — पासवर्ड, डिजिटल हस्ताक्षर या अद्वितीय पहचान का धोखाधड़ीपूर्ण उपयोग' },
+  '66C': { title: 'Identity theft - fraudulent use of password, digital signature, or unique ID', titleHi: 'पहचान की चोरी - पासवर्ड, डिजिटल हस्ताक्षर या अद्वितीय पहचान का धोखाधड़ीपूर्ण उपयोग' },
   '66D': { title: 'Cheating by personation using a computer resource', titleHi: 'कंप्यूटर संसाधन का उपयोग करके प्रतिरूपण द्वारा धोखाधड़ी' },
-  '66E': { title: 'Violation of privacy — capturing/publishing private images', titleHi: 'गोपनीयता का उल्लंघन — निजी छवियों को कैप्चर/प्रकाशित करना' },
+  '66E': { title: 'Violation of privacy - capturing/publishing private images', titleHi: 'गोपनीयता का उल्लंघन - निजी छवियों को कैप्चर/प्रकाशित करना' },
   '67': { title: 'Publishing or transmitting obscene material in electronic form', titleHi: 'इलेक्ट्रॉनिक रूप में अश्लील सामग्री प्रकाशित या प्रसारित करना' },
   '67A': { title: 'Publishing or transmitting sexually explicit material', titleHi: 'यौन रूप से स्पष्ट सामग्री प्रकाशित या प्रसारित करना' },
   '67B': { title: 'Publishing/transmitting material depicting children in a sexually explicit act', titleHi: 'बच्चों को यौन रूप से स्पष्ट कृत्य में दर्शाने वाली सामग्री प्रकाशित/प्रसारित करना' },
@@ -389,8 +389,8 @@ Date: 22/08/2024`,
         },
         {
           step: 2,
-          action: 'Call HDFC Bank — Block all transactions',
-          actionHi: 'HDFC बैंक को कॉल करें — सभी लेनदेन ब्लॉक करें',
+          action: 'Call HDFC Bank - Block all transactions',
+          actionHi: 'HDFC बैंक को कॉल करें - सभी लेनदेन ब्लॉक करें',
           detail:
             'Call HDFC 24×7 helpline 1800-202-6161 to temporarily block your debit card and internet banking.',
           detailHi:
@@ -476,7 +476,7 @@ Respected Sir/Madam,
 
 I, Amit Verma (Synthetic), wish to report an online investment fraud perpetrated against me between 1st August and 22nd August 2024.
 
-I was added to a WhatsApp group called "Rakesh Jhunjhunwala Tips Official" which falsely used the identity of a well-known investor. The group lured me into investing on a fraudulent app "StockPro". I transferred ₹1,20,000 in three transactions to account number 8876543210 (IFSC: HDFC0001234). When I attempted to withdraw, I was asked to pay a "20% tax" before withdrawal — a classic advance-fee fraud pattern — which made me realize the scam.
+I was added to a WhatsApp group called "Rakesh Jhunjhunwala Tips Official" which falsely used the identity of a well-known investor. The group lured me into investing on a fraudulent app "StockPro". I transferred ₹1,20,000 in three transactions to account number 8876543210 (IFSC: HDFC0001234). When I attempted to withdraw, I was asked to pay a "20% tax" before withdrawal - a classic advance-fee fraud pattern - which made me realize the scam.
 
 I request:
 1. Immediate freeze on account 8876543210 (HDFC0001234).

@@ -1,5 +1,5 @@
 -- Samarthan complaints table (canonical reference).
--- The live database is Neon Postgres — apply changes with `node scripts/migrate.mjs`
+-- The live database is Neon Postgres - apply changes with `node scripts/migrate.mjs`
 -- (reads DATABASE_URL from env), which runs the CREATE + additive ALTERs.
 -- This file also works pasted into the Supabase SQL Editor if that backend is used.
 
@@ -36,7 +36,7 @@ create index if not exists complaints_saved_at_idx on complaints (saved_at desc)
 -- Row Level Security: this app has no real user accounts (DigiLocker sign-in
 -- is a simulated demo flow), so complaints are readable/writable by anyone
 -- holding the anon key, matching the existing localStorage-equivalent trust
--- model. Do not store real PII here — synthetic/demo data only.
+-- model. Do not store real PII here - synthetic/demo data only.
 alter table complaints enable row level security;
 
 create policy "public read" on complaints

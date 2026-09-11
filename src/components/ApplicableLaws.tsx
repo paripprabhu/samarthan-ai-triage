@@ -77,7 +77,7 @@ export default function ApplicableLaws({ laws, hi, language }: ApplicableLawsPro
           <Scale className="w-4 h-4 text-indigo-500" />
           {loc.header}
         </h3>
-        <span className="text-[9px] font-mono font-bold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-200 rounded-sm px-1.5 py-0.5">
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5">
           {loc.badge}
         </span>
       </div>
@@ -88,7 +88,7 @@ export default function ApplicableLaws({ laws, hi, language }: ApplicableLawsPro
       <div className="space-y-3">
         {laws.map((law, idx) => (
           <div key={idx} className="border border-zinc-200 rounded-lg p-3.5 bg-zinc-50">
-            <span className="inline-block text-xs font-bold font-mono text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md px-2 py-0.5 mb-1.5">
+            <span className="inline-block text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded px-2 py-0.5 mb-1.5">
               {law.section}
             </span>
             <p className="text-sm font-semibold text-zinc-900 leading-snug">

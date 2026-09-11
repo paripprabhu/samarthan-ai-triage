@@ -5,7 +5,7 @@ import { ThemeProvider } from '@/context/ThemeContext'
 import SmoothScroll from '@/components/SmoothScroll'
 
 export const metadata: Metadata = {
-  title: 'Samarthan — Build What Moves India Hackathon',
+  title: 'Samarthan - Build What Moves India Hackathon',
   description: 'AI-powered cybercrime triage platform',
   manifest: '/manifest.json',
   appleWebApp: {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: 'Samarthan',
   },
   openGraph: {
-    title: 'Samarthan — Golden Hour Fraud Triage',
+    title: 'Samarthan - Golden Hour Fraud Triage',
     description: 'AI-powered fraud reporting. From panic to FIR in 60 seconds.',
     type: 'website',
   },

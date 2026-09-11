@@ -9,7 +9,7 @@ export const StatsBento = () => {
         <div className="md:col-span-3 md:row-span-2 bg-primary rounded-lg p-10 flex flex-col justify-between overflow-hidden relative shadow-sm">
           <div className="absolute bottom-0 left-0 right-0 top-0 bg-[repeating-linear-gradient(45deg,#808080_0px_1px,transparent_1px_10px)] opacity-20 pointer-events-none"></div>
           <div>
-            <span className="inline-block px-3 py-1 bg-white/10 rounded-md text-[10px] font-mono font-semibold text-white/80 uppercase tracking-widest mb-6">
+            <span className="inline-block px-3 py-1 bg-white/10 rounded-md text-[10px] font-semibold text-white/80 uppercase tracking-widest mb-6">
               1930 NCRP Framework
             </span>
             <h3 className="text-6xl tracking-tighter text-white font-extrabold">
@@ -17,7 +17,7 @@ export const StatsBento = () => {
             </h3>
           </div>
           <p className="text-white/80 text-sm max-w-sm mt-6 leading-relaxed">
-            From panic to formal cybercrime report in under a minute — aligned with the national 1930 Golden Hour response protocol.
+            From panic to formal cybercrime report in under a minute - aligned with the national 1930 Golden Hour response protocol.
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export const StatsBento = () => {
         {/* Tertiary Stat B */}
         <div className="md:col-span-1 bg-white rounded-lg p-6 border border-zinc-200 flex flex-col justify-center text-center shadow-xs">
           <p className="text-2xl font-bold text-primary">66C / 66D</p>
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mt-1">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mt-1">
             IT Act & BNS
           </p>
         </div>

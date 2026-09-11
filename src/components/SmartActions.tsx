@@ -187,7 +187,7 @@ export default function SmartActions({
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">{lang === 'hi' ? ch.descHi : ch.desc}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Primary channel-driven action — Fully Simulated, Never takes user away */}
+        {/* Primary channel-driven action - Fully Simulated, Never takes user away */}
         <button
           onClick={primaryDone || primarySimulating ? undefined : handlePrimarySimulate}
           disabled={primarySimulating || primaryDone}
@@ -209,7 +209,7 @@ export default function SmartActions({
           <div>
             <h4 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm mb-1 flex items-center gap-1.5">
               {kind === 'bank' ? loc.bankActionTitle : (lang === 'hi' ? ch.titleHi : ch.title)}
-              <span className="text-[9px] font-mono font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-700/60 rounded-sm px-1.5 py-0.5">
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-700/60 rounded px-1.5 py-0.5">
                 {loc.simulatedBadge}
               </span>
             </h4>
@@ -223,7 +223,7 @@ export default function SmartActions({
           </div>
         </button>
 
-        {/* Route to Police — Beautiful in both Light and Dark Mode */}
+        {/* Route to Police - Beautiful in both Light and Dark Mode */}
         <button
           onClick={policeStation || locating ? undefined : handleRoutePolice}
           disabled={locating || !!policeStation}
@@ -249,7 +249,7 @@ export default function SmartActions({
           <div>
             <h4 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm mb-1 flex items-center gap-1.5">
               {loc.routePoliceTitle}
-              <span className="text-[9px] font-mono font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-700/60 rounded-sm px-1.5 py-0.5">
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-700/60 rounded px-1.5 py-0.5">
                 {loc.simulatedBadge}
               </span>
             </h4>
@@ -267,7 +267,7 @@ export default function SmartActions({
       {/* Real helpline numbers + portal for this route */}
       {(ch.hotline || ch.portalUrl) && (
         <div className="mt-4 pt-4 border-t border-dashed border-zinc-200 dark:border-zinc-800 flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mr-1">
             {loc.realContacts}
           </span>
           {ch.hotline && (

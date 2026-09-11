@@ -182,7 +182,7 @@ function IntakeContent() {
       router.push('/dashboard')
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {
-        // Network hang past 90s — don't dead-end the user. Serve the
+        // Network hang past 90s - don't dead-end the user. Serve the
         // rule-based client result and continue to the dashboard.
         console.warn('[intake] Triage request timed out, using client fallback')
         setTriageResult(buildClientFallback())
@@ -248,7 +248,7 @@ function IntakeContent() {
             className="border border-zinc-200 bg-zinc-50 rounded-lg p-3.5 sm:p-4">
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1 flex items-center gap-1.5">
               <ShieldAlert className="w-3.5 h-3.5" />
-              {hi ? 'Sandbox Mode' : 'Sandbox Mode — Synthetic Data'}
+              {hi ? 'Sandbox Mode' : 'Sandbox Mode - Synthetic Data'}
             </p>
             <p className="text-xs sm:text-sm text-zinc-700">{hi ? scenario.descriptionHi : scenario.description}</p>
           </motion.div>
@@ -264,7 +264,7 @@ function IntakeContent() {
         {/* ── FORM GRID ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          {/* Voice — hero cell, spans both rows on desktop */}
+          {/* Voice - hero cell, spans both rows on desktop */}
           <div className="md:row-span-2 border border-zinc-200 rounded-xl bg-zinc-50 shadow-sm p-4 sm:p-5 flex flex-col min-h-[240px] sm:min-h-[280px]">
             <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2 sm:mb-3">
               <span className="flex items-center gap-1.5"><Mic className="w-3.5 h-3.5" />{t.intake.voiceCardTitle}</span>

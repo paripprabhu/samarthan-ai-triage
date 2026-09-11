@@ -140,11 +140,11 @@ const REMINDER_I18N: Record<SupportedLanguage, {
     completeText: 'Your complaint is fully complete for emergency fund freezing and police FIR registration.',
     requiredBadge: 'Required',
     completed: 'completed',
-    actionRequired: 'Action required — details needed to freeze funds & file FIR',
+    actionRequired: 'Action required - details needed to freeze funds & file FIR',
     autoFillBtn: 'Auto-fill via Updates',
     done: 'Done',
     pending: 'Pending',
-    aiHint: 'Skip manual entry — type details naturally in Updates below (e.g. "UTR is 482910394821, bank is SBI") and AI auto-fills for you.',
+    aiHint: 'Skip manual entry - type details naturally in Updates below (e.g. "UTR is 482910394821, bank is SBI") and AI auto-fills for you.',
   },
   hi: {
     completeBadge: '100% पूर्ण',
@@ -155,117 +155,117 @@ const REMINDER_I18N: Record<SupportedLanguage, {
     autoFillBtn: 'ऑटो-फिल करें',
     done: 'पूर्ण',
     pending: 'बाकी',
-    aiHint: 'आसान तरीका: नीचे "नई जानकारी जोड़ें" में बस लिखें (जैसे: "मेरा UTR 482910394821 है, बैंक SBI") — AI अपने-आप भर देगा!',
+    aiHint: 'आसान तरीका: नीचे "नई जानकारी जोड़ें" में बस लिखें (जैसे: "मेरा UTR 482910394821 है, बैंक SBI") - AI अपने-आप भर देगा!',
   },
   bn: {
     completeBadge: '১০০% সম্পন্ন',
     completeText: 'আপনার অভিযোগটি ফান্ড ফ্রিজ এবং পুলিশ এফআইআর-এর জন্য সম্পূর্ণরূপে প্রস্তুত!',
     requiredBadge: 'বাধ্যতামূলক',
     completed: 'সম্পন্ন',
-    actionRequired: 'পদক্ষেপ প্রয়োজন — ফান্ড ফ্রিজ ও এফআইআর-এর জন্য এই বিবরণ প্রয়োজন',
+    actionRequired: 'পদক্ষেপ প্রয়োজন - ফান্ড ফ্রিজ ও এফআইআর-এর জন্য এই বিবরণ প্রয়োজন',
     autoFillBtn: 'অটো-ফিল করুন',
     done: 'সম্পন্ন',
     pending: 'বাকি',
-    aiHint: 'সহজ উপায়: নিচে আপডেটে সাধারণ ভাষায় লিখুন (যেমন: "আমার UTR 482910394821, ব্যাংক SBI") — AI স্বয়ংক্রিয়ভাবে পূরণ করবে!',
+    aiHint: 'সহজ উপায়: নিচে আপডেটে সাধারণ ভাষায় লিখুন (যেমন: "আমার UTR 482910394821, ব্যাংক SBI") - AI স্বয়ংক্রিয়ভাবে পূরণ করবে!',
   },
   mr: {
     completeBadge: '१००% पूर्ण',
     completeText: 'तुमची तक्रार निधी गोठवण्यासाठी आणि पोलीस एफआयआरसाठी पूर्णपणे तयार आहे!',
     requiredBadge: 'आवश्यक',
     completed: 'पूर्ण',
-    actionRequired: 'कारवाई आवश्यक — फंड फ्रीज आणि एफआयआरसाठी हे तपशील आवश्यक आहेत',
+    actionRequired: 'कारवाई आवश्यक - फंड फ्रीज आणि एफआयआरसाठी हे तपशील आवश्यक आहेत',
     autoFillBtn: 'ऑटो-फिल करा',
     done: 'पूर्ण',
     pending: 'बाकी',
-    aiHint: 'सोपा मार्ग: खाली अपडेट्समध्ये सामान्य भाषेत लिहा (उदा. "माझा UTR 482910394821 आहे, बँक SBI") — AI आपोआप भरेल!',
+    aiHint: 'सोपा मार्ग: खाली अपडेट्समध्ये सामान्य भाषेत लिहा (उदा. "माझा UTR 482910394821 आहे, बँक SBI") - AI आपोआप भरेल!',
   },
   te: {
     completeBadge: '100% పూర్తయింది',
     completeText: 'మీ ఫిర్యాదు నిధుల ఫ్రీజింగ్ మరియు పోలీస్ ఎఫ్ఐఆర్ నమోదుకు పూర్తిగా సిద్ధంగా ఉంది!',
     requiredBadge: 'తప్పనిసరి',
     completed: 'పూర్తయింది',
-    actionRequired: 'చర్య అవసరం — నిధులు ఫ్రీజ్ చేయడానికి మరియు ఎఫ్ఐఆర్ కోసం ఈ వివరాలు కావాలి',
+    actionRequired: 'చర్య అవసరం - నిధులు ఫ్రీజ్ చేయడానికి మరియు ఎఫ్ఐఆర్ కోసం ఈ వివరాలు కావాలి',
     autoFillBtn: 'ఆటో-ఫిల్ చేయండి',
     done: 'పూర్తి',
     pending: 'బాకీ',
-    aiHint: 'సులభమైన మార్గం: క్రింద అప్‌డేట్స్‌లో సహజంగా టైప్ చేయండి (ఉదా: "నా UTR 482910394821, బ్యాంక్ SBI") — AI దానంతటదే నింపుతుంది!',
+    aiHint: 'సులభమైన మార్గం: క్రింద అప్‌డేట్స్‌లో సహజంగా టైప్ చేయండి (ఉదా: "నా UTR 482910394821, బ్యాంక్ SBI") - AI దానంతటదే నింపుతుంది!',
   },
   ta: {
     completeBadge: '100% முடிந்தது',
     completeText: 'உங்கள் புகார் நிதி முடக்கம் மற்றும் காவல் துறை எஃப்ஐஆர் பதிவிற்கு முற்றிலும் தயாராக உள்ளது!',
     requiredBadge: 'கட்டாயம்',
     completed: 'முடிந்தது',
-    actionRequired: 'நடவடிக்கை தேவை — நிதி முடக்கம் மற்றும் எஃப்ஐஆருக்கு இந்த விவரங்கள் தேவை',
+    actionRequired: 'நடவடிக்கை தேவை - நிதி முடக்கம் மற்றும் எஃப்ஐஆருக்கு இந்த விவரங்கள் தேவை',
     autoFillBtn: 'தானாக நிரப்பவும்',
     done: 'முடிந்தது',
     pending: 'நிலுவை',
-    aiHint: 'எளிதான வழி: கீழே உள்ள புதுப்பிப்புகளில் விவரங்களை தட்டச்சு செய்யவும் (எ.கா: "என் UTR 482910394821, வங்கி SBI") — AI தானாக நிரப்பும்!',
+    aiHint: 'எளிதான வழி: கீழே உள்ள புதுப்பிப்புகளில் விவரங்களை தட்டச்சு செய்யவும் (எ.கா: "என் UTR 482910394821, வங்கி SBI") - AI தானாக நிரப்பும்!',
   },
   gu: {
     completeBadge: '100% પૂર્ણ',
     completeText: 'તમારી ફરિયાદ ફંડ ફ્રીઝ અને પોલીસ એફઆઈઆર માટે સંપૂર્ણપણે તૈયાર છે!',
     requiredBadge: 'ફરજિયાત',
     completed: 'પૂર્ણ',
-    actionRequired: 'પગલાં જરૂરી — ફંડ ફ્રીઝ અને એફઆઈઆર માટે આ વિગતો જરૂરી છે',
+    actionRequired: 'પગલાં જરૂરી - ફંડ ફ્રીઝ અને એફઆઈઆર માટે આ વિગતો જરૂરી છે',
     autoFillBtn: 'ઓટો-ફિલ કરો',
     done: 'પૂર્ણ',
     pending: 'બાકી',
-    aiHint: 'સરળ રીત: નીચે અપડેટ્સમાં સામાન્ય રીતે લખો (દા.ત. "મારો UTR 482910394821 છે, બેંક SBI") — AI આપમેળે ભરી દેશે!',
+    aiHint: 'સરળ રીત: નીચે અપડેટ્સમાં સામાન્ય રીતે લખો (દા.ત. "મારો UTR 482910394821 છે, બેંક SBI") - AI આપમેળે ભરી દેશે!',
   },
   ur: {
     completeBadge: '100% مکمل',
     completeText: 'آپ کی شکایت فنڈز منجمد کرنے اور پولیس ایف آئی آر کے لیے مکمل طور پر تیار ہے!',
     requiredBadge: 'لازمی',
     completed: 'مکمل',
-    actionRequired: 'کارروائی درکار ہے — رقم منجمد کرنے اور ایف آئی آر کے لیے یہ تفصیلات ضروری ہیں',
+    actionRequired: 'کارروائی درکار ہے - رقم منجمد کرنے اور ایف آئی آر کے لیے یہ تفصیلات ضروری ہیں',
     autoFillBtn: 'خودکار اندراج کریں',
     done: 'مکمل',
     pending: 'باقی',
-    aiHint: 'آسان طریقہ: نیچے اپڈیٹس میں قدرتی انداز میں لکھیں (مثلاً "میرا UTR 482910394821 ہے، بینک SBI") — AI خودکار طور پر بھر دے گا!',
+    aiHint: 'آسان طریقہ: نیچے اپڈیٹس میں قدرتی انداز میں لکھیں (مثلاً "میرا UTR 482910394821 ہے، بینک SBI") - AI خودکار طور پر بھر دے گا!',
   },
   kn: {
     completeBadge: '100% ಪೂರ್ಣಗೊಂಡಿದೆ',
     completeText: 'ನಿಮ್ಮ ದೂರು ಹಣ ಸ್ಥಗಿತಗೊಳಿಸಲು ಮತ್ತು ಪೊಲೀಸ್ ಎಫ್‌ಐಆರ್‌ಗೆ ಸಂಪೂರ್ಣವಾಗಿ ಸಿದ್ಧವಾಗಿದೆ!',
     requiredBadge: 'ಕಡ್ಡಾಯ',
     completed: 'ಪೂರ್ಣ',
-    actionRequired: 'ಕ್ರಮ ಅಗತ್ಯ — ಹಣ ಸ್ಥಗಿತಗೊಳಿಸಲು ಮತ್ತು ಎಫ್‌ಐಆರ್‌ಗೆ ಈ ವಿವರಗಳು ಬೇಕಾಗುತ್ತವೆ',
+    actionRequired: 'ಕ್ರಮ ಅಗತ್ಯ - ಹಣ ಸ್ಥಗಿತಗೊಳಿಸಲು ಮತ್ತು ಎಫ್‌ಐಆರ್‌ಗೆ ಈ ವಿವರಗಳು ಬೇಕಾಗುತ್ತವೆ',
     autoFillBtn: 'ಆಟೋ-ಫಿಲ್ ಮಾಡಿ',
     done: 'ಪೂರ್ಣ',
     pending: 'ಬಾಕಿ',
-    aiHint: 'ಸುಲಭ ವಿಧಾನ: ಕೆಳಗಿನ ಅಪ್‌ಡೇಟ್ಸ್‌ನಲ್ಲಿ ಸಹಜವಾಗಿ ಬರೆಯಿರಿ (ಉದಾ: "ನನ್ನ UTR 482910394821, ಬ್ಯಾಂಕ್ SBI") — AI ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಭರ್ತಿ ಮಾಡುತ್ತದೆ!',
+    aiHint: 'ಸುಲಭ ವಿಧಾನ: ಕೆಳಗಿನ ಅಪ್‌ಡೇಟ್ಸ್‌ನಲ್ಲಿ ಸಹಜವಾಗಿ ಬರೆಯಿರಿ (ಉದಾ: "ನನ್ನ UTR 482910394821, ಬ್ಯಾಂಕ್ SBI") - AI ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಭರ್ತಿ ಮಾಡುತ್ತದೆ!',
   },
   or: {
     completeBadge: '୧୦୦% ସମ୍ପୂର୍ଣ୍ଣ',
     completeText: 'ଆପଣଙ୍କ ଅଭିଯୋଗ ଟଙ୍କା ଫ୍ରିଜ୍ ଏବଂ ପୋଲିସ FIR ପାଇଁ ସମ୍ପୂର୍ଣ୍ଣ ପ୍ରସ୍ତୁତ!',
     requiredBadge: 'ବାଧ୍ୟତାମୂଳକ',
     completed: 'ସମ୍ପୂର୍ଣ୍ଣ',
-    actionRequired: 'ପଦକ୍ଷେପ ଆବଶ୍ୟକ — ଫଣ୍ଡ ଫ୍ରିଜ୍ ଏବଂ FIR ପାଇଁ ଏହି ବିବରଣୀ ଆବଶ୍ୟକ',
+    actionRequired: 'ପଦକ୍ଷେପ ଆବଶ୍ୟକ - ଫଣ୍ଡ ଫ୍ରିଜ୍ ଏବଂ FIR ପାଇଁ ଏହି ବିବରଣୀ ଆବଶ୍ୟକ',
     autoFillBtn: 'ଅଟୋ-ଫିଲ୍ କରନ୍ତୁ',
     done: 'ସମ୍ପୂର୍ଣ୍ଣ',
     pending: 'ବାକି',
-    aiHint: 'ସହଜ ଉପାୟ: ତଳେ ଅପଡେଟ୍‌ସରେ ସାଧାରଣ ଭାବେ ଲେଖନ୍ତୁ (ଯେପରି: "ମୋର UTR 482910394821, ବ୍ୟାଙ୍କ SBI") — AI ନିଜେ ଭରିଦେବ!',
+    aiHint: 'ସହଜ ଉପାୟ: ତଳେ ଅପଡେଟ୍‌ସରେ ସାଧାରଣ ଭାବେ ଲେଖନ୍ତୁ (ଯେପରି: "ମୋର UTR 482910394821, ବ୍ୟାଙ୍କ SBI") - AI ନିଜେ ଭରିଦେବ!',
   },
   ml: {
     completeBadge: '100% പൂർത്തിയായി',
     completeText: 'നിങ്ങളുടെ പരാതി പണം മരവിപ്പിക്കുന്നതിനും പോലീസ് എഫ്ഐആറിനും പൂർണ്ണമായും തയ്യാറാണ്!',
     requiredBadge: 'നിർബന്ധം',
     completed: 'പൂർത്തിയായി',
-    actionRequired: 'നടപടി ആവശ്യമാണ് — ഫണ്ട് മരവിപ്പിക്കാനും എഫ്ഐആറിനും ഈ വിവരങ്ങൾ ആവശ്യമാണ്',
+    actionRequired: 'നടപടി ആവശ്യമാണ് - ഫണ്ട് മരവിപ്പിക്കാനും എഫ്ഐആറിനും ഈ വിവരങ്ങൾ ആവശ്യമാണ്',
     autoFillBtn: 'ഓട്ടോ-ഫിൽ ചെയ്യുക',
     done: 'പൂർത്തിയായി',
     pending: 'ബാക്കി',
-    aiHint: 'എളുപ്പവഴി: താഴെയുള്ള അപ്‌ഡേറ്റുകളിൽ സാധാരണ രീതിയിൽ എഴുതുക (ഉദാ: "എന്റെ UTR 482910394821, ബാങ്ക് SBI") — AI തനിയെ പൂരിപ്പിക്കും!',
+    aiHint: 'എളുപ്പവഴി: താഴെയുള്ള അപ്‌ഡേറ്റുകളിൽ സാധാരണ രീതിയിൽ എഴുതുക (ഉദാ: "എന്റെ UTR 482910394821, ബാങ്ക് SBI") - AI തനിയെ പൂരിപ്പിക്കും!',
   },
   pa: {
     completeBadge: '100% ਪੂਰਾ',
     completeText: 'ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਫੰਡ ਫ੍ਰੀਜ਼ ਕਰਨ ਅਤੇ ਪੁਲਿਸ ਐੱਫ.ਆਈ.ਆਰ. ਲਈ ਪੂਰੀ ਤਰ੍ਹਾਂ ਤਿਆਰ ਹੈ!',
     requiredBadge: 'ਲਾਜ਼ਮੀ',
     completed: 'ਪੂਰਾ',
-    actionRequired: 'ਕਾਰਵਾਈ ਲੋੜੀਂਦੀ ਹੈ — ਫੰਡ ਫ੍ਰੀਜ਼ ਕਰਨ ਅਤੇ ਐੱਫ.ਆਈ.ਆਰ. ਲਈ ਇਹ ਵੇਰਵੇ ਜ਼ਰੂਰੀ ਹਨ',
+    actionRequired: 'ਕਾਰਵਾਈ ਲੋੜੀਂਦੀ ਹੈ - ਫੰਡ ਫ੍ਰੀਜ਼ ਕਰਨ ਅਤੇ ਐੱਫ.ਆਈ.ਆਰ. ਲਈ ਇਹ ਵੇਰਵੇ ਜ਼ਰੂਰੀ ਹਨ',
     autoFillBtn: 'ਆਟੋ-ਫਿਲ ਕਰੋ',
     done: 'ਪੂਰਾ',
     pending: 'ਬਾਕੀ',
-    aiHint: 'ਸੌਖਾ ਤਰੀਕਾ: ਹੇਠਾਂ ਅਪਡੇਟਸ ਵਿੱਚ ਕੁਦਰਤੀ ਢੰਗ ਨਾਲ ਲਿਖੋ (ਜਿਵੇਂ: "ਮੇਰਾ UTR 482910394821 ਹੈ, ਬੈਂਕ SBI") — AI ਆਪਣੇ-ਆਪ ਭਰ ਦੇਵੇਗਾ!',
+    aiHint: 'ਸੌਖਾ ਤਰੀਕਾ: ਹੇਠਾਂ ਅਪਡੇਟਸ ਵਿੱਚ ਕੁਦਰਤੀ ਢੰਗ ਨਾਲ ਲਿਖੋ (ਜਿਵੇਂ: "ਮੇਰਾ UTR 482910394821 ਹੈ, ਬੈਂਕ SBI") - AI ਆਪਣੇ-ਆਪ ਭਰ ਦੇਵੇਗਾ!',
   },
 }
 
@@ -369,7 +369,7 @@ export default function CompulsoryDetailsReminder({
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2.5">
-            <span className="text-[10px] font-bold font-mono uppercase tracking-widest text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-800/60 px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-800/60 px-2.5 py-1 rounded-full">
               {t.completeBadge}
             </span>
           </div>
@@ -394,14 +394,14 @@ export default function CompulsoryDetailsReminder({
             </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
-                <span className="text-[10px] font-bold font-mono uppercase tracking-widest text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/50 px-2.5 py-1 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/50 px-2.5 py-1 rounded-full">
                   {t.requiredBadge}
                 </span>
                 <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                   {filledCount} / {totalCount} {t.completed}
                 </span>
               </div>
-              <h3 className="text-[15px] sm:text-base font-semibold text-zinc-900 dark:text-zinc-100 mt-1.5 leading-snug indic-headline">
+              <h3 className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100 mt-1.5 leading-snug indic-headline">
                 {t.actionRequired}
               </h3>
             </div>
@@ -428,7 +428,7 @@ export default function CompulsoryDetailsReminder({
               style={{ width: `${percent}%` }}
             />
           </div>
-          <span className="text-[11px] font-mono font-semibold text-zinc-400 dark:text-zinc-500 tabular-nums flex-shrink-0">
+          <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 tabular-nums flex-shrink-0">
             {percent}%
           </span>
         </div>
@@ -466,7 +466,7 @@ export default function CompulsoryDetailsReminder({
                       {labelText}
                     </span>
                     <span
-                      className={`text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0 ${
+                      className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0 ${
                         f.isFilled
                           ? 'bg-emerald-100 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300'
                           : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400'
@@ -475,7 +475,7 @@ export default function CompulsoryDetailsReminder({
                       {f.isFilled ? t.done : t.pending}
                     </span>
                   </div>
-                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed line-clamp-1 indic-body">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed line-clamp-1 indic-body">
                     {f.isFilled ? f.value : importanceText}
                   </p>
                 </div>

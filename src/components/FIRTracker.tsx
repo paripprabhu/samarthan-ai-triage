@@ -63,7 +63,7 @@ export default function FIRTracker({ hi, language, status, onAdvance }: FIRTrack
                 >
                   <span>{COMPLAINT_STATUS_LABELS_12[s]?.[lang] || COMPLAINT_STATUS_LABELS_12[s]?.en || s}</span>
                   {s !== 'SUBMITTED' && (
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/70 border border-blue-200/80 dark:border-blue-800/80 rounded-full px-2 py-0.5">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/70 border border-blue-200/80 dark:border-blue-800/80 rounded-full px-2 py-0.5">
                       {loc.liveBadge}
                     </span>
                   )}
@@ -75,7 +75,7 @@ export default function FIRTracker({ hi, language, status, onAdvance }: FIRTrack
       </div>
 
       <div className="mt-6 pt-5 border-t border-dashed border-zinc-200 dark:border-zinc-800">
-        <p className="text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2.5">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2.5">
           {loc.demoControls}
         </p>
         <button

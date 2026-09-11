@@ -84,7 +84,7 @@ export default function CallOperatorModal({
                     {hi ? 'ऑपरेटर को आपकी शिकायत का डेटा भेजा जा रहा है' : 'Sending your complaint data to the call operator'}
                   </p>
                 </div>
-                <span className="text-[9px] font-mono font-bold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-200 rounded-sm px-1.5 py-0.5">
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5">
                   {hi ? 'डेमो' : 'Simulated'}
                 </span>
               </div>
@@ -109,13 +109,13 @@ export default function CallOperatorModal({
                   {hi ? 'ऑपरेटर को भेजा गया डेटा' : 'Data shared with the operator'}
                 </p>
                 <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-4 space-y-2 text-xs text-zinc-700 mb-4 max-h-[260px] overflow-y-auto">
-                  <p><span className="text-zinc-400">{hi ? 'घटना ID' : 'Incident ID'}:</span> <span className="font-mono font-semibold">{incidentId}</span></p>
+                  <p><span className="text-zinc-400">{hi ? 'घटना ID' : 'Incident ID'}:</span> <span className="font-semibold">{incidentId}</span></p>
                   <p><span className="text-zinc-400">{hi ? 'श्रेणी' : 'Category'}:</span> {fraudType}</p>
                   {amount > 0 && <p><span className="text-zinc-400">{hi ? 'राशि' : 'Amount'}:</span> ₹{amount.toLocaleString('en-IN')}</p>}
                   
                   {/* Initial summary */}
                   <div className="pt-1">
-                    <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-0.5">
+                    <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-0.5">
                       {hi ? 'प्रारंभिक सारांश:' : 'Initial Complaint Summary:'}
                     </p>
                     <p className="text-zinc-700 leading-relaxed bg-white border border-zinc-200/80 rounded-md p-2.5">
@@ -126,7 +126,7 @@ export default function CallOperatorModal({
                   {/* Fresh Updates / Additional Info */}
                   {updates.length > 0 && (
                     <div className="pt-2 space-y-1.5">
-                      <p className="text-[11px] font-bold text-blue-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <p className="text-[10px] font-semibold text-blue-700 uppercase tracking-wider flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
                         {hi ? 'नई जानकारी / पूरक विवरण:' : 'Fresh Information & Updates:'}
                       </p>
@@ -136,7 +136,7 @@ export default function CallOperatorModal({
                             {u.note}
                           </p>
                           {((hi ? u.actionPointsHi : u.actionPoints) || []).length > 0 && (
-                            <ul className="space-y-0.5 pt-1 border-t border-blue-200/40 text-[11px] text-blue-800">
+                            <ul className="space-y-0.5 pt-1 border-t border-blue-200/40 text-xs text-blue-800">
                               {((hi ? u.actionPointsHi : u.actionPoints) || []).map((pt, ptIdx) => (
                                 <li key={ptIdx} className="flex gap-1">
                                   <span>•</span>
@@ -173,7 +173,7 @@ export default function CallOperatorModal({
                   {hi ? `${hotline} पर वास्तविक कॉल करें` : `Actually dial ${hotline}`}
                 </a>
                 <p className="text-center text-xs text-zinc-400 mt-2">
-                  {hi ? 'यह डेमो है — ऑपरेटर को डेटा वास्तव में नहीं भेजा गया' : 'This is a demo — no data was actually transmitted to a real operator'}
+                  {hi ? 'यह डेमो है - ऑपरेटर को डेटा वास्तव में नहीं भेजा गया' : 'This is a demo - no data was actually transmitted to a real operator'}
                 </p>
               </div>
             )}

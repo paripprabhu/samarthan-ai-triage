@@ -216,7 +216,7 @@ function writeLocal(all: SavedComplaint[]) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
   } catch {
-    // QuotaExceededError — strip base64 evidence images and retry
+    // QuotaExceededError - strip base64 evidence images and retry
     try {
       const slim = all.map(c => ({ ...c, evidenceImages: c.evidenceImages.map(img => ({ ...img, dataUrl: '' })) }))
       localStorage.setItem(STORAGE_KEY, JSON.stringify(slim))

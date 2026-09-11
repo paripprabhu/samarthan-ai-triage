@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
         session.forceNewComplaint = true
         ;(session as any)._skipDbRestore = true
       } else if (forceNew) {
-        // Do NOT clear an in-progress force-new session's accumulated narrative here —
+        // Do NOT clear an in-progress force-new session's accumulated narrative here -
         // only (re)assert the sticky flag and make sure no stale incident is attached.
         session.forceNewComplaint = true
         session.incidentId = undefined
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!body && !mediaUrl && !voiceTranscript && !imageBase64) {
-      // A reset ping legitimately carries no message — the session was already
+      // A reset ping legitimately carries no message - the session was already
       // cleared above. Acknowledge with 200 instead of a 400 the caller ignores.
       if (isResetPing) {
         return NextResponse.json({ success: true, reply: '', reset: true }, { status: 200 })

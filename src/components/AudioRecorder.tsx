@@ -69,7 +69,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
   const rafRef = useRef<number | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
 
-  // Rolling ~4s chunk recorder for live captions — separate from the main
+  // Rolling ~4s chunk recorder for live captions - separate from the main
   // MediaRecorder so the final audio blob sent to Whisper stays one clean
   // continuous file, while captions are a best-effort streaming preview.
   const chunkRecorderRef = useRef<MediaRecorder | null>(null)
@@ -126,11 +126,11 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       const resp = await fetch('/api/transcribe-chunk', { method: 'POST', body: formData })
       if (!resp.ok) return
       const { text } = await resp.json()
-      // Chunks resolve out of order if one Whisper call is slow — only apply
+      // Chunks resolve out of order if one Whisper call is slow - only apply
       // a response if it's not older than the last one we already applied.
       // (Every chunk WILL be "behind" the currently-recording chunk by the
       // time its request completes, since Whisper latency > the chunk
-      // interval — that's expected, not staleness.)
+      // interval - that's expected, not staleness.)
       if (seq <= lastAppliedSeqRef.current) return
       lastAppliedSeqRef.current = seq
       if (text && text.trim()) {
@@ -140,7 +140,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
         setCaptionError('')
       }
     } catch {
-      // Best-effort — the final Whisper pass on the full recording (in
+      // Best-effort - the final Whisper pass on the full recording (in
       // /api/triage) is what actually matters. Only surface an error if we
       // haven't managed a single successful caption yet, so one dropped
       // chunk mid-stream doesn't overwrite text that's already showing.

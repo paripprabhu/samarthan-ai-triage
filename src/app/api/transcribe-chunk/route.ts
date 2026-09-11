@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 export const maxDuration = 30
 
 // Transcribes a short (~3s) audio chunk for live captioning during recording.
-// This is a best-effort preview — the final, accurate transcript for triage
+// This is a best-effort preview - the final, accurate transcript for triage
 // still comes from transcribing the full recording in /api/triage.
 export async function POST(req: NextRequest) {
   try {

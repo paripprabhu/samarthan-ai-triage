@@ -256,7 +256,7 @@ export default function LoadingTriage({ language }: LoadingTriageProps) {
               </p>
             </div>
 
-            {/* Large orb below — the centrepiece */}
+            {/* Large orb below - the centrepiece */}
             <motion.div
               animate={{ scale: phase === 'inhale' ? 1.04 : 0.97 }}
               transition={{ duration: BREATH_DURATION / 2 / 1000, ease: 'easeInOut' }}

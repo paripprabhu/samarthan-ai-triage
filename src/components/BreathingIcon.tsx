@@ -13,7 +13,7 @@ export default function BreathingIcon({ phase, durationMs }: BreathingIconProps)
 
   return (
     <div className="relative w-64 h-64 flex items-center justify-center">
-      {/* Outer ring — expands on inhale */}
+      {/* Outer ring - expands on inhale */}
       <motion.div
         animate={{ scale: isInhale ? 1.3 : 0.82, opacity: isInhale ? 0.2 : 0.07 }}
         transition={{ duration, ease: 'easeInOut' }}
@@ -25,7 +25,7 @@ export default function BreathingIcon({ phase, durationMs }: BreathingIconProps)
         transition={{ duration, ease: 'easeInOut' }}
         className="absolute inset-8 rounded-full bg-blue-500"
       />
-      {/* Inner core — always solid */}
+      {/* Inner core - always solid */}
       <motion.div
         animate={{ scale: isInhale ? 1.08 : 0.92 }}
         transition={{ duration, ease: 'easeInOut' }}

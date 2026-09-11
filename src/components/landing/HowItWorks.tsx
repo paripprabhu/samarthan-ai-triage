@@ -178,7 +178,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
                       <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-600 block" />
                       <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-600 block" />
                     </div>
-                    <span className="text-[11px] md:text-xs font-mono text-zinc-400 dark:text-zinc-500 tracking-tight select-none">
+                    <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 tracking-tight select-none">
                       {step.n === '01' ? 'samarthan.gov.in/intake' : step.n === '02' ? 'samarthan.gov.in/dossier' : 'samarthan.gov.in/complaints'}
                     </span>
                     <span className="w-3" />

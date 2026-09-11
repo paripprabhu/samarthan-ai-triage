@@ -38,8 +38,8 @@
   --ring: #1E3A5F;
 
   /* Two-tier radius */
-  --radius-control: 0.375rem;   /* 6px — buttons, inputs, chips */
-  --radius-card: 0.5rem;        /* 8px — cards, panels, modals  */
+  --radius-control: 0.375rem;   /* 6px - buttons, inputs, chips */
+  --radius-card: 0.5rem;        /* 8px - cards, panels, modals  */
   --radius: 0.375rem;           /* default alias               */
 }
 
@@ -88,6 +88,28 @@ body {
   font-family: 'Inter', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Noto Sans Gujarati', 'Noto Sans Kannada', 'Noto Sans Oriya', 'Noto Sans Malayalam', 'Noto Sans Gurmukhi', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Unified 3-Tier Typography System ─────────────────────── */
+/* 1. Main Font: 14px (Body copy, inputs, primary buttons, card titles) */
+.text-ui-main,
+.font-main {
+  font-size: 0.875rem !important; /* 14px */
+  line-height: 1.25rem !important;
+}
+
+/* 2. Smaller Font: 12px (Form labels, descriptions, helper text, subtitles) */
+.text-ui-small,
+.font-smaller {
+  font-size: 0.75rem !important; /* 12px */
+  line-height: 1rem !important;
+}
+
+/* 3. Smallest Font: 10px (Badges, tags, microcopy, status pills, timestamps) */
+.text-ui-micro,
+.font-smallest {
+  font-size: 0.625rem !important; /* 10px */
+  line-height: 0.875rem !important;
 }
 
 /* Indic Script & RTL Formatting Utilities */

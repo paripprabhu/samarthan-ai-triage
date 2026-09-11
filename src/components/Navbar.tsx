@@ -72,7 +72,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
         <div className="h-[3px] w-full bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
 
         {/* Build What Moves India Hackathon Simulation Disclaimer Banner */}
-        <div className="bg-amber-50 dark:bg-amber-950/50 border-b border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 text-[10.5px] sm:text-xs py-1.5 px-3 sm:px-4 text-center font-medium">
+        <div className="bg-amber-50 dark:bg-amber-950/50 border-b border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 text-xs py-1.5 px-3 sm:px-4 text-center font-medium">
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-300">
               🏆 Build What Moves India Hackathon
@@ -92,10 +92,10 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                  <span className="font-bold text-zinc-950 dark:text-white text-sm sm:text-base md:text-lg tracking-tight">
+                  <span className="font-bold text-zinc-950 dark:text-white text-base md:text-lg tracking-tight">
                     {t.appName}
                   </span>
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold text-primary bg-primary-tint dark:bg-blue-950/60 border border-primary/20 dark:border-blue-800/60 px-1.5 py-0.5 rounded font-mono">
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold text-primary bg-primary-tint dark:bg-blue-950/60 border border-primary/20 dark:border-blue-800/60 px-1.5 py-0.5 rounded">
                     {t.citizenHelpdesk}
                   </span>
                 </div>
@@ -113,7 +113,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                 onClick={() => router.push('/complaints')}
                 aria-label={t.nav.myComplaints}
                 title={t.nav.myComplaints}
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100/80 border border-border rounded-md px-2.5 sm:px-4 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100/80 border border-border rounded-md px-2.5 sm:px-4 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer"
               >
                 <FileText className="w-4 h-4 text-zinc-500 shrink-0" />
                 <span className="hidden md:inline">{t.nav.myComplaints}</span>

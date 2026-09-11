@@ -126,7 +126,7 @@ export default function TrustStrip({ language }: TrustStripProps) {
               <div>
                 <div className="flex items-center gap-2 mb-2 sm:mb-3">
                   <span className="shrink-0">{item.icon}</span>
-                  <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-zinc-500 dark:text-zinc-400 leading-snug">
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-zinc-500 dark:text-zinc-400 leading-snug">
                     {item.label}
                   </span>
                 </div>

@@ -32,12 +32,12 @@ Extract ALL specific details provided and return a STRICT JSON object.
 CRITICAL INSTRUCTIONS:
 1. AGGRESSIVELY EXTRACT FRAUDSTER IDENTITY:
    - fraudsterIdentifier field = FRAUDSTER's PRIMARY identifier: person name, Instagram handle, website, UPI ID, APP NAME, BANK NAME, seller username, channel name, email, or phone.
-   - CRITICAL: If victim says "mera naam X hai" or "My name is X" or "I am X" or "mai X hoon" — that is the COMPLAINANT, NOT the fraudster. Do NOT extract complainant name as fraudster. Only extract the person/entity who perpetrated the fraud.
+   - CRITICAL: If victim says "mera naam X hai" or "My name is X" or "I am X" or "mai X hoon" - that is the COMPLAINANT, NOT the fraudster. Do NOT extract complainant name as fraudster. Only extract the person/entity who perpetrated the fraud.
    - AGGRESSIVELY look for: person names (of fraudster/scammer/imposter ONLY), @handles, domains, UPI@patterns, APP NAMES (StockPro, QuickCash, SBI Bank, HDFC Bank), Telegram channels (Truth Warriors India), WhatsApp groups, seller usernames.
-   - PRIORITY (strict, top wins): (1) the NAME OF A HUMAN who perpetrated, orchestrated, or fronted the fraud — a scammer, imposter, fake advisor, group admin, "tips provider", the person you spoke to — even if an app/website/channel was also used > (2) @handle of the fraudster > (3) fraudulent domain > (4) APP / BANK / SERVICE NAME (only when NO human fraudster is named) > (5) UPI ID > (6) phone > (7) Telegram channel / WhatsApp group name > (8) email.
+   - PRIORITY (strict, top wins): (1) the NAME OF A HUMAN who perpetrated, orchestrated, or fronted the fraud - a scammer, imposter, fake advisor, group admin, "tips provider", the person you spoke to - even if an app/website/channel was also used > (2) @handle of the fraudster > (3) fraudulent domain > (4) APP / BANK / SERVICE NAME (only when NO human fraudster is named) > (5) UPI ID > (6) phone > (7) Telegram channel / WhatsApp group name > (8) email.
    - A named person BEATS an app or channel. "Vinod Agarwal gave tips in a group and made me invest in the ProfitMax app" → fraudsterIdentifier = "Vinod Agarwal" (NOT "ProfitMax"). The app is only the tool. Put the app/channel name in the summary.
    - If several people are named, pick the one who most directly ran the scam (the caller / the advisor / the admin); mention the others in the summary.
-   - CRITICAL EXAMPLES TO EXTRACT: "Inspector Verma" (imposter police officer), "Priya Sharma" (fake advisor), "Vinod Agarwal" (group tips-provider) — these WIN over any app. Only when nobody is named: "StockPro" (app), "HDFC Bank" (bank), "Truth Warriors India" (Telegram), "Rakesh Jhunjhunwala Tips Official" (WhatsApp group), "bestdeal-mobile.in" (website).
+   - CRITICAL EXAMPLES TO EXTRACT: "Inspector Verma" (imposter police officer), "Priya Sharma" (fake advisor), "Vinod Agarwal" (group tips-provider) - these WIN over any app. Only when nobody is named: "StockPro" (app), "HDFC Bank" (bank), "Truth Warriors India" (Telegram), "Rakesh Jhunjhunwala Tips Official" (WhatsApp group), "bestdeal-mobile.in" (website).
    - If text says "I am Ramesh Iyer" → Ramesh Iyer is COMPLAINANT. Extract the fraudster instead (e.g., "Inspector Verma" who called, or "Priya Sharma" the fake advisor).
    - If text names NO human and says "app called StockPro" → extract "StockPro" as fraudsterIdentifier (the fraudulent app/entity, not the victim's name).
    - If "bank HDFC" used fraudulently → extract "HDFC Bank" or "HDFC".
@@ -56,26 +56,26 @@ CRITICAL INSTRUCTIONS:
       * In summary / summaryHi: Clearly state that the complainant is filing on behalf of X.
       * Under NO circumstances extract X or the complainant as the fraudsterIdentifier!
 
-2. FRAUD TYPE CLASSIFICATION — Use EXACT categories and logic:
+2. FRAUD TYPE CLASSIFICATION - Use EXACT categories and logic:
    - Financial Fraud: Direct bank/UPI transfers phished, credit card misuse, phishing for money, OTP theft leading to bank debit, direct money theft via banking channels (NOT marketplace).
    - Women/Children Related Crime: Cyberbullying, harassment, abuse, threats involving minors or women, sextortion of minors/women, fake impersonation profiles targeting someone.
    - Extortion & Blackmail: Adult sextortion, ransom demands, threat to expose/leak content, money demanded under threat, harassment with threat to publish content.
    - Identity Theft: Aadhaar/PAN misuse, fake accounts opened in victim's name, credential theft, unauthorized loan applications using stolen identity.
-   - E-Commerce Scams: Fake sellers on OLX/marketplace (including QR code scams on OLX), non-delivery of a PHYSICAL PRODUCT that was ordered, fake shopping websites, delivery scams. This is about buying goods that never arrive — NOT about investing money.
-   - Investment Scam: A fraudulent investment / trading / crypto / stock-tip scheme — money "deposited" into a trading app or wallet (StockPro, TradeXPro, GrowRich, etc.), promised multiplied returns, run via a Telegram/WhatsApp channel or group, victim cannot withdraw. Use this EVEN IF an app or website is named — an app used to collect "investments" is an Investment Scam, not E-Commerce.
+   - E-Commerce Scams: Fake sellers on OLX/marketplace (including QR code scams on OLX), non-delivery of a PHYSICAL PRODUCT that was ordered, fake shopping websites, delivery scams. This is about buying goods that never arrive - NOT about investing money.
+   - Investment Scam: A fraudulent investment / trading / crypto / stock-tip scheme - money "deposited" into a trading app or wallet (StockPro, TradeXPro, GrowRich, etc.), promised multiplied returns, run via a Telegram/WhatsApp channel or group, victim cannot withdraw. Use this EVEN IF an app or website is named - an app used to collect "investments" is an Investment Scam, not E-Commerce.
    - Other Cyber Crime: Ransomware, hacking / unauthorized access to the victim's own accounts (email, social media) with passwords changed, data theft, malware, hate speech, online ragging with threats. Account takeover where the attacker locked the victim out = Other Cyber Crime (NOT Identity Theft, NOT a platform harassment case).
    CRITICAL: If incident involves ORDERING A PRODUCT that never arrived → E-Commerce. If money was "invested" / "deposited for returns" / put into a trading or crypto app → Investment Scam. If involves bank/UPI phishing without marketplace → Financial. If involves fake profile pretending to be victim (not predator) → Identity Theft. If predator harassing minor/woman → Women/Children (even if money demanded). If the victim's OWN accounts were hacked and passwords changed → Other Cyber Crime.
 
 3. CAPTURE ALL DETAILS: Ensure you extract all mentioned platforms (Instagram, WhatsApp, Telegram), banks, amounts, transaction IDs, UPI IDs, and contact info. Do not miss any provided details.
-   - MONEY-TRAIL FIELDS ARE MANDATORY when present: the BENEFICIARY account name the money went TO (e.g. "Apex Retail Traders"), and the transaction reference / UTR / IMPS / NEFT number (e.g. "IMPS/624519082341"). These go in frauderContact. A bank cannot freeze funds without them — never leave them only in the summary prose.
+   - MONEY-TRAIL FIELDS ARE MANDATORY when present: the BENEFICIARY account name the money went TO (e.g. "Apex Retail Traders"), and the transaction reference / UTR / IMPS / NEFT number (e.g. "IMPS/624519082341"). These go in frauderContact. A bank cannot freeze funds without them - never leave them only in the summary prose.
 
-3b. ESCALATION ROUTING — set "recommendedChannel" and "recommendedChannelTarget":
+3b. ESCALATION ROUTING - set "recommendedChannel" and "recommendedChannelTarget":
    - The route follows the FRAUD TYPE first. Only pick a route below if it matches the fraudType you chose in rule 2:
      Financial Fraud → "bank" | Investment Scam → "agency" (RBI Sachet) | E-Commerce Scams → "agency" (National Consumer Helpline) | Identity Theft → "agency" (UIDAI/Income Tax) | Women/Children Related Crime → "platform" | Extortion & Blackmail → "platform" if a social account is the vector, else "helpline" | Other Cyber Crime → "helpline".
-   - "bank": ONLY for Financial Fraud — bank/UPI/net-banking money theft, OTP theft leading to a debit, fake customer-care refund scam. recommendedChannelTarget = the VICTIM's bank name (e.g. "HDFC Bank") or "the bank" if unnamed. NOTE: in an Investment Scam the fraudster's receiving account may be at a named bank (e.g. "money sent to their ICICI account") — that does NOT make it "bank"; it stays "agency" / "RBI Sachet".
-   - "platform": ANOTHER PERSON is harassing, bullying, stalking, sextorting the victim, or running an impersonation / fake profile of the victim, ON a social platform (Instagram, Facebook, WhatsApp, Telegram, YouTube, X/Twitter, Snapchat). recommendedChannelTarget = the platform name (e.g. "Instagram"). Do NOT use "platform" just because a social app is mentioned — it must be person-on-person harassment or impersonation.
+   - "bank": ONLY for Financial Fraud - bank/UPI/net-banking money theft, OTP theft leading to a debit, fake customer-care refund scam. recommendedChannelTarget = the VICTIM's bank name (e.g. "HDFC Bank") or "the bank" if unnamed. NOTE: in an Investment Scam the fraudster's receiving account may be at a named bank (e.g. "money sent to their ICICI account") - that does NOT make it "bank"; it stays "agency" / "RBI Sachet".
+   - "platform": ANOTHER PERSON is harassing, bullying, stalking, sextorting the victim, or running an impersonation / fake profile of the victim, ON a social platform (Instagram, Facebook, WhatsApp, Telegram, YouTube, X/Twitter, Snapchat). recommendedChannelTarget = the platform name (e.g. "Instagram"). Do NOT use "platform" just because a social app is mentioned - it must be person-on-person harassment or impersonation.
    - "agency": identity theft via Aadhaar/PAN misuse (target = "UIDAI" for Aadhaar, "Income Tax" for PAN); an investment / trading / crypto / deposit scheme where money was put into an app or wallet for promised returns (target = "RBI Sachet"); a marketplace / e-commerce non-delivery of an ordered product (target = "National Consumer Helpline").
-   - "helpline": anything else — including the victim's OWN email/social accounts being hacked and locked, ransomware, malware, data theft, generic fraud, or money lost with no bank/platform/agency identifiable. recommendedChannelTarget = "1930".
+   - "helpline": anything else - including the victim's OWN email/social accounts being hacked and locked, ransomware, malware, data theft, generic fraud, or money lost with no bank/platform/agency identifiable. recommendedChannelTarget = "1930".
    Pick exactly ONE. When both a bank and a platform appear, choose by WHERE the loss/harm occurred (money debited from a bank → "bank"; harassment on Instagram → "platform"). Account takeover of the victim's own profile is "helpline", NOT "platform".
 
 4. NO HALLUCINATION: Use ONLY the details provided or visible in evidence. Do not invent data.
@@ -85,12 +85,12 @@ CRITICAL INSTRUCTIONS:
 6. For missing JSON fields below, use "Not Provided".
 
 {
-  "incidentId": "",  // leave this EMPTY — the server assigns the acknowledgement number
+  "incidentId": "",  // leave this EMPTY - the server assigns the acknowledgement number
   "fraudsterIdentifier": "FRAUDSTER's primary identifier ONLY (name, @handle, UPI ID, domain, seller username, phone). Examples: 'Rithwik', '@rithwik8024', 'random@ybl', 'example.com', 'tech-deals-mumbai'. Use 'Not Identified' ONLY if absolutely none exist.",
   "complainantName": "The person who is ACTUALLY complaining / filing the report. If filing on behalf of X (e.g. 'on behalf of Ramesh Sharma'), the complainant is the filer (from narrative or logged-in identity), NOT X! If not mentioned and no logged-in user is specified, return 'Anonymous Complainant'. NEVER leave as empty string.",
-  "recommendedChannel": "bank | platform | agency | helpline — see rule 3b. The escalation route this victim should take FIRST.",
+  "recommendedChannel": "bank | platform | agency | helpline - see rule 3b. The escalation route this victim should take FIRST.",
   "recommendedChannelTarget": "Who to escalate to: bank name, platform name (Instagram/WhatsApp/…), 'UIDAI', 'Income Tax', 'RBI Sachet', 'National Consumer Helpline', or '1930'.",
-  "fraudType": "Classify STRICTLY by incident type: Financial Fraud (UPI/bank money theft, QR scams), Women/Children Related Crime (harassment of minors/women, cyberbullying, fake impersonation profiles), Extortion & Blackmail (adult sextortion, ransom threats), Identity Theft (Aadhaar/PAN misuse), E-Commerce Scams (ordered product never delivered), Investment Scam (money put into a trading/crypto/investment app for promised returns, cannot withdraw), Other Cyber Crime (ransomware, hacking of the victim's own accounts, data theft). DO NOT confuse cyberbullying with extortion—if victim is minor/woman and being harassed/threatened, it's Women/Children Related Crime. DO NOT classify a trading-app deposit scam as E-Commerce — that is Investment Scam.",
+  "fraudType": "Classify STRICTLY by incident type: Financial Fraud (UPI/bank money theft, QR scams), Women/Children Related Crime (harassment of minors/women, cyberbullying, fake impersonation profiles), Extortion & Blackmail (adult sextortion, ransom threats), Identity Theft (Aadhaar/PAN misuse), E-Commerce Scams (ordered product never delivered), Investment Scam (money put into a trading/crypto/investment app for promised returns, cannot withdraw), Other Cyber Crime (ransomware, hacking of the victim's own accounts, data theft). DO NOT confuse cyberbullying with extortion-if victim is minor/woman and being harassed/threatened, it's Women/Children Related Crime. DO NOT classify a trading-app deposit scam as E-Commerce - that is Investment Scam.",
   "frauderContact": "ALL secondary trace details, semicolon-separated: the fraudster's phone/email/WhatsApp/handle, AND the beneficiary/destination account name & number the money went to, AND any transaction/UTR/IMPS/NEFT reference number. Example: 'Phone: 98321-45670; Beneficiary: Apex Retail Traders; Ref: IMPS/624519082341'. These are critical for a bank freeze. Use 'Not Provided' only if none exist.",
   "amount": number,  // in INR, 0 if no financial loss is mentioned/visible
   "bankName": "The VICTIM's bank name, or 'Not Provided'",
@@ -130,12 +130,12 @@ CRITICAL INSTRUCTIONS:
 
 Always include these steps in freezeSteps:
 - Step 1: Call 1930 (National Cybercrime Helpline)
-- Step 2: File complaint on cybercrime.gov.in — if recommendedChannel is "platform", this step should ALSO tell the victim to report the offending account inside the platform's own report flow; if "agency", name that agency (UIDAI Aadhaar lock / RBI Sachet / National Consumer Helpline 1915) in this step.
+- Step 2: File complaint on cybercrime.gov.in - if recommendedChannel is "platform", this step should ALSO tell the victim to report the offending account inside the platform's own report flow; if "agency", name that agency (UIDAI Aadhaar lock / RBI Sachet / National Consumer Helpline 1915) in this step.
 - Include bank-specific freeze steps ONLY if the bank is explicitly mentioned.
 - Preserve evidence step (screenshots, chats, etc.)
 
-APPLICABLE LAWS — WHITELIST ONLY:
-You MUST select applicableLaws ONLY from the exact sections below (Information Technology Act, 2000). Copy the "title"/"titleHi" text EXACTLY as given — do not paraphrase, and NEVER invent a section number that is not in this list. Select every section that plausibly applies to this specific incident (usually 1-3). Almost every cybercrime incident has at least ONE applicable section — returning an empty array should be extremely rare. Guidance:
+APPLICABLE LAWS - WHITELIST ONLY:
+You MUST select applicableLaws ONLY from the exact sections below (Information Technology Act, 2000). Copy the "title"/"titleHi" text EXACTLY as given - do not paraphrase, and NEVER invent a section number that is not in this list. Select every section that plausibly applies to this specific incident (usually 1-3). Almost every cybercrime incident has at least ONE applicable section - returning an empty array should be extremely rare. Guidance:
 - Money fraud / phishing / fake identity to cheat → Section 66D (and 66C if credentials/OTP stolen).
 - Hacking, account takeover, passwords changed, unauthorized access → Section 66 AND Section 43.
 - Aadhaar/PAN/password/ID misuse → Section 66C.
@@ -231,8 +231,8 @@ export async function POST(req: NextRequest) {
       summary: `AI triage summary generated for ${inferredCategory}.${isDigitalArrest ? ' High-priority Digital Arrest extortion scam detected.' : ''}`,
       summaryHi: `${inferredCategory} के लिए AI ट्रायज सारांश।${isDigitalArrest ? ' डिजिटल अरेस्ट जबरन वसूली का मामला पहचाना गया।' : ''}`,
       summaryRegional: `${inferredCategory} - AI Triage Summary`,
-      complaintDraft: `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Cybercrime Complaint regarding ${inferredCategory}\n\nRespected Sir/Madam,\n\nI am filing this complaint regarding a cyber incident (${inferredCategory}). ${cleanAmt > 0 ? `Financial loss: ₹${cleanAmt.toLocaleString('en-IN')}. ` : ''}${detectedUtr ? `Transaction UTR: ${detectedUtr}. ` : ''}${detectedUpi ? `UPI: ${detectedUpi}. ` : ''}${detectedIfsc ? `IFSC: ${detectedIfsc}. ` : ''}Please investigate this matter and take appropriate action under IT Act 2000 and Bharatiya Nyaya Sanhita (BNS 2023).\n\n[Complainant address / city — to be provided]`,
-      complaintDraftHi: `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${inferredCategory} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं ${inferredCategory} से संबंधित एक साइबर घटना की औपचारिक शिकायत दर्ज कर रहा हूँ। ${cleanAmt > 0 ? `नुकसान राशि: ₹${cleanAmt.toLocaleString('en-IN')}। ` : ''}${detectedUtr ? `यूटीआर नंबर: ${detectedUtr}। ` : ''}${detectedUpi ? `यूपीआई: ${detectedUpi}। ` : ''}कृपया मामले की जांच करें और आईटी अधिनियम तथा भारतीय न्याय संहिता (BNS 2023) के तहत उचित कार्रवाई करें।\n\n[शिकायतकर्ता का पता / शहर — दिया जाना है]`,
+      complaintDraft: `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Cybercrime Complaint regarding ${inferredCategory}\n\nRespected Sir/Madam,\n\nI am filing this complaint regarding a cyber incident (${inferredCategory}). ${cleanAmt > 0 ? `Financial loss: ₹${cleanAmt.toLocaleString('en-IN')}. ` : ''}${detectedUtr ? `Transaction UTR: ${detectedUtr}. ` : ''}${detectedUpi ? `UPI: ${detectedUpi}. ` : ''}${detectedIfsc ? `IFSC: ${detectedIfsc}. ` : ''}Please investigate this matter and take appropriate action under IT Act 2000 and Bharatiya Nyaya Sanhita (BNS 2023).\n\n[Complainant address / city - to be provided]`,
+      complaintDraftHi: `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${inferredCategory} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं ${inferredCategory} से संबंधित एक साइबर घटना की औपचारिक शिकायत दर्ज कर रहा हूँ। ${cleanAmt > 0 ? `नुकसान राशि: ₹${cleanAmt.toLocaleString('en-IN')}। ` : ''}${detectedUtr ? `यूटीआर नंबर: ${detectedUtr}। ` : ''}${detectedUpi ? `यूपीआई: ${detectedUpi}। ` : ''}कृपया मामले की जांच करें और आईटी अधिनियम तथा भारतीय न्याय संहिता (BNS 2023) के तहत उचित कार्रवाई करें।\n\n[शिकायतकर्ता का पता / शहर - दिया जाना है]`,
       complaintDraftRegional: (targetLanguage && targetLanguage !== 'en')
         ? getRegionalComplaintDraft(targetLanguage as SupportedLanguage, detectedComplainant, detectedOnBehalfOf, inferredCategory, userText || inferredCategory, cleanAmt, detectedUtr || undefined, detectedUpi || undefined, detectedIfsc || undefined)
         : `Formal Cybercrime Complaint regarding ${inferredCategory}.\n\n[Official Police Complaint Draft in selected language]`,
@@ -391,7 +391,7 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
 
     // 2. Structured legal complaint generation. Safety race well below the
     //    route's maxDuration (60s) but above the observed p99 (~13s), so it
-    //    only trips on a genuine hang — not on a normal slow completion.
+    //    only trips on a genuine hang - not on a normal slow completion.
     const completionPromise = openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
@@ -441,7 +441,7 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
     // Resolve complainant name with priority:
     // 1. Explicit self-intro of the filer from narrative across all 12 languages
     // 2. Logged-in user's identity (e.g. from DigiLocker session)
-    // 3. "Anonymous Complainant" — no name given and not signed in
+    // 3. "Anonymous Complainant" - no name given and not signed in
     // CRITICAL: If the narrative says "on behalf of X", X is the victim, NOT the complainant!
     const onBehalfOfTarget = extractMultilingualOnBehalfOf(userText)
     const selfIntroName = extractMultilingualComplainant(userText)

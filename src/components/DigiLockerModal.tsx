@@ -128,7 +128,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-zinc-900">Sign in with DigiLocker</h2>
-                      <p className="text-xs text-zinc-500">Government of India — MeitY Sandbox</p>
+                      <p className="text-xs text-zinc-500">Government of India - MeitY Sandbox</p>
                     </div>
                   </div>
 
@@ -136,7 +136,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                   <button
                     type="button"
                     onClick={handleDirectLogin}
-                    className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover active:scale-[0.99] text-white rounded-xl py-3 font-medium text-xs sm:text-sm transition-all shadow-sm mb-3.5 min-h-[44px] cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover active:scale-[0.99] text-white rounded-xl py-3 font-medium text-sm transition-all shadow-sm mb-3.5 min-h-[44px] cursor-pointer"
                   >
                     <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                     <span>1-Click Direct Login (Verified Citizen)</span>
@@ -144,7 +144,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
 
                   <div className="relative flex py-1 items-center mb-3.5">
                     <div className="flex-grow border-t border-zinc-200"></div>
-                    <span className="flex-shrink mx-2 text-[10.5px] font-medium text-zinc-400 uppercase tracking-wider">or sign in with custom details</span>
+                    <span className="flex-shrink mx-2 text-xs font-medium text-zinc-400 uppercase tracking-wider">or sign in with custom details</span>
                     <div className="flex-grow border-t border-zinc-200"></div>
                   </div>
 
@@ -180,10 +180,10 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                           value={aadhaar}
                           onChange={(e) => setAadhaar(e.target.value)}
                           placeholder="e.g. 5432 9876 1234 (optional)"
-                          className="w-full border border-zinc-200 rounded-md pl-10 pr-4 py-2.5 text-base sm:text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 transition-all"
+                          className="w-full border border-zinc-200 rounded-md pl-10 pr-4 py-2.5 text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 transition-all"
                         />
                       </div>
-                      <p className="text-[11px] text-zinc-400 mt-1">Leave blank to use default masked ID ****-****-8421</p>
+                      <p className="text-xs text-zinc-400 mt-1">Leave blank to use default masked ID ****-****-8421</p>
                     </div>
 
                     <div className="bg-orange-50/80 border border-orange-100 rounded-md p-3.5 space-y-1">
@@ -191,7 +191,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                         <CheckCircle2 className="w-3.5 h-3.5 text-orange-600 flex-shrink-0" />
                         Aadhaar KYC Verification
                       </p>
-                      <p className="text-[11.5px] text-orange-950/70 leading-relaxed">
+                      <p className="text-xs text-orange-950/70 leading-relaxed">
                         Formal police complaint drafts & statements will be filed with this verified name.
                       </p>
                     </div>

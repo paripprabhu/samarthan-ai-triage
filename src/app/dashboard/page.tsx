@@ -157,7 +157,7 @@ function DashboardContent() {
     language,
   })
 
-  // Initial persist + load — runs once per incident, immediately (no debounce),
+  // Initial persist + load - runs once per incident, immediately (no debounce),
   // so a complaint is saved even if the user leaves the page within 2 seconds.
   useEffect(() => {
     if (!triageResult) return
@@ -254,9 +254,9 @@ function DashboardContent() {
     if (updated) {
       setUpdates(updated)
       const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })
-      const fallbackDraft = (triageResult.complaintDraft || '') + `\n\n[SUPPLEMENTARY STATEMENT — ${timeStr}]\nI further report the following fresh evidence/update: ${note}`
-      const fallbackDraftHi = (triageResult.complaintDraftHi || '') + `\n\n[पूरक बयान — ${timeStr}]\nमैं आगे निम्नलिखित नया साक्ष्य/अपडेट रिपोर्ट करता हूँ: ${note}`
-      const fallbackDraftRegional = (triageResult.complaintDraftRegional || triageResult.complaintDraft || '') + `\n\n[SUPPLEMENTARY STATEMENT — ${timeStr}]\nUpdate: ${note}`
+      const fallbackDraft = (triageResult.complaintDraft || '') + `\n\n[SUPPLEMENTARY STATEMENT - ${timeStr}]\nI further report the following fresh evidence/update: ${note}`
+      const fallbackDraftHi = (triageResult.complaintDraftHi || '') + `\n\n[पूरक बयान - ${timeStr}]\nमैं आगे निम्नलिखित नया साक्ष्य/अपडेट रिपोर्ट करता हूँ: ${note}`
+      const fallbackDraftRegional = (triageResult.complaintDraftRegional || triageResult.complaintDraft || '') + `\n\n[SUPPLEMENTARY STATEMENT - ${timeStr}]\nUpdate: ${note}`
 
       // Handle additional vs replacement amount
       const prevAmt = triageResult.amount || 0
@@ -528,7 +528,7 @@ function DashboardContent() {
                     id="crime-category"
                     value={r.fraudType}
                     onChange={(e) => handleUpdate('fraudType', e.target.value)}
-                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                   >
                     <option value="Financial Fraud">{CRIME_CATEGORY_LABELS_12['Financial Fraud']?.[language] || 'Financial Fraud'}</option>
                     <option value="Women/Children Related Crime">{CRIME_CATEGORY_LABELS_12['Women/Children Related Crime']?.[language] || 'Women/Children Related Crime'}</option>
@@ -552,7 +552,7 @@ function DashboardContent() {
                     value={r.complainantName || ''}
                     onChange={(e) => handleUpdate('complainantName', e.target.value)}
                     placeholder={hi ? 'उदा. राजेश कुमार' : 'e.g. Citizen Complainant'}
-                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
@@ -568,7 +568,7 @@ function DashboardContent() {
                       id="fraudster-name"
                       type="text" value={r.fraudsterIdentifier || ''}
                       onChange={(e) => handleUpdate('fraudsterIdentifier', e.target.value)}
-                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <div>
@@ -581,7 +581,7 @@ function DashboardContent() {
                       id="amount-lost"
                       type="number" value={r.amount}
                       onChange={(e) => handleUpdate('amount', Number(e.target.value))}
-                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -597,7 +597,7 @@ function DashboardContent() {
                     id="fraudster-contact"
                     type="text" value={r.frauderContact}
                     onChange={(e) => handleUpdate('frauderContact', e.target.value)}
-                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
@@ -615,7 +615,7 @@ function DashboardContent() {
                       value={r.bankName || ''}
                       onChange={(e) => handleUpdate('bankName', e.target.value)}
                       placeholder={hi ? 'उदा. HDFC Bank, SBI' : 'e.g. HDFC Bank, SBI'}
-                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <div>
@@ -630,7 +630,7 @@ function DashboardContent() {
                       value={r.accountNumber || ''}
                       onChange={(e) => handleUpdate('accountNumber', e.target.value)}
                       placeholder={hi ? 'उदा. XXXX-XXXX-5102' : 'e.g. XXXX-XXXX-5102'}
-                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -653,7 +653,7 @@ function DashboardContent() {
                       onChange={(e) => handleUpdate('utrNumber', e.target.value)}
                       placeholder={hi ? 'उदा. 123456789012' : 'e.g. 123456789012'}
                       title={r.utrNumber || ''}
-                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <div>
@@ -669,7 +669,7 @@ function DashboardContent() {
                       onChange={(e) => handleUpdate('upiId', e.target.value)}
                       placeholder={hi ? 'उदा. fraudster@okhdfcbank' : 'e.g. fraudster@okhdfcbank'}
                       title={r.upiId || ''}
-                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                   <div>
@@ -685,7 +685,7 @@ function DashboardContent() {
                       onChange={(e) => handleUpdate('ifscCode', e.target.value.toUpperCase())}
                       placeholder={hi ? 'उदा. SBIN0001234' : 'e.g. SBIN0001234'}
                       title={r.ifscCode || ''}
-                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-base sm:text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all font-mono uppercase placeholder:normal-case"
+                      className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all uppercase placeholder:normal-case"
                     />
                   </div>
                 </div>
@@ -771,13 +771,13 @@ function DashboardContent() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex flex-col gap-3">
               <button
                 onClick={() => setCallModalHotline('1930')}
-                className="w-full flex flex-col items-center justify-center gap-1 bg-red-600 hover:bg-red-700 text-white rounded-xl py-3.5 sm:py-4 font-semibold text-sm sm:text-base transition-all shadow-sm min-h-[50px] cursor-pointer"
+                className="w-full flex flex-col items-center justify-center gap-1 bg-red-600 hover:bg-red-700 text-white rounded-xl py-3.5 sm:py-4 font-semibold text-sm transition-all shadow-sm min-h-[50px] cursor-pointer"
               >
                 <div className="flex items-center gap-2">
                   <Phone className="w-5 h-5" />
                   {dashLoc.call1930Btn}
                 </div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-white/20 rounded-sm px-1.5 py-0.5 mt-0.5">
+                <span className="text-[10px] font-semibold uppercase tracking-wider bg-white/20 rounded px-1.5 py-0.5 mt-0.5">
                   {dashLoc.liveEmergencyBadge}
                 </span>
               </button>
@@ -785,25 +785,25 @@ function DashboardContent() {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={handleShare}
-                  className="flex flex-col items-center justify-center gap-1 border border-zinc-200 hover:bg-zinc-50 text-zinc-900 rounded-xl py-3 font-semibold text-xs sm:text-sm transition-all min-h-[44px] cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1 border border-zinc-200 hover:bg-zinc-50 text-zinc-900 rounded-xl py-3 font-semibold text-xs transition-all min-h-[44px] cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5">
                     <Share2 className="w-4 h-4" />
                     {dashLoc.shareStatusBtn}
                   </div>
-                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-green-700 bg-green-50 border border-green-200 rounded-sm px-1.5 py-0.5">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-green-700 bg-green-50 border border-green-200 rounded px-1.5 py-0.5">
                     {dashLoc.liveBadge}
                   </span>
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="flex flex-col items-center justify-center gap-1 border border-zinc-200 hover:bg-zinc-50 text-zinc-600 rounded-xl py-3 font-medium text-xs sm:text-sm transition-all min-h-[44px] cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1 border border-zinc-200 hover:bg-zinc-50 text-zinc-600 rounded-xl py-3 font-medium text-xs transition-all min-h-[44px] cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5">
                     <Printer className="w-4 h-4" />
                     <span>{t.dashboard.savePdfBtn}</span>
                   </div>
-                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-green-700 bg-green-50 border border-green-200 rounded-sm px-1.5 py-0.5">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-green-700 bg-green-50 border border-green-200 rounded px-1.5 py-0.5">
                     {dashLoc.liveBadge}
                   </span>
                 </button>
@@ -826,7 +826,7 @@ function DashboardContent() {
                 <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
                   {t.dashboard.incidentId}
                 </p>
-                <p className="font-mono font-bold text-zinc-900 text-base tracking-tight truncate">{r.incidentId}</p>
+                <p className="font-bold text-zinc-900 text-sm tracking-tight truncate">{r.incidentId}</p>
               </div>
               <div className="flex items-stretch">
                 <UrgencyBadge level={r.urgencyLevel} language={language} size="lg" />
@@ -873,7 +873,7 @@ function DashboardContent() {
                 <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                   {dashLoc.recommendedImmediateHeader}
                 </p>
-                <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-green-700 bg-green-50 border border-green-200 rounded-sm px-1.5 py-0.5">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-green-700 bg-green-50 border border-green-200 rounded px-1.5 py-0.5">
                   {dashLoc.liveGuidanceBadge}
                 </span>
               </div>

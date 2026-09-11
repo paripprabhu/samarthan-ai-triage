@@ -84,7 +84,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
     defaultText: 'Hi Samarthan, I want to report a cybercrime incident.',
     simTitle: 'In-App WhatsApp Simulator',
     recommended: 'Recommended',
-    simDesc: 'Interactive WhatsApp mockup running inside this app. Zero phone needed — test voice notes, screenshot triage, and live complaint generation on the identical GPT-4o engine.',
+    simDesc: 'Interactive WhatsApp mockup running inside this app. Zero phone needed - test voice notes, screenshot triage, and live complaint generation on the identical GPT-4o engine.',
     simLaunch: 'Launch In-App Simulator',
     realTitle: 'Open Real WhatsApp App',
     realTag: 'WhatsApp AI Agent',
@@ -342,11 +342,11 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
                 <h3 className="text-sm sm:text-lg font-bold indic-headline">
                   {t.title}
                 </h3>
-                <span className="bg-emerald-500 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                   24x7 AI
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-emerald-100/90 mt-0.5 sm:mt-1 leading-relaxed indic-body">
+              <p className="text-xs text-emerald-100/90 mt-0.5 sm:mt-1 leading-relaxed indic-body">
                 {t.subtitle}
               </p>
             </div>
@@ -444,7 +444,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
                       : 'bg-zinc-400'
                   }`}
                 />
-                <span className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 indic-body">
+                <span className="text-xs text-zinc-500 dark:text-zinc-400 indic-body">
                   {botOnline === true
                     ? t.botOnline
                     : botOnline === false
@@ -468,7 +468,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
         </div>
 
         {/* Footer info note */}
-        <div className="px-5 sm:px-6 py-3 bg-zinc-50 dark:bg-zinc-800/60 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400">
+        <div className="px-5 sm:px-6 py-3 bg-zinc-50 dark:bg-zinc-800/60 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
           <span className="flex items-center gap-1 indic-body">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
             {t.footerAi}

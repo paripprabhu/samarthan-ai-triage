@@ -78,7 +78,7 @@ export default function FreezeStepper({ steps, language, onHotlineClick }: Freez
             <div className="flex items-start justify-between gap-3">
               <h4
                 className={clsx(
-                  'font-semibold text-sm sm:text-[15px] leading-snug',
+                  'font-semibold text-sm leading-snug',
                   step.step === 1
                     ? 'text-red-700 dark:text-red-400'
                     : 'text-zinc-900 dark:text-zinc-100'

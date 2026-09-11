@@ -1016,8 +1016,8 @@ export function getApplicableBNSLaws(
   if (fraudType === 'Identity Theft' || fraudType === 'Financial Fraud') {
     laws.push({
       section: 'Section 66C IT Act 2000',
-      title: 'Identity theft — fraudulent use of password, digital signature, or unique ID',
-      titleHi: 'पहचान की चोरी — पासवर्ड, डिजिटल हस्ताक्षर या अद्वितीय पहचान का धोखाधड़ीपूर्ण उपयोग',
+      title: 'Identity theft - fraudulent use of password, digital signature, or unique ID',
+      titleHi: 'पहचान की चोरी - पासवर्ड, डिजिटल हस्ताक्षर या अद्वितीय पहचान का धोखाधड़ीपूर्ण उपयोग',
       reason: 'Fraudulent utilization of victim authentication credentials, OTP, or identity.',
       reasonHi: 'पीड़ित के प्रमाणीकरण क्रेडेंशियल्स, ओटीपी या पहचान का धोखाधड़ीपूर्ण उपयोग।',
     })

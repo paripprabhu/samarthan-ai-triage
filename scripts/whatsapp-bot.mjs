@@ -100,7 +100,7 @@ let isStarting = false
 let reconnectAttempts = 0
 let latestState = {}
 
-// DB handle — used so a cloud-hosted bot (Railway) can publish its status +
+// DB handle - used so a cloud-hosted bot (Railway) can publish its status +
 // QR to the same Postgres the Vercel site reads. Optional: falls back to the
 // local state file if DATABASE_URL is unset (pure local dev).
 const sqlDb = process.env.DATABASE_URL ? neon(process.env.DATABASE_URL) : null
@@ -478,7 +478,7 @@ async function startWhatsAppBot() {
         const data = await res.json()
         const replyText = data.reply || 'Your report was received. Our team is processing.'
 
-        // A new complaint was actually filed — NEW mode has served its purpose.
+        // A new complaint was actually filed - NEW mode has served its purpose.
         if (data.filedComplaint || (newMode && data.incidentId)) {
           setNewMode(senderPhone, false)
         }

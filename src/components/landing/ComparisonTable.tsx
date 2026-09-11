@@ -221,7 +221,7 @@ export default function ComparisonTable({ language }: ComparisonTableProps) {
                 <h3 className="text-xl sm:text-2xl font-bold text-zinc-950 tracking-tight">
                   {loc.samarthanTitle}
                 </h3>
-                <span className="bg-primary text-white text-[10.5px] sm:text-[11px] font-mono uppercase tracking-wider px-2 sm:px-2.5 py-0.5 rounded font-semibold">
+                <span className="bg-primary text-white text-[10px] uppercase tracking-wider px-2 sm:px-2.5 py-0.5 rounded font-semibold">
                   {loc.recommended}
                 </span>
               </div>

@@ -106,7 +106,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
           <span className="flex h-2 w-2 relative">
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
-          <span className="text-[11px] sm:text-xs font-semibold text-zinc-800 dark:text-zinc-200 tracking-tight">
+          <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 tracking-tight">
             {trans.hero.badge}
           </span>
         </div>
@@ -141,7 +141,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
           </div>
 
           {/* Micro trust indicators */}
-          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-zinc-200/70 dark:border-zinc-800/80 flex flex-wrap items-center gap-y-2 gap-x-4 sm:gap-x-5 text-xs text-zinc-500 dark:text-zinc-400 font-medium font-mono">
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-zinc-200/70 dark:border-zinc-800/80 flex flex-wrap items-center gap-y-2 gap-x-4 sm:gap-x-5 text-xs text-zinc-500 dark:text-zinc-400 font-medium">
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               {hi ? 'डिजीलॉकर प्रमाणित पहचान' : 'DigiLocker Verified'}
@@ -157,7 +157,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
           </div>
 
           {/* Explicit simulation disclaimer notice */}
-          <p className="mt-3.5 text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
+          <p className="mt-3.5 text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
             {hi
               ? '⚠️ यह Build What Moves India हैकथॉन के लिए बनाया गया एक सिमुलेशन प्रोटोटाइप है, कोई आधिकारिक सरकारी वेबसाइट नहीं है (आधिकारिक राष्ट्रीय पोर्टल: cybercrime.gov.in)।'
               : '⚠️ This is a hackathon simulation and prototype created for the Build What Moves India Hackathon. It is NOT an official government website (official portal: cybercrime.gov.in).'}
@@ -174,11 +174,11 @@ export default function HeroSection({ language }: HeroSectionProps) {
                 <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                 <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                 <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-                <span className="ml-1 sm:ml-2 text-[10.5px] sm:text-[11px] font-mono font-medium text-zinc-500 dark:text-zinc-400 truncate">
+                <span className="ml-1 sm:ml-2 text-xs font-medium text-zinc-500 dark:text-zinc-400 truncate">
                   {hi ? 'नागरिक इनटेक टर्मिनल' : 'Citizen Rapid Intake (NCRP-1930)'}
                 </span>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-[10px] font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 font-mono shrink-0">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-[10px] font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 {hi ? 'सक्रिय' : 'Active'}
               </span>
@@ -208,7 +208,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
               {/* Sample simulation chips if user hasn't recorded */}
               {!committed && !isTranscribing && (
                 <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                  <p className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2">
+                  <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2">
                     {hi ? 'या त्वरित सिमुलेशन चुनें:' : 'Or test with a 1-click simulation:'}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
@@ -252,18 +252,18 @@ export default function HeroSection({ language }: HeroSectionProps) {
                     <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                        <p className="text-[10px] font-mono font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
+                        <p className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                           {isEn ? 'Preliminary Incident Dossier (Form NCRP-1930)' : `${meta.nativeName} Incident Dossier`}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+                        <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
                           {trans.nav.digiLockerVerified}
                         </span>
                         <button
                           type="button"
                           onClick={handleResetRecord}
-                          className="text-[11px] text-primary hover:underline font-medium flex items-center gap-1"
+                          className="text-xs text-primary hover:underline font-medium flex items-center gap-1"
                         >
                           <RotateCcw className="w-3 h-3" />
                           <span>{isEn ? 'Say it again' : 'Re-record'}</span>
@@ -285,7 +285,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                           {result.type}
                         </span>
                       } />
-                      <Row label={isEn ? 'Applicable Law' : 'Section'} value={<span className="font-mono text-xs text-zinc-700">{result.law}</span>} />
+                      <Row label={isEn ? 'Applicable Law' : 'Section'} value={<span className="text-xs font-semibold text-zinc-700">{result.law}</span>} />
                       <Row label={isEn ? 'Golden Hour Action' : 'Action'} value={<span className="text-zinc-700">{result.action}</span>} />
                     </div>
 

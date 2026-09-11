@@ -47,7 +47,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 नमस्ते! अब आपके सभी अपडेट और केस रिपोर्ट हिन्दी में प्रोसेस होंगे।
 📌 *सक्रिय घटना आईडी:* ${incidentId}
 
-🤖 आप नया विवरण, UTR नंबर, बैंक का नाम, या वॉयस नोट 🎤 भेजें — AI इसे स्वतः आपकी शिकायत में जोड़ देगा।
+🤖 आप नया विवरण, UTR नंबर, बैंक का नाम, या वॉयस नोट 🎤 भेजें - AI इसे स्वतः आपकी शिकायत में जोड़ देगा।
 👉 नई शिकायत शुरू करने के लिए *NEW* लिखकर भेजें।`
       case 'bn':
         return `✅ *ভাষা পরিবর্তন করে বাংলা (Bengali) করা হয়েছে।*
@@ -55,7 +55,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 নমস্কার! এখন আপনার সমস্ত আপডেট এবং কেস রিপোর্ট বাংলায় প্রক্রিয়াকৃত হবে।
 📌 *সক্রিয় ঘটনা আইডি:* ${incidentId}
 
-🤖 আপনি যেকোনো নতুন বিবরণ, UTR নম্বর, ব্যাংকের নাম বা ভয়েস নোট 🎤 পাঠান — AI স্বয়ংক্রিয়ভাবে এটি যুক্ত করবে।
+🤖 আপনি যেকোনো নতুন বিবরণ, UTR নম্বর, ব্যাংকের নাম বা ভয়েস নোট 🎤 পাঠান - AI স্বয়ংক্রিয়ভাবে এটি যুক্ত করবে।
 👉 নতুন অভিযোগ শুরু করতে *NEW* লিখে পাঠান।`
       case 'mr':
         return `✅ *भाषा बदलून मराठी (Marathi) करण्यात आली आहे.*
@@ -63,7 +63,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 नमस्कार! आता तुमचे सर्व अपडेट्स आणि केस रिपोर्ट मराठीत प्रोसेस होतील.
 📌 *सक्रिय घटना आयडी:* ${incidentId}
 
-🤖 तुम्ही नवीन तपशील, UTR नंबर, बँकेचे नाव किंवा व्हॉइस नोट 🎤 पाठवा — AI हे आपोआप तक्रारीत जोडेल.
+🤖 तुम्ही नवीन तपशील, UTR नंबर, बँकेचे नाव किंवा व्हॉइस नोट 🎤 पाठवा - AI हे आपोआप तक्रारीत जोडेल.
 👉 नवीन तक्रार सुरू करण्यासाठी *NEW* लिहून पाठवा.`
       case 'te':
         return `✅ *భాషను తెలుగు (Telugu) గా మార్చబడింది.*
@@ -71,7 +71,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 నమస్కారం! మీ తదుపరి అప్‌డేట్‌లు మరియు కేస్ రిపోర్ట్ తెలుగులో ప్రాసెస్ చేయబడతాయి.
 📌 *యాక్టివ్ ఇన్సిడెంట్ ID:* ${incidentId}
 
-🤖 మీరు కొత్త వివరాలు, UTR నంబర్, బ్యాంక్ పేరు లేదా వాయిస్ నోట్ 🎤 పంపవచ్చు — AI స్వయంచాలకంగా జోడిస్తుంది.
+🤖 మీరు కొత్త వివరాలు, UTR నంబర్, బ్యాంక్ పేరు లేదా వాయిస్ నోట్ 🎤 పంపవచ్చు - AI స్వయంచాలకంగా జోడిస్తుంది.
 👉 కొత్త ఫిర్యాదు ప్రారంభించడానికి *NEW* అని పంపండి.`
       case 'ta':
         return `✅ *மொழி தமிழாக (Tamil) மாற்றப்பட்டது.*
@@ -79,7 +79,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 வணக்கம்! உங்கள் அனைத்து புதுப்பிப்புகளும் வழக்கின் அறிக்கைகளும் தமிழில் செயல்படுத்தப்படும்.
 📌 *செயலில் உள்ள வழக்கு ஐடி:* ${incidentId}
 
-🤖 நீங்கள் புதிய விவரங்கள், UTR எண், வங்கி பெயர் அல்லது குரல் குறிப்பு 🎤 அனுப்பலாம் — AI தானாக சேர்க்கும்.
+🤖 நீங்கள் புதிய விவரங்கள், UTR எண், வங்கி பெயர் அல்லது குரல் குறிப்பு 🎤 அனுப்பலாம் - AI தானாக சேர்க்கும்.
 👉 புதிய புகாரைத் தொடங்க *NEW* என பதிலளிக்கவும்.`
       case 'gu':
         return `✅ *ભાષા બદલીને ગુજરાતી (Gujarati) કરવામાં આવી છે.*
@@ -87,7 +87,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 નમસ્તે! હવે તમારા બધા અપડેટ્સ અને કેસ રિપોર્ટ્સ ગુજરાતીમાં પ્રોસેસ થશે.
 📌 *સક્રિય ઘટના આઈડી:* ${incidentId}
 
-🤖 તમે કોઈપણ નવી વિગતો, UTR નંબર, બેંકનું નામ અથવા વૉઇસ નોટ 🎤 મોકલી શકો છો — AI આપમેળે ઉમેરશે.
+🤖 તમે કોઈપણ નવી વિગતો, UTR નંબર, બેંકનું નામ અથવા વૉઇસ નોટ 🎤 મોકલી શકો છો - AI આપમેળે ઉમેરશે.
 👉 નવી ફરિયાદ શરૂ કરવા માટે *NEW* લખો.`
       case 'ur':
         return `✅ *زبان تبدیل کر کے اردو (Urdu) کر دی گئی ہے۔*
@@ -95,7 +95,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 آداب! اب آپ کی تمام تفصیلات اور کیس رپورٹ اردو میں عمل میں لائی جائیں گی۔
 📌 *فعال واقعہ آئی ڈی:* ${incidentId}
 
-🤖 آپ کوئی بھی نئی تفصیل، UTR نمبر، بینک کا نام یا وائس نوٹ 🎤 بھیجیں — AI اسے خود بخود شامل کر لے گا۔
+🤖 آپ کوئی بھی نئی تفصیل، UTR نمبر، بینک کا نام یا وائس نوٹ 🎤 بھیجیں - AI اسے خود بخود شامل کر لے گا۔
 👉 نئی شکایت شروع کرنے کے لیے *NEW* لکھیں۔`
       case 'kn':
         return `✅ *ಭಾಷೆಯನ್ನು ಕನ್ನಡ (Kannada) ಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗಿದೆ.*
@@ -103,7 +103,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 ನಮಸ್ಕಾರ! ಈಗ ನಿಮ್ಮ ಎಲ್ಲಾ ಅಪ್‌ಡೇಟ್‌ಗಳು ಮತ್ತು ಕೇಸ್ ವರದಿಗಳು ಕನ್ನಡದಲ್ಲಿ ಪ್ರಕ್ರಿಯೆಗೊಳ್ಳುತ್ತವೆ.
 📌 *ಸಕ್ರಿಯ ಪ್ರಕರಣ ಐಡಿ:* ${incidentId}
 
-🤖 ನೀವು ಹೊಸ ವಿವರಗಳು, UTR ಸಂಖ್ಯೆ, ಬ್ಯಾಂಕ್ ಹೆಸರು ಅಥವಾ ಧ್ವನಿ ಟಿಪ್ಪಣಿ 🎤 ಕಳುಹಿಸಬಹುದು — AI ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸೇರಿಸುತ್ತದೆ.
+🤖 ನೀವು ಹೊಸ ವಿವರಗಳು, UTR ಸಂಖ್ಯೆ, ಬ್ಯಾಂಕ್ ಹೆಸರು ಅಥವಾ ಧ್ವನಿ ಟಿಪ್ಪಣಿ 🎤 ಕಳುಹಿಸಬಹುದು - AI ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸೇರಿಸುತ್ತದೆ.
 👉 ಹೊಸ ದೂರು ದಾಖಲಿಸಲು *NEW* ಎಂದು ಕಳುಹಿಸಿ.`
       case 'or':
         return `✅ *ଭାଷା ବଦଳାଇ ଓଡ଼ିଆ (Odia) କରାଗଲା।*
@@ -111,7 +111,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 ନମସ୍କାର! ବର୍ତ୍ତମାନ ଆପଣଙ୍କର ସମସ୍ତ ଅପଡେଟ୍ ଏବଂ କେସ୍ ରିପୋର୍ଟ ଓଡ଼ିଆରେ ପ୍ରକ୍ରିୟାକରଣ ହେବ।
 📌 *ସକ୍ରିୟ ଘଟଣା ଆଇଡି:* ${incidentId}
 
-🤖 ଆପଣ ନୂତନ ବିବରଣୀ, UTR ନମ୍ବର, ବ୍ୟାଙ୍କ ନାମ କିମ୍ବା ଭଏସ୍ ନୋଟ୍ 🎤 ପଠାଇପାରିବେ — AI ସ୍ୱତଃ ଯୋଡିଦେବ।
+🤖 ଆପଣ ନୂତନ ବିବରଣୀ, UTR ନମ୍ବର, ବ୍ୟାଙ୍କ ନାମ କିମ୍ବା ଭଏସ୍ ନୋଟ୍ 🎤 ପଠାଇପାରିବେ - AI ସ୍ୱତଃ ଯୋଡିଦେବ।
 👉 ନୂତନ ଅଭିଯୋଗ ଆରମ୍ଭ କରିବାକୁ *NEW* ଲେଖନ୍ତୁ।`
       case 'ml':
         return `✅ *ഭാഷ മലയാളം (Malayalam) ആയി മാറ്റി.*
@@ -119,7 +119,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 നമസ്കാരം! നിങ്ങളുടെ തുടർവിവരങ്ങളും കേസ് റിപ്പോർട്ടും ഇനി മലയാളത്തിൽ ലഭിക്കും.
 📌 *സജീവ ഇൻസിഡന്റ് ഐഡി:* ${incidentId}
 
-🤖 നിങ്ങൾക്ക് പുതിയ വിവരങ്ങൾ, UTR നമ്പർ, ബാങ്ക് പേര് അല്ലെങ്കിൽ വോയ്‌സ് നോട്ട് 🎤 അയക്കാം — AI അത് സ്വയമേവ ചേർക്കും.
+🤖 നിങ്ങൾക്ക് പുതിയ വിവരങ്ങൾ, UTR നമ്പർ, ബാങ്ക് പേര് അല്ലെങ്കിൽ വോയ്‌സ് നോട്ട് 🎤 അയക്കാം - AI അത് സ്വയമേവ ചേർക്കും.
 👉 പുതിയ പരാതി ആരംഭിക്കാൻ *NEW* എന്ന് മറുപടി നൽകുക.`
       case 'pa':
         return `✅ *ਭਾਸ਼ਾ ਬਦਲ ਕੇ ਪੰਜਾਬੀ (Punjabi) ਕਰ ਦਿੱਤੀ ਗਈ ਹੈ।*
@@ -127,7 +127,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਹੁਣ ਤੁਹਾਡੇ ਸਾਰੇ ਅੱਪਡੇਟ ਅਤੇ ਕੇਸ ਰਿਪੋਰਟਾਂ ਪੰਜਾਬੀ ਵਿੱਚ ਪ੍ਰਕਿਰਿਆ ਹੋਣਗੀਆਂ।
 📌 *ਐਕਟਿਵ ਘਟਨਾ ਆਈਡੀ:* ${incidentId}
 
-🤖 ਤੁਸੀਂ ਨਵੇਂ ਵੇਰਵੇ, UTR ਨੰਬਰ, ਬੈਂਕ ਦਾ ਨਾਂ ਜਾਂ ਵੌਇਸ ਨੋਟ 🎤 ਭੇਜੋ — AI ਇਸਨੂੰ ਆਪਣੇ ਆਪ ਸ਼ਿਕਾਇਤ ਵਿੱਚ ਜੋੜ ਦੇਵੇਗਾ।
+🤖 ਤੁਸੀਂ ਨਵੇਂ ਵੇਰਵੇ, UTR ਨੰਬਰ, ਬੈਂਕ ਦਾ ਨਾਂ ਜਾਂ ਵੌਇਸ ਨੋਟ 🎤 ਭੇਜੋ - AI ਇਸਨੂੰ ਆਪਣੇ ਆਪ ਸ਼ਿਕਾਇਤ ਵਿੱਚ ਜੋੜ ਦੇਵੇਗਾ।
 👉 ਨਵੀਂ ਸ਼ਿਕਾਇਤ ਸ਼ੁਰੂ ਕਰਨ ਲਈ *NEW* ਲਿਖੋ।`
     case 'en':
     default:
@@ -136,7 +136,7 @@ export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?:
 All future updates and case reports will now be processed in English.
 📌 *Active Incident ID:* ${incidentId}
 
-🤖 You can send any additional details, UTR numbers, bank names, or voice notes 🎤 — AI will automatically add them to this complaint.
+🤖 You can send any additional details, UTR numbers, bank names, or voice notes 🎤 - AI will automatically add them to this complaint.
 👉 Reply *NEW* to start a fresh complaint.`
     }
   }

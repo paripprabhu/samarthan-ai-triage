@@ -324,7 +324,7 @@ export default function WhatsAppSimulatorModal({
     }
   }, [isOpen])
 
-  // Efficient direct scroll — triggered ONLY when message count changes or typing starts (NO LAG)
+  // Efficient direct scroll - triggered ONLY when message count changes or typing starts (NO LAG)
   useEffect(() => {
     if (chatFeedRef.current) {
       chatFeedRef.current.scrollTop = chatFeedRef.current.scrollHeight
@@ -870,15 +870,15 @@ export default function WhatsAppSimulatorModal({
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <h3 className="text-sm font-semibold tracking-tight">Samarthan WhatsApp AI Agent</h3>
-                <span className="bg-emerald-500 text-white rounded-full px-1 text-[9px] font-bold">✓</span>
-                <span className="bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 text-[9px] font-mono px-1.5 py-0.5 rounded-full">
+                <span className="bg-emerald-500 text-white rounded-full px-1 text-[10px] font-bold">✓</span>
+                <span className="bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 text-[10px] px-1.5 py-0.5 rounded-full">
                   GPT-4o API
                 </span>
-                <span className="bg-amber-400/20 text-amber-200 border border-amber-300/30 text-[9px] font-mono px-1.5 py-0.5 rounded-full">
+                <span className="bg-amber-400/20 text-amber-200 border border-amber-300/30 text-[10px] px-1.5 py-0.5 rounded-full">
                   Build What Moves India Demo
                 </span>
               </div>
-              <p className="text-[11px] text-emerald-200 dark:text-emerald-300/80">
+              <p className="text-xs text-emerald-200 dark:text-emerald-300/80">
                 {isTyping
                   ? '⚡ GPT-4o is triaging & drafting legal sections...'
                   : activeIncidentId
@@ -925,7 +925,7 @@ export default function WhatsAppSimulatorModal({
                 onClose()
                 router.push(`/dashboard?id=${activeIncidentId}`)
               }}
-              className="flex items-center gap-1 bg-white text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-[11px] hover:bg-emerald-50 cursor-pointer shadow-xs"
+              className="flex items-center gap-1 bg-white text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs hover:bg-emerald-50 cursor-pointer shadow-xs"
             >
               <span>{isHi ? 'वेबसाइट पर देखें →' : 'View on Website →'}</span>
             </button>
@@ -934,13 +934,13 @@ export default function WhatsAppSimulatorModal({
 
         {/* Preset Prompt & Quick Actions Bar */}
         <div className="bg-[#F0F2F5] dark:bg-[#111b21] border-b border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide text-xs flex-shrink-0">
-          <span className="text-zinc-500 dark:text-zinc-400 font-medium whitespace-nowrap text-[11px]">
+          <span className="text-zinc-500 dark:text-zinc-400 font-medium whitespace-nowrap text-xs">
             {isHi ? 'त्वरित कार्रवाई:' : 'Quick actions:'}
           </span>
           <button
             type="button"
             onClick={isRecording ? stopRecording : startRecording}
-            className={`whitespace-nowrap flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer border ${
+            className={`whitespace-nowrap flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer border ${
               isRecording
                 ? 'bg-red-500 text-white border-red-600 animate-pulse'
                 : 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700 hover:bg-emerald-100'
@@ -953,7 +953,7 @@ export default function WhatsAppSimulatorModal({
           <button
             type="button"
             onClick={handleSampleReceiptClick}
-            className="whitespace-nowrap flex items-center gap-1 px-2.5 py-1 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-full text-[11px] font-semibold hover:bg-blue-100 transition-colors cursor-pointer"
+            className="whitespace-nowrap flex items-center gap-1 px-2.5 py-1 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-full text-xs font-semibold hover:bg-blue-100 transition-colors cursor-pointer"
           >
             <Sparkles className="w-3 h-3 text-blue-500" />
             <span>{isHi ? '₹45K रसीद जोड़ें' : 'Attach ₹45K Receipt'}</span>
@@ -964,7 +964,7 @@ export default function WhatsAppSimulatorModal({
               type="button"
               key={idx}
               onClick={() => handleSendText(p[language] || p.en)}
-              className="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-[#202c33] hover:bg-zinc-100 dark:hover:bg-[#2a3942] text-zinc-700 dark:text-zinc-200 rounded-full border border-zinc-300 dark:border-zinc-700 text-[11px] shadow-2xs transition-colors cursor-pointer"
+              className="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-[#202c33] hover:bg-zinc-100 dark:hover:bg-[#2a3942] text-zinc-700 dark:text-zinc-200 rounded-full border border-zinc-300 dark:border-zinc-700 text-xs shadow-2xs transition-colors cursor-pointer"
             >
               {p.label}
             </button>
@@ -1003,14 +1003,14 @@ export default function WhatsAppSimulatorModal({
                     <div className="mb-2 p-2 rounded-xl bg-black/5 dark:bg-white/10 flex flex-col gap-1">
                       <audio src={m.audioUrl} controls className="w-full h-8" />
                       {m.voiceTranscript && (
-                        <p className="text-[11px] text-zinc-600 dark:text-zinc-300 italic px-1">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-300 italic px-1">
                           "{m.voiceTranscript}"
                         </p>
                       )}
                     </div>
                   )}
 
-                  <p className="whitespace-pre-line leading-relaxed text-[13.5px]">
+                  <p className="whitespace-pre-line leading-relaxed text-sm">
                     {renderFormattedText(m.content)}
                   </p>
 
@@ -1022,7 +1022,7 @@ export default function WhatsAppSimulatorModal({
                           <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                           <span>{isHi ? 'आधिकारिक NCRP पोर्टल पर दर्ज' : 'Filed on NCRP Legal Portal'}</span>
                         </span>
-                        <span className="font-mono text-[11px] bg-emerald-200/80 dark:bg-emerald-800/60 text-emerald-900 dark:text-emerald-200 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] bg-emerald-200/80 dark:bg-emerald-800/60 text-emerald-900 dark:text-emerald-200 px-2 py-0.5 rounded font-semibold">
                           INC-{m.incidentId || m.filedData?.incidentId}
                         </span>
                       </div>

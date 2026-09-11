@@ -54,9 +54,14 @@ module.exports = {
         xl: 'calc(var(--radius-card) + 4px)',
       },
       fontFamily: {
-        sans: ['Inter', 'Noto Sans Devanagari', 'sans-serif'],
+        sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Noto Sans Gujarati', 'Noto Sans Kannada', 'Noto Sans Oriya', 'Noto Sans Malayalam', 'Noto Sans Gurmukhi', 'Noto Sans Arabic', 'system-ui', '-apple-system', 'sans-serif'],
         devanagari: ['Noto Sans Devanagari', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+      },
+      fontSize: {
+        'ui-main': ['0.875rem', { lineHeight: '1.25rem' }],     // 14px (Main font tier)
+        'ui-small': ['0.75rem', { lineHeight: '1rem' }],        // 12px (Smaller font tier)
+        'ui-micro': ['0.625rem', { lineHeight: '0.875rem' }],   // 10px (Smallest font tier)
       },
       boxShadow: {
         /* Supabase-flat: barely-there elevation */

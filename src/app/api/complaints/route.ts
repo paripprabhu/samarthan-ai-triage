@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/complaints  body: complaint row (snake_case)
-// Upserts — if incident_id exists, updates all fields (so dashboard edits persist)
+// Upserts - if incident_id exists, updates all fields (so dashboard edits persist)
 export async function POST(req: NextRequest) {
   let c: Record<string, unknown>
   try {
@@ -131,7 +131,7 @@ export async function PATCH(req: NextRequest) {
   try {
     const sql = getDb()
 
-    // Build dynamic SET clauses — supports any combination of fields
+    // Build dynamic SET clauses - supports any combination of fields
     const sets: string[] = []
     const vals: unknown[] = []
 
