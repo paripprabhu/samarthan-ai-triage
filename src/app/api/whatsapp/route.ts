@@ -77,7 +77,9 @@ export async function POST(req: NextRequest) {
         ;(session as any).isSimulator = true
       }
       if (json.language && json.language in LANGUAGE_MAP) {
-        session.language = json.language as SupportedLanguage
+        if (!session.language || session.stage === 'SELECT_LANGUAGE' || isExplicitReset) {
+          session.language = json.language as SupportedLanguage
+        }
       }
 
       if (isExplicitReset) {
@@ -158,6 +160,7 @@ export async function POST(req: NextRequest) {
       session: {
         stage: session.stage,
         history: session.history,
+        language: session.language,
       },
     })
   } catch (error: unknown) {

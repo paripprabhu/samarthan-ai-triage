@@ -251,7 +251,11 @@ export default function WhatsAppSimulatorModal({
 }: WhatsAppSimulatorModalProps) {
   const router = useRouter()
   const { setTriageResult } = useTriage()
-  const isHi = language === 'hi'
+  const [activeLanguage, setActiveLanguage] = useState<SupportedLanguage>(language)
+  useEffect(() => {
+    setActiveLanguage(language)
+  }, [language])
+  const isHi = activeLanguage === 'hi'
 
   // Hydration safety for createPortal
   const [mounted, setMounted] = useState(false)
@@ -380,7 +384,7 @@ export default function WhatsAppSimulatorModal({
           phoneNumber: freshSimId,
           resetSession: true,
           isSimulator: true,
-          language,
+          language: activeLanguage,
         }),
       })
     } catch {}
@@ -404,7 +408,7 @@ export default function WhatsAppSimulatorModal({
       .trim()
 
     const utterance = new SpeechSynthesisUtterance(cleanText)
-    utterance.lang = BCP47_MAP[language] || 'en-IN'
+    utterance.lang = BCP47_MAP[activeLanguage] || 'en-IN'
     utterance.rate = 1.05
 
     utterance.onend = () => setSpeakingMsgId(null)
@@ -440,7 +444,7 @@ export default function WhatsAppSimulatorModal({
           message: text,
           activeIncidentId: activeIncidentId || undefined,
           isSimulator: true,
-          language,
+          language: activeLanguage,
         }),
       })
 
@@ -449,8 +453,11 @@ export default function WhatsAppSimulatorModal({
 
       if (data.reply) {
         const returnedIncidentId = data.incidentId || data.filedComplaint?.incidentId || activeIncidentId
-        if (returnedIncidentId && !activeIncidentId) {
+        if (returnedIncidentId && returnedIncidentId !== activeIncidentId) {
           setActiveIncidentId(returnedIncidentId)
+        }
+        if (data.session?.language && data.session.language !== activeLanguage) {
+          setActiveLanguage(data.session.language)
         }
 
         const botMsg: Message = {
@@ -525,7 +532,7 @@ export default function WhatsAppSimulatorModal({
             const recognition = new SpeechRec()
             recognition.continuous = true
             recognition.interimResults = true
-            recognition.lang = BCP47_MAP[language] || 'en-IN'
+            recognition.lang = BCP47_MAP[activeLanguage] || 'en-IN'
 
             recognition.onresult = (event: any) => {
               let text = ''
@@ -609,7 +616,7 @@ export default function WhatsAppSimulatorModal({
           const fd = new FormData()
           const ext = recordedMimeTypeRef.current.includes('mp4') ? 'mp4' : 'webm'
           fd.append('audio', blob, `voicenote.${ext}`)
-          fd.append('language', language)
+          fd.append('language', activeLanguage)
           const trRes = await fetch('/api/transcribe-chunk', { method: 'POST', body: fd })
           if (trRes.ok) {
             const trData = await trRes.json()
@@ -646,7 +653,7 @@ export default function WhatsAppSimulatorModal({
             audioMimeType: recordedMimeTypeRef.current || 'audio/webm',
             activeIncidentId: activeIncidentId || undefined,
             isSimulator: true,
-            language,
+            language: activeLanguage,
           }),
         })
 
@@ -655,8 +662,11 @@ export default function WhatsAppSimulatorModal({
 
         if (data.reply) {
           const returnedIncidentId = data.incidentId || data.filedComplaint?.incidentId || activeIncidentId
-          if (returnedIncidentId && !activeIncidentId) {
+          if (returnedIncidentId && returnedIncidentId !== activeIncidentId) {
             setActiveIncidentId(returnedIncidentId)
+          }
+          if (data.session?.language && data.session.language !== activeLanguage) {
+            setActiveLanguage(data.session.language)
           }
 
           const botMsg: Message = {
@@ -716,7 +726,7 @@ export default function WhatsAppSimulatorModal({
           imageBase64: cleanBase64,
           activeIncidentId: activeIncidentId || undefined,
           isSimulator: true,
-          language,
+          language: activeLanguage,
         }),
       })
 
@@ -725,8 +735,11 @@ export default function WhatsAppSimulatorModal({
 
       if (data.reply) {
         const returnedIncidentId = data.incidentId || data.filedComplaint?.incidentId || activeIncidentId
-        if (returnedIncidentId && !activeIncidentId) {
+        if (returnedIncidentId && returnedIncidentId !== activeIncidentId) {
           setActiveIncidentId(returnedIncidentId)
+        }
+        if (data.session?.language && data.session.language !== activeLanguage) {
+          setActiveLanguage(data.session.language)
         }
 
         const botMsg: Message = {

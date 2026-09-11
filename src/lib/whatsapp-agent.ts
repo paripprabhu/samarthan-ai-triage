@@ -149,8 +149,9 @@ export function detectLanguage(text: string): SupportedLanguage {
 
   const devMatches = trimmed.match(/[\u0900-\u097F]/g)
   if (devMatches) {
-    const marathiMarkers = /(?:माझे|माझा|माझी|माझ्या|झाले|झाला|झाली|गेले|गेला|पैसे|तक्रार|खाते|खात्यातून|घोटाळा|पोलीस|आहे|नाही|नाहीत|केले|केला|होते|होता|फसवणूक|रुपये|रुपयांची|बँक|नोंदवा|करण्यात|खंडणी|मागणी|दिसत)/
-    if (marathiMarkers.test(trimmed)) {
+    const hindiMarkers = /(?:मेरा|मेरी|मेरे|मुझे|मुझसे|हुआ|हुई|हुए|गया|गई|गए|है|हैं|था|थी|थे|नहीं|नही|शिकायत|धोखा|धोखाधड़ी|ठगी|खाता|खाते|पैसा|पैसे|रुपये|रुपया|निकाले|निकाल|कटा|कटे|कटी|आरोपी|बताओ|कीजिए)/
+    const marathiMarkers = /(?:माझे|माझा|माझी|माझ्या|माझं|झाले|झाला|झाली|झालं|गेले|गेला|गेली|गेलं|आहे|आहेत|नाही|नाहीत|तक्रार|फसवणूक|खात्यातून|रुपयांची|नोंदवा|खंडणी|दिसत|करायचे|करायची|केली)/
+    if (marathiMarkers.test(trimmed) && !hindiMarkers.test(trimmed)) {
       addCount('mr', devMatches.length)
     } else {
       addCount('hi', devMatches.length)
@@ -179,7 +180,7 @@ export function detectLanguage(text: string): SupportedLanguage {
   if (/\b(?:da misuse|ton|kadheya|mang leya|de naa te|ban ke|laaye|pind|gall|ch paise|chite|kiti|punjabi)\b/i.test(trimmed)) return 'pa'
   if (/\b(?:majhe naav|mazhe naav|majhe|mazhe|ahe|aahe|kela|pathvun|maagat|ahet|sathi|chori|jhale|gela|gele|fusavli|takraar|karnyachya|marathi)\b/i.test(trimmed)) return 'mr'
   if (/^(?:ur|urdu|اردو)$/i.test(trimmed.trim())) return 'ur'
-  if (/\b(?:mera naam|mera name|kiya|diya|liya|huye|hua|hai|hain|tha|thi|paise|karo|bhai|sahab|dhokha|thagi|maine|apne|karwaya|shukriya|janab)\b/i.test(trimmed)) return 'hi'
+  if (/\b(?:mera|meri|mere|naam|name|kiya|diya|liya|huye|hua|hai|hain|tha|thi|paise|paisa|rupaye|rupay|karo|karein|karna|bhai|sahab|dhokha|thagi|maine|apne|karwaya|shukriya|janab|kya|kyun|kaise|batao|bataiye|de do|kardo|gaya|gayi|gaye|fraud|shikayat|madad|chahiye|nahi|nhi|bolo|boliye|bataye)\b/i.test(trimmed)) return 'hi'
 
   return 'en'
 }
@@ -317,6 +318,80 @@ export function quickExtract(text: string) {
   }
 }
 
+// Robust extractor for Complaint Acknowledgement IDs, UTRs, and update command phrases
+export function extractComplaintOrUtrNumber(text: string): { id: string | null; isExplicitUpdateCommand: boolean; updateNote: string } {
+  const normalized = normalizeIndicNumerals(text.trim())
+
+  let targetId: string | null = null
+  let matchPos = -1
+  let matchLen = 0
+
+  // 1. INC-XXXX-XXXX
+  const incMatch = normalized.match(/INC-\d{4}-\d{4}/i)
+  if (incMatch && incMatch.index !== undefined) {
+    targetId = incMatch[0].toUpperCase()
+    matchPos = incMatch.index
+    matchLen = incMatch[0].length
+  }
+
+  // 2. 14-digit numeric ID (Standard NCRP ID)
+  if (!targetId) {
+    const ncrpMatch = normalized.match(/(?:#|\b)(\d{14})\b/)
+    if (ncrpMatch && ncrpMatch.index !== undefined) {
+      targetId = ncrpMatch[1]
+      matchPos = ncrpMatch.index
+      matchLen = ncrpMatch[0].length
+    }
+  }
+
+  // 3. 12-digit numeric ID (Standard UTR / Banking reference)
+  if (!targetId) {
+    const utrMatch = normalized.match(/(?:#|\b)(\d{12})\b/)
+    if (utrMatch && utrMatch.index !== undefined) {
+      targetId = utrMatch[1]
+      matchPos = utrMatch.index
+      matchLen = utrMatch[0].length
+    }
+  }
+
+  // 4. Any #ID or 8-18 digit standalone number
+  if (!targetId) {
+    const looseMatch = normalized.match(/#(\d{6,18})\b/) || normalized.match(/\b(\d{8,18})\b/)
+    if (looseMatch && looseMatch.index !== undefined) {
+      targetId = looseMatch[1]
+      matchPos = looseMatch.index
+      matchLen = looseMatch[0].length
+    }
+  }
+
+  if (!targetId) {
+    return { id: null, isExplicitUpdateCommand: false, updateNote: '' }
+  }
+
+  // Extract the remaining text surrounding the ID as the updateNote / command
+  const before = normalized.slice(0, matchPos).trim()
+  const after = normalized.slice(matchPos + matchLen).trim()
+  const combinedRemains = `${before} ${after}`.trim()
+
+  // Clean out common inquiry / command prefixes/suffixes to find true update content
+  const cleanedNote = combinedRemains
+    .replace(/^(?:please\s+|can\s+you\s+)?(?:give\s+(?:me\s+)?(?:an\s+)?|check\s+(?:the\s+)?|tell\s+me\s+(?:about\s+)?|show\s+(?:me\s+)?(?:the\s+)?|get\s+)?(?:status|update|updates|track|tracking|progress|details)\s*(?:of|on|for|regarding|about|का|की)?\s*/gi, '')
+    .replace(/^(?:कृपया\s+)?(?:स्टेटस|अपडेट|स्थिति|प्रगति|विवरण|जांच)\s*(?:का|की|के)?\s*/gi, '')
+    .replace(/^(?:case|incident|complaint|shikayat|तक्रार|केस|शिकायत|no\.?|number|id|#)\s*[:#-]*\s*/gi, '')
+    .replace(/(?:का|की|के)\s*(?:स्टेटस|अपडेट|स्थिति|प्रगति|विवरण)\s*(?:बताओ|दीजिए|दें|क्या\s*है)?$/gi, '')
+    .replace(/(?:kya\s*(?:hua|update|status)|status\s*kya\s*hai|batao|please|plz)$/gi, '')
+    .replace(/^[\s,;:-]+|[\s,;:-]+$/g, '')
+    .trim()
+
+  const isExplicitUpdate = /(?:update|status|track|अपडेट|स्थिति|प्रगति|स्टेटस)/i.test(normalized)
+
+  return {
+    id: targetId,
+    isExplicitUpdateCommand: isExplicitUpdate,
+    updateNote: cleanedNote
+  }
+}
+
 export function isDetailedIncidentPrompt(text: string, voiceTranscript?: string): boolean {
   const full = (voiceTranscript || text).trim()
   if (!full) return false
@@ -427,18 +502,27 @@ Extract transaction and crime details. Return ONLY valid JSON matching:
 
 export async function handleStatusQuery(
   session: WhatsAppSession,
-  query: string
+  query: string,
+  preloadedComplaint?: any
 ): Promise<{ reply: string; incidentId?: string }> {
-  const isHi = session.language === 'hi'
-  const utrRes = extractMultilingualUTR(query)
-  const queryUtr = utrRes.utr || query.match(/\b\d{12}\b/)?.[0]
-  const matchedId = query.match(/INC-\d{4}-\d{4}/i)?.[0]?.toUpperCase()
-  const numericId = query.match(/\b\d{14}\b/)?.[0]
-  const targetId = matchedId || numericId || session.incidentId
+  // Multilingual query language alignment: if user typed Hindi, Tamil, Telugu, etc., switch immediately!
+  const queryLang = detectLanguage(query)
+  const hasEnglishWords = /\b(?:status|update|case|complaint|check|tell|give|incident|track|progress|report)\b/i.test(query)
+  if (queryLang && queryLang !== 'en') {
+    session.language = queryLang
+  } else if (hasEnglishWords && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(query))) {
+    session.language = 'en'
+  }
 
-  let complaint: any = null
+  let complaint: any = preloadedComplaint || null
 
-  if (process.env.DATABASE_URL) {
+  if (!complaint && process.env.DATABASE_URL) {
+    const utrRes = extractMultilingualUTR(query)
+    const queryUtr = utrRes.utr || query.match(/\b\d{12}\b/)?.[0]
+    const matchedId = query.match(/INC-\d{4}-\d{4}/i)?.[0]?.toUpperCase()
+    const numericId = query.match(/\b\d{14}\b/)?.[0] || query.match(/#?(\d{10,18})/)?.[1]
+    const targetId = matchedId || numericId || session.incidentId
+
     try {
       const { neon } = await import('@neondatabase/serverless')
       const sql = neon(process.env.DATABASE_URL)
@@ -449,6 +533,7 @@ export async function handleStatusQuery(
         const utrRows = await sql`
           SELECT * FROM complaints
           WHERE incident_id = ${queryUtr}
+             OR incident_id ILIKE ${utrPattern}
              OR frauder_contact ILIKE ${utrPattern}
              OR updates::text ILIKE ${utrPattern}
              OR summary ILIKE ${utrPattern}
@@ -462,7 +547,20 @@ export async function handleStatusQuery(
 
       // 2. Lookup by incident ID if available
       if (!complaint && targetId) {
-        const rows = await sql`SELECT * FROM complaints WHERE incident_id = ${targetId} LIMIT 1`
+        const cleanTargetId = targetId.replace(/^[#\s]+/, '').trim()
+        const targetPattern = `%${cleanTargetId}%`
+        const rows = await sql`
+          SELECT * FROM complaints 
+          WHERE incident_id = ${cleanTargetId}
+             OR incident_id ILIKE ${targetPattern}
+             OR frauder_contact ILIKE ${targetPattern}
+             OR updates::text ILIKE ${targetPattern}
+             OR summary ILIKE ${targetPattern}
+             OR complaint_draft ILIKE ${targetPattern}
+             OR account_number ILIKE ${targetPattern}
+             OR upi_id ILIKE ${targetPattern}
+          ORDER BY saved_at DESC LIMIT 1
+        `
         if (rows[0]) complaint = rows[0]
       }
 
@@ -501,6 +599,12 @@ export async function handleStatusQuery(
   const id = complaint.incident_id
   session.incidentId = id
   session.stage = 'FILED'
+  session.forceNewComplaint = false
+
+  // Adopt complaint language if user sent bare number
+  if (complaint.language && complaint.language in LANGUAGE_MAP && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(query)) && !hasEnglishWords) {
+    session.language = complaint.language
+  }
 
   const statusEmojis: Record<string, string> = {
     DRAFT: '📝',
@@ -535,6 +639,23 @@ export async function processWhatsAppTurn(
   const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   session.history.push({ role: 'user', content: voiceTranscript ? `[Voice Note] ${voiceTranscript}` : userInput, timestamp })
 
+  // Seamless Multilingual Detection: If user speaks or writes in Hindi, Tamil, Telugu, English, etc., switch immediately!
+  const rawInput = (voiceTranscript || userInput).trim()
+  const detectedLang = detectLanguage(rawInput)
+  const hasSubstantiveEnglish = /\b(?:the|is|are|was|were|my|on|for|at|to|from|in|update|status|check|please|give|tell|bank|police|complaint|incident|report|fraudster|stolen|lost|account|froze|frozen|money|loss)\b/i.test(rawInput)
+
+  if (detectedLang && detectedLang !== 'en') {
+    session.language = detectedLang
+    if (session.stage === 'SELECT_LANGUAGE') {
+      session.stage = 'AWAITING_INCIDENT'
+    }
+  } else if (hasSubstantiveEnglish && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(rawInput))) {
+    session.language = 'en'
+    if (session.stage === 'SELECT_LANGUAGE') {
+      session.stage = 'AWAITING_INCIDENT'
+    }
+  }
+
   // Same Account Assumption: auto-restore active incident from Neon DB across web, WhatsApp bot, & simulator
   // SKIP only if session was explicitly reset (user said NEW) or forceNewComplaint is active.
   if (!session.incidentId && !session.forceNewComplaint && process.env.DATABASE_URL && !(session as any)._skipDbRestore) {
@@ -568,7 +689,7 @@ export async function processWhatsAppTurn(
       if (rows[0]?.incident_id) {
         session.incidentId = rows[0].incident_id
         session.stage = 'FILED'
-        if (rows[0].language === 'hi' || rows[0].language === 'en') {
+        if (rows[0].language && rows[0].language in LANGUAGE_MAP) {
           session.language = rows[0].language
         }
       }
@@ -579,22 +700,20 @@ export async function processWhatsAppTurn(
   // Clear the skip flag after this turn so future turns can auto-restore if needed
   delete (session as any)._skipDbRestore
 
-  // Extract any UTR, transaction reference, or incident ID from the user's message
-  const utrCheck = extractMultilingualUTR(trimmed)
-  const msgUtr = utrCheck.utr || trimmed.match(/\b\d{12}\b/)?.[0]
-  const msgInc = trimmed.match(/INC-\d{4}-\d{4}/i)?.[0]?.toUpperCase() || trimmed.match(/\b\d{14}\b/)?.[0]
+  // Extract Complaint Acknowledgement ID, UTR, or update command
+  const idInfo = extractComplaintOrUtrNumber(trimmed)
+  let matchedComplaint: any = null
 
-  // If a specific transaction ID or UTR is mentioned, immediately bind session to THAT complaint
-  if ((msgUtr || msgInc) && process.env.DATABASE_URL) {
+  if (idInfo.id && process.env.DATABASE_URL) {
     try {
       const { neon } = await import('@neondatabase/serverless')
       const sql = neon(process.env.DATABASE_URL)
-      const searchKey = msgUtr || msgInc
-      const searchPattern = `%${searchKey}%`
-      const matched = await sql`
-        SELECT incident_id, language, summary, summary_hi
-        FROM complaints
-        WHERE incident_id = ${searchKey}
+      const cleanNum = idInfo.id.replace(/^[#\s]+/, '').trim()
+      const searchPattern = `%${cleanNum}%`
+      const rows = await sql`
+        SELECT * FROM complaints
+        WHERE incident_id = ${cleanNum}
+           OR incident_id ILIKE ${searchPattern}
            OR frauder_contact ILIKE ${searchPattern}
            OR updates::text ILIKE ${searchPattern}
            OR summary ILIKE ${searchPattern}
@@ -603,24 +722,32 @@ export async function processWhatsAppTurn(
            OR upi_id ILIKE ${searchPattern}
         ORDER BY saved_at DESC LIMIT 1
       `
-      if (matched[0]?.incident_id) {
-        session.incidentId = matched[0].incident_id
+      if (rows[0]) {
+        matchedComplaint = rows[0]
+        session.incidentId = matchedComplaint.incident_id
         session.stage = 'FILED'
-        if (matched[0].language === 'hi' || matched[0].language === 'en') {
-          session.language = matched[0].language
+        session.forceNewComplaint = false
+        if (matchedComplaint.language && matchedComplaint.language in LANGUAGE_MAP && !detectedLang && !hasSubstantiveEnglish) {
+          session.language = matchedComplaint.language
         }
       }
     } catch (e) {
-      console.error('[WhatsApp Agent] Specific UTR lookup error:', e)
+      console.error('[WhatsApp Agent] Specific ID/UTR lookup error:', e)
     }
   }
 
-  // Case Status / Update Inquiry Intent
-  const isBareId = Boolean(
-    /^(?:INC-\d{4}-\d{4}|\d{12}|\d{14})$/i.test(trimmed) ||
-    /^(?:utr|txn|ref|transaction\s*id|reference\s*no|reference\s*number)[:\s]*(\d{12})/i.test(trimmed)
-  )
+  // 1. Direct single-message update with ID: e.g. "update 20260311000001 bank froze account"
+  const isPureInquiry = !idInfo.updateNote || /^(?:status|update|kya hua|kya update|batao|check|report|details|स्थिति|अपडेट)$/i.test(idInfo.updateNote)
+  if (idInfo.id && matchedComplaint && !isPureInquiry && idInfo.updateNote.length >= 3) {
+    return await updateExistingComplaint(session, matchedComplaint.incident_id, idInfo.updateNote)
+  }
 
+  // 2. Explicit ID status query or bare ID lookup: e.g. "update 20260311000001", "status 20260311000001", "20260311000001"
+  if (idInfo.id && (idInfo.isExplicitUpdateCommand || isPureInquiry)) {
+    return await handleStatusQuery(session, trimmed, matchedComplaint)
+  }
+
+  // 3. General Status / Progress query without explicit ID (e.g. "what is my case status", "meri complaint ka kya hua")
   const hasUpdateOrStatusWord = /(?:\b(?:status|update|updates|track|tracking|progress|check|report)\b|(?:kya hua|kya update|update kya|batao|स्थिति|स्टेटस|प्रगति|क्या हुआ|अपडेट))/i.test(trimmed)
   const hasFilingIndicators = Boolean(
     /(?:debited|lost|transferred|stolen|cheated|looted|fraudster|threat|blackmail|scam|gaye|kaat|liye)\b/i.test(trimmed) &&
@@ -628,16 +755,14 @@ export async function processWhatsAppTurn(
   )
 
   const isStatusQuery = Boolean(
-    (isBareId && session.stage !== 'AWAITING_INCIDENT') ||
-    (hasUpdateOrStatusWord && (
-      Boolean(msgUtr) ||
-      Boolean(msgInc) ||
+    hasUpdateOrStatusWord && (
+      Boolean(session.incidentId) ||
       (trimmed.length <= 45 && !hasFilingIndicators) ||
       /(?:case|complaint|incident|shikayat|तक्रार|केस|शिकायत|mera|meri|my)/i.test(trimmed) ||
       /^(?:what(?:'s|\s+is)?\s+(?:the\s+)?(?:status|update)|give\s+(?:me\s+)?(?:an\s+)?update|any\s+update|tell\s+me\s+(?:the\s+)?(?:status|update)|check\s+(?:the\s+)?(?:status|update)|can\s+you\s+(?:give|check|tell)\s+(?:me\s+)?(?:the\s+)?update)/i.test(trimmed) ||
       /(?:update|status)\s+(?:on|for|of|regarding|about)\s+/i.test(trimmed) ||
       /(?:का|की)\s*(?:स्थिति|अपडेट|स्टेटस)/i.test(trimmed)
-    ))
+    )
   )
 
   if (isStatusQuery) {
@@ -828,11 +953,8 @@ export async function processWhatsAppTurn(
 
   // STAGE 1: SELECT_LANGUAGE
   if (session.stage === 'SELECT_LANGUAGE') {
-    const ext = quickExtract(trimmed)
-    const isBareLangPick = /^(?:[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|en|english|hindi|bn|bengali|mr|marathi|te|telugu|ta|tamil|gu|gujarati|ur|urdu|kn|kannada|or|odia|ml|malayalam|pa|punjabi)$/i.test(trimmed)
-    const hasIncidentDetails = !isBareLangPick && Boolean(voiceTranscript || ext.amount || ext.upi || ext.phone || trimmed.length > 40)
-
-    if (!hasIncidentDetails) {
+    const isGreetingOrNav = isInitialGreeting || isWebsiteDefaultMsg || /^(?:menu|start|help|options)$/i.test(trimmed)
+    if (isGreetingOrNav) {
       return sendLanguageGreeting()
     }
 
@@ -941,6 +1063,13 @@ async function updateExistingComplaint(
   incidentId: string,
   noteText: string
 ): Promise<{ reply: string; incidentId: string }> {
+  const detectedNoteLang = detectLanguage(noteText)
+  const hasEnglishWords = /\b(?:status|update|case|complaint|check|tell|give|incident|track|progress|report|account|bank|police|froze|frozen|money|amount|loss|cheated|stolen|scam)\b/i.test(noteText)
+  if (detectedNoteLang && detectedNoteLang !== 'en') {
+    session.language = detectedNoteLang
+  } else if (hasEnglishWords && session.language !== 'en' && !(/[\u0900-\u0D7F\u0600-\u06FF]/.test(noteText))) {
+    session.language = 'en'
+  }
   const isHi = session.language === 'hi'
   const extractedUpdate = await extractUpdateDetailsWithAI(noteText)
 

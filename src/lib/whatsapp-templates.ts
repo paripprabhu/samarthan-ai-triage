@@ -449,6 +449,23 @@ export function formatStatusReport(
   const fraudster = complaint.frauder_contact || complaint.fraudster_identifier || 'Not Specified'
   const bank = complaint.bank_name || 'NCRP 1930 Triage'
 
+  const updatesList = Array.isArray(complaint.updates) ? complaint.updates : []
+  let formattedUpdatesEn = ''
+  let formattedUpdatesHi = ''
+  if (updatesList.length > 0) {
+    formattedUpdatesEn = updatesList.slice(-3).map((u: any) => {
+      const time = u.timestamp ? new Date(u.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : ''
+      return `• ${time ? `[${time}] ` : ''}${u.note}`
+    }).join('\n')
+    formattedUpdatesHi = updatesList.slice(-3).map((u: any) => {
+      const time = u.timestamp ? new Date(u.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : ''
+      return `• ${time ? `[${time}] ` : ''}${u.note}`
+    }).join('\n')
+  } else {
+    formattedUpdatesEn = latestUpdate ? `• ${latestUpdate.note}` : '• Complaint registered. Golden Hour freeze token active.'
+    formattedUpdatesHi = latestUpdate ? `• ${latestUpdate.note}` : '• शिकायत दर्ज। 1930 व बैंक फ्रीज टोकन सक्रिय।'
+  }
+
   switch (lang) {
     case 'hi':
       return `📊 *शिकायत स्थिति रिपोर्ट (CASE STATUS)*
@@ -461,13 +478,16 @@ ${emoji} *वर्तमान स्थिति:* *${curStatus}*
 🏦 *बैंक / नोडल:* ${bank}
 🕒 *दर्ज तिथि:* ${dateStr}
 
-📝 *नवीनतम अपडेट:*
-${latestUpdate ? `"${latestUpdate.note}"` : 'शिकायत दर्ज। 1930 व बैंक फ्रीज टोकन सक्रिय।'}
+📝 *दर्ज टाइमलाइन अपडेट:*
+${formattedUpdatesHi}
+
+✍️ *इस केस (#${id}) पर नया अपडेट दें:*
+कोई भी नया विवरण सीधे भेजें (जैसे UTR नंबर, आरोपी का फोन/UPI, बैंक का जवाब, या स्क्रीनशॉट 📸 / वॉयस नोट 🎤) — यह स्वतः केस #${id} में जुड़ जाएगा।
 
 📄 *लाइव डॉसियर व औपचारिक FIR ड्राफ्ट:*
 ${trackingLink}
 ━━━━━━━━━━━━━━━━━━━━
-💡 *सुझाव:* नया विवरण जोड़ने के लिए संदेश/वॉयस नोट/स्क्रीनशॉट भेजें, या नई शिकायत के लिए *NEW* लिखें।`
+💡 *सुझाव:* नई शिकायत शुरू करने के लिए कभी भी *NEW* लिखें।`
 
     case 'bn':
       return `📊 *অভিযোগের স্থিতি রিপোর্ট (CASE STATUS)*
@@ -671,13 +691,16 @@ ${emoji} *Current Status:* *${curStatus}*
 🏦 *Bank / Nodal Desk:* ${bank}
 🕒 *Filed At:* ${dateStr}
 
-📝 *Latest Timeline Update:*
-${latestUpdate ? `"${latestUpdate.note}"` : 'Complaint lodged. Golden Hour freeze token active.'}
+📝 *Timeline Updates on Record:*
+${formattedUpdatesEn}
+
+✍️ *Give an Update on Case #${id}:*
+Reply directly with any new details (UTR number, fraudster contact, bank response, or send a screenshot 📸 / voice note 🎤) to automatically append it to this case.
 
 📄 *View Full Case Dossier & Police Draft:*
 ${trackingLink}
 ━━━━━━━━━━━━━━━━━━━━
-💡 *Tip:* Reply anytime with a UTR, voice note, or payment screenshot to add to this case, or reply *NEW* for another case.`
+💡 *Tip:* To start a brand new complaint anytime, reply *NEW*.`
   }
 }
 
