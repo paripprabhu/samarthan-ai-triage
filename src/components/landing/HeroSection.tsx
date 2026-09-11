@@ -101,50 +101,49 @@ export default function HeroSection({ language }: HeroSectionProps) {
     <section className="relative w-full pt-4 pb-8 sm:pt-6 sm:pb-12 md:pt-8 md:pb-14 overflow-hidden isolate">
       <RadialBackground />
       <div className="relative z-10 max-w-[1060px] mx-auto px-4 sm:px-6">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-stretch justify-center">
-          {/* Left: copy (matching height and scale with rapid intake card) */}
-          <div className="w-full max-w-[500px] mx-auto lg:mx-0 flex flex-col justify-between">
-            <div>
-              {/* Eyebrow Pill */}
-              <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-4 backdrop-blur-sm">
-                <span className="flex h-2 w-2 relative">
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                </span>
-                <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 tracking-tight">
-                  {trans.hero.badge}
-                </span>
-              </div>
-
-              <h1 className="text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] font-extrabold tracking-tight text-zinc-950 dark:text-white leading-[1.14] indic-headline">
-                <span className="block py-0.5">{trans.hero.headline1}</span>
-                <span className="block text-primary mt-1 py-0.5">{trans.hero.headline2}</span>
-              </h1>
-
-              <p className="mt-3.5 sm:mt-4 text-sm sm:text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                {trans.hero.subtitle}
-              </p>
-
-              <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
-                <button
-                  onClick={goToIntake}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white rounded-lg px-5 sm:px-6 py-3 text-sm font-semibold transition-colors shadow-sm min-h-[42px]"
-                >
-                  <span>{cleanCtaReport}</span>
-                  <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                </button>
-                <a
-                  href="#how-it-works"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-200 rounded-lg px-5 sm:px-6 py-3 text-sm font-medium transition-colors shadow-2xs min-h-[42px]"
-                >
-                  <span>{cleanCtaLearnMore}</span>
-                  <ArrowDown className="w-4 h-4 text-zinc-400" />
-                </a>
-              </div>
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center justify-center">
+          {/* Left: copy (matching scale and height with rapid intake card) */}
+          <div className="w-full max-w-[500px] mx-auto lg:mx-0 flex flex-col justify-center">
+            {/* Eyebrow Pill */}
+            <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-4 backdrop-blur-sm self-start">
+              <span className="flex h-2 w-2 relative">
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 tracking-tight">
+                {trans.hero.badge}
+              </span>
             </div>
 
-            <div className="mt-6 sm:mt-8">
+            <h1 className="text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] font-extrabold tracking-tight text-zinc-950 dark:text-white leading-[1.14] indic-headline">
+              <span className="block py-0.5">{trans.hero.headline1}</span>
+              <span className="block text-primary mt-1 py-0.5">{trans.hero.headline2}</span>
+            </h1>
+
+            <p className="mt-3.5 sm:mt-4 text-sm sm:text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
+              {trans.hero.subtitle}
+            </p>
+
+            <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+              <button
+                onClick={goToIntake}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white rounded-lg px-5 sm:px-6 py-3 text-sm font-semibold transition-colors shadow-sm min-h-[42px]"
+              >
+                <span>{cleanCtaReport}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </button>
+              <a
+                href="#how-it-works"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-200 rounded-lg px-5 sm:px-6 py-3 text-sm font-medium transition-colors shadow-2xs min-h-[42px]"
+              >
+                <span>{cleanCtaLearnMore}</span>
+                <ArrowDown className="w-4 h-4 text-zinc-400" />
+              </a>
+            </div>
+
+            {/* Placed directly in the empty space below buttons */}
+            <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-zinc-200/80 dark:border-zinc-800">
               {/* Micro trust indicators */}
-              <div className="pt-4 sm:pt-5 border-t border-zinc-200/70 dark:border-zinc-800/80 flex flex-wrap items-center gap-y-1.5 gap-x-3.5 sm:gap-x-4 text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+              <div className="flex flex-wrap items-center gap-y-1.5 gap-x-3.5 sm:gap-x-4 text-xs text-zinc-600 dark:text-zinc-300 font-medium">
                 <span className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   {hi ? 'डिजीलॉकर प्रमाणित पहचान' : 'DigiLocker Verified'}
@@ -169,9 +168,9 @@ export default function HeroSection({ language }: HeroSectionProps) {
           </div>
 
           {/* Right: Studio Window Terminal (matching height and width with left copy) */}
-          <div className="relative w-full max-w-[500px] lg:max-w-[520px] mx-auto lg:mx-0 h-full flex flex-col">
+          <div className="relative w-full max-w-[500px] lg:max-w-[520px] mx-auto lg:mx-0">
             {/* Outer window frame container */}
-            <div className="rounded-[20px] border border-zinc-200/90 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden h-full flex flex-col justify-between">
+            <div className="rounded-[20px] border border-zinc-200/90 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden">
               {/* Terminal Window Top Bar */}
               <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-3.5 border-b border-zinc-100 dark:border-zinc-850 bg-surface shrink-0">
                 <div className="flex items-center gap-2">

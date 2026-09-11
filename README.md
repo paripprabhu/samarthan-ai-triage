@@ -259,7 +259,7 @@ scripts/
 ## Disclaimer
 
 - **Synthetic data only.** Every scenario, demo complaint, and mock response is fictitious.
-- **Not an official government portal.** A hackathon prototype. File real complaints at
+- **Not an official government portal.** A prototype simulation. File real complaints at
   [cybercrime.gov.in](https://cybercrime.gov.in).
 - **Demonstrative.** Built to show AI-powered UX for an urgent citizen service — not to replace
   or impersonate official channels. The escalation / bank / platform actions are simulated.
