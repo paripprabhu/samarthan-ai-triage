@@ -68,6 +68,31 @@ function setActiveIncident(phone, incidentId) {
 // down the new-complaint path (never an update to the old case) until a fresh
 // complaint is actually filed. Persisted alongside the active-incident map.
 const NEW_MODE_FILE = SESSIONS_FILE.replace(/\.json$/, '') + '.newmode.json'
+const LANG_FILE = SESSIONS_FILE.replace(/\.json$/, '') + '.lang.json'
+
+function getUserLanguage(phone) {
+  try {
+    if (fs.existsSync(LANG_FILE)) {
+      const data = JSON.parse(fs.readFileSync(LANG_FILE, 'utf-8'))
+      return data[phone] || null
+    }
+  } catch {}
+  return null
+}
+
+function setUserLanguage(phone, lang) {
+  try {
+    let data = {}
+    if (fs.existsSync(LANG_FILE)) {
+      try { data = JSON.parse(fs.readFileSync(LANG_FILE, 'utf-8')) } catch {}
+    }
+    if (lang) data[phone] = lang
+    else delete data[phone]
+    fs.writeFileSync(LANG_FILE, JSON.stringify(data, null, 2), 'utf-8')
+  } catch (e) {
+    console.error('[Lang Save Error]:', e.message)
+  }
+}
 
 function isNewMode(phone) {
   try {
@@ -383,18 +408,68 @@ async function startWhatsAppBot() {
             console.log(`[Audio Message] Successfully extracted audio (${buffer.length} bytes)`)
 
             // Try Whisper transcription locally using OPENAI_API_KEY with auto-language detection
+            let detectedAudioLanguage = undefined
             if (process.env.OPENAI_API_KEY) {
               try {
                 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
                 const file = await toFile(buffer, 'audio.ogg', { type: 'audio/ogg' })
-                // Do not force 'hi' or Hindi prompt - Whisper-1 natively auto-detects Malayalam, Tamil, Telugu, Hindi, English, etc.
+                const userLang = getUserLanguage(senderPhone)
+                const validLangs = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
+                const whisperLang = userLang && validLangs.includes(userLang) && userLang !== 'en' ? userLang : undefined
+                const INDIC_PROMPT =
+                  'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
+
                 const transcription = await openai.audio.transcriptions.create({
                   file,
                   model: 'whisper-1',
+                  ...(whisperLang ? { language: whisperLang } : {}),
+                  prompt: INDIC_PROMPT,
                 })
+
                 if (transcription?.text) {
                   voiceTranscript = transcription.text.trim()
-                  console.log(`[Audio Message] Transcribed locally: "${voiceTranscript}"`)
+                  console.log(`[Audio Message] Transcribed raw: "${voiceTranscript}"`)
+
+                  // If transcription contains Indic characters, verify and normalize Dravidian ASR phonetics
+                  // (Whisper frequently transcribes spoken Malayalam or Telugu into Tamil glyphs without language lock)
+                  if (/[\u0B80-\u0D7F\u0900-\u0A7F]/.test(voiceTranscript) || !whisperLang) {
+                    try {
+                      const normRes = await openai.chat.completions.create({
+                        model: 'gpt-4o-mini',
+                        temperature: 0.1,
+                        messages: [
+                          {
+                            role: 'system',
+                            content: `You are an expert AI Indian speech transcript normalizer for cybercrime triage.
+ASR models often transcribe spoken Malayalam (ml) or Telugu (te) into Tamil (ta) or Devanagari characters due to Dravidian acoustic overlap.
+Your task:
+1. Determine the true language phonetically spoken in the transcript.
+   - Malayalam markers: 'പേര്/பேரு', 'ആണ്/ஆணு', 'ഞാൻ/நான்', 'മൂന്ന്/മൂനു', 'ദിവസം/஦ேஸம்', 'മുമ്പ്/மும்ப', 'ഒരു/ஒரு', 'വാച്ച്/வாச்ச்', 'വെബ്സൈറ്റ്/வயஸாய்ட்', 'തട്ടിപ്പ്', 'പണം'
+   - Telugu markers: 'పేరు/பயரு', 'నేను/நீ நூ', 'కొందామని/குண்டாண', 'ఒక/ஒக', 'వెళ్తే/வேல்ல்தே', 'అక్కడినుంచి/அக்கண்ணுச்ச', 'డబ్బులు', 'మోసం'
+2. Return JSON:
+{
+  "detectedLanguage": "ml" | "te" | "ta" | "hi" | "en" | "kn" | "bn" | "gu" | "mr" | "pa" | "ur" | "or",
+  "cleanedTranscript": "full sentence in the correct native script",
+  "confidence": number
+}`
+                          },
+                          { role: 'user', content: voiceTranscript }
+                        ],
+                        response_format: { type: 'json_object' }
+                      })
+                      const parsed = JSON.parse(normRes.choices[0].message.content)
+                      if (parsed.cleanedTranscript && parsed.confidence >= 0.7) {
+                        voiceTranscript = parsed.cleanedTranscript
+                        console.log(`[Audio Message] Reconstructed clean transcript (${parsed.detectedLanguage}): "${voiceTranscript}"`)
+                      }
+                      if (parsed.detectedLanguage && parsed.confidence >= 0.7) {
+                        detectedAudioLanguage = parsed.detectedLanguage
+                        setUserLanguage(senderPhone, parsed.detectedLanguage)
+                      }
+                    } catch (normErr) {
+                      console.warn('[Transcript Normalizer Warning]:', normErr.message)
+                    }
+                  }
                 }
               } catch (whisperErr) {
                 console.warn('[Local Whisper Warning]:', whisperErr.message)
@@ -441,11 +516,33 @@ async function startWhatsAppBot() {
       } catch {}
 
       try {
+        const trimmedText = (text || '').trim()
+        // Check for numeric language picks (1 to 12)
+        const NUMERIC_LANG_MAP = {
+          '1': 'en', '2': 'hi', '3': 'bn', '4': 'mr',
+          '5': 'te', '6': 'ta', '7': 'gu', '8': 'ur',
+          '9': 'kn', '10': 'or', '11': 'ml', '12': 'pa',
+        }
+        if (NUMERIC_LANG_MAP[trimmedText]) {
+          setUserLanguage(senderPhone, NUMERIC_LANG_MAP[trimmedText])
+        } else if (/^(?:ml|malayalam|മലയാളം)$/i.test(trimmedText)) {
+          setUserLanguage(senderPhone, 'ml')
+        } else if (/^(?:hi|hindi|हिंदी|हिन्दी)$/i.test(trimmedText)) {
+          setUserLanguage(senderPhone, 'hi')
+        } else if (/^(?:te|telugu|తెలుగు)$/i.test(trimmedText)) {
+          setUserLanguage(senderPhone, 'te')
+        } else if (/^(?:ta|tamil|தமிழ்)$/i.test(trimmedText)) {
+          setUserLanguage(senderPhone, 'ta')
+        } else if (/^(?:kn|kannada|ಕನ್ನಡ)$/i.test(trimmedText)) {
+          setUserLanguage(senderPhone, 'kn')
+        }
+
         const isExplicitNew =
           /^(new|start new|file new|new complaint|fresh|naya|nai|नई|नया|नई शिकायत|പുതിയ|പുതിയ പരാതി|reset|\/reset|clear|restart)$/i.test((text || '').trim()) ||
           /i want to report a cybercrime incident/i.test(text || '') ||
           /i want to report a cyber incident/i.test(text || '') ||
           /സൈബർ കുറ്റകൃത്യം|സൈബർ തട്ടിപ്പ്/i.test(text || '') ||
+          /సైబర్ క్రైమ్|మోసం/i.test(text || '') ||
           /साइबर अपराध|साइबर धोखाधड़ी/i.test(text || '') ||
           /^(hi samarthan|hello samarthan|namaste samarthan)/i.test((text || '').trim())
 
@@ -458,6 +555,7 @@ async function startWhatsAppBot() {
         // never send a stale active incident id.
         const newMode = isNewMode(senderPhone)
         const activeIncidentId = newMode ? null : getActiveIncident(senderPhone)
+        const currentLanguage = detectedAudioLanguage || getUserLanguage(senderPhone)
 
         const res = await fetch(NEXT_API_URL, {
           method: 'POST',
@@ -469,6 +567,7 @@ async function startWhatsAppBot() {
             message: text,
             audioBase64,
             voiceTranscript,
+            language: currentLanguage,
             imageBase64,
           }),
         })
@@ -487,6 +586,10 @@ async function startWhatsAppBot() {
 
         if (data.incidentId) {
           setActiveIncident(senderPhone, data.incidentId)
+        }
+
+        if (data.session?.language) {
+          setUserLanguage(senderPhone, data.session.language)
         }
 
         await sock.sendMessage(remoteJid, { text: replyText })

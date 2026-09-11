@@ -316,10 +316,14 @@ export async function POST(req: NextRequest) {
             ? targetLanguage
             : undefined
 
+          const INDIC_WHISPER_PROMPT =
+            'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
+
           const transcription = await openai.audio.transcriptions.create({
             file: fileObj,
             model: 'whisper-1',
             ...(whisperLang ? { language: whisperLang } : {}),
+            prompt: INDIC_WHISPER_PROMPT,
           })
           return typeof transcription === 'string' ? transcription : (transcription as any).text || ''
         } catch (audioError: any) {

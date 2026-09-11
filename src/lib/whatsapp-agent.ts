@@ -167,7 +167,20 @@ export function detectLanguage(text: string): SupportedLanguage {
     }
   }
 
-  if (topLang) return topLang
+  if (topLang) {
+    // When Whisper transcribes spoken Malayalam or Telugu without explicit language hints,
+    // it often defaults to Tamil script (\u0B80-\u0BFF) due to acoustic similarities.
+    // Detect distinctive Malayalam/Telugu vocabulary rendered in Tamil glyphs:
+    if (topLang === 'ta') {
+      if (/(?:பேரு|ஆணு|மும்ப|஦ேஸம்|வய\s*ஸாய்ட்|வய\u0BECஸாய்ட்|மூனு|கம்ப்லைனே|கம்ப்லைன்|இந்ந)/i.test(trimmed)) {
+        return 'ml'
+      }
+      if (/(?:நா பயரு|நீ நூ|ஒக|வேல்ல்தே|அக்கண்ணுச்ச|குண்\a*ண்காண)/i.test(trimmed)) {
+        return 'te'
+      }
+    }
+    return topLang
+  }
 
   // Romanized transliteration heuristics for code-switched text
   if (/\b(?:maru naam|maru name|chhe|lidhu|lidha|thaya|karyu|mate|mathi|aavya|khata|koi e|padavi|gujarati)\b/i.test(trimmed)) return 'gu'

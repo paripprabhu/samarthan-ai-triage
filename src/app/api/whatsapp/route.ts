@@ -77,8 +77,9 @@ export async function POST(req: NextRequest) {
         ;(session as any).isSimulator = true
       }
       if (json.language && json.language in LANGUAGE_MAP) {
-        if (!session.language || session.stage === 'SELECT_LANGUAGE' || isExplicitReset) {
-          session.language = json.language as SupportedLanguage
+        session.language = json.language as SupportedLanguage
+        if (session.stage === 'SELECT_LANGUAGE') {
+          session.stage = 'AWAITING_INCIDENT'
         }
       }
 
@@ -188,10 +189,14 @@ async function transcribeAudioUrl(audioUrl: string): Promise<string | null> {
   const buffer = Buffer.from(await blob.arrayBuffer())
   const file = await toFile(buffer, 'audio.ogg', { type: 'audio/ogg' })
 
+  const INDIC_WHISPER_PROMPT =
+    'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
+
   const openai = new OpenAI({ apiKey })
   const transcription = await openai.audio.transcriptions.create({
     file,
     model: 'whisper-1',
+    prompt: INDIC_WHISPER_PROMPT,
   })
 
   return transcription.text
@@ -219,12 +224,15 @@ async function transcribeAudioBase64(
 
   const openai = new OpenAI({ apiKey })
   const VALID_WHISPER_LANGS = ['en', 'hi', 'bn', 'mr', 'te', 'ta', 'gu', 'ur', 'kn', 'ml', 'pa']
-  const whisperLang = language && VALID_WHISPER_LANGS.includes(language) ? language : undefined
+  const whisperLang = language && VALID_WHISPER_LANGS.includes(language) && language !== 'en' ? language : undefined
+  const INDIC_WHISPER_PROMPT =
+    'Indian cybercrime complaint. Spoken in English, Malayalam (മലയാളം: എന്റെ പേര്, പണം, ബാങ്ക്, തട്ടിപ്പ്), Telugu (తెలుగు: నా పేరు, డబ్బులు, మోసం), Hindi (हिन्दी: पैसे, फ्रॉड), Tamil (தமிழ்), Kannada (ಕನ್ನಡ). UPI fraud, OTP, 1930.'
   try {
     const transcription = await openai.audio.transcriptions.create({
       file,
       model: 'whisper-1',
       ...(whisperLang ? { language: whisperLang } : {}),
+      prompt: INDIC_WHISPER_PROMPT,
     })
     return transcription.text
   } catch (err: any) {
