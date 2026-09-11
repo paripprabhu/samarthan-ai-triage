@@ -478,14 +478,17 @@ async function startWhatsAppBot() {
         setUserLanguage(senderPhone, 'en')
         const currentLanguage = 'en'
 
+        const incomingContent = (voiceTranscript || text || '').trim()
         const isExplicitNew =
-          /^(new|start new|file new|new complaint|fresh|naya|nai|नई|नया|नई शिकायत|പുതിയ|പുതിയ പരാതി|reset|\/reset|clear|restart)$/i.test((text || '').trim()) ||
-          /i want to report a cybercrime incident/i.test(text || '') ||
-          /i want to report a cyber incident/i.test(text || '') ||
-          /സൈബർ കുറ്റകൃത്യം|സൈബർ തട്ടിപ്പ്/i.test(text || '') ||
-          /సైబర్ క్రైమ్|మోసం/i.test(text || '') ||
-          /साइबर अपराध|साइबर धोखाधड़ी/i.test(text || '') ||
-          /^(hi samarthan|hello samarthan|namaste samarthan)/i.test((text || '').trim())
+          /^(new|start new|file new|new complaint|fresh|naya|nai|नई|नया|नई शिकायत|പുതിയ|പുതിയ പരാതി|reset|\/reset|clear|restart)$/i.test(incomingContent) ||
+          /i want to report a cybercrime incident/i.test(incomingContent) ||
+          /i want to report a cyber incident/i.test(incomingContent) ||
+          /സൈബർ കുറ്റകൃത്യം|സൈബർ തട്ടിപ്പ്/i.test(incomingContent) ||
+          /సైబర్ క్రైమ్|మోసం/i.test(incomingContent) ||
+          /साइबर अपराध|साइबर धोखाधड़ी/i.test(incomingContent) ||
+          /^(hi samarthan|hello samarthan|namaste samarthan)/i.test(incomingContent) ||
+          /\b(?:my name is|mera naam|hamara naam|ente peru|naa peru|nanna hesaru|amar naam)\b/i.test(incomingContent) ||
+          (/\b(?:two days ago|three days ago|four days ago|yesterday|last week|fake website|pension money|someone took|booked a flight|guy called|travel agent called)\b/i.test(incomingContent) && incomingContent.length > 40)
 
         if (isExplicitNew) {
           setActiveIncident(senderPhone, null)

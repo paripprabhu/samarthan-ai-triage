@@ -108,6 +108,39 @@ export function stripAddressPlaceholders(text: string | undefined): string {
     .trim()
 }
 
+export function isNewIncidentNarrative(text: string, voiceTranscript?: string): boolean {
+  const content = (voiceTranscript || text || '').trim()
+  if (content.length < 20) return false
+
+  // 1. Explicit complaint filing intent
+  if (/\b(?:file (?:a )?new complaint|start (?:a )?new|report (?:a )?new|new cybercrime|report a fraud|new incident|fresh complaint)\b/i.test(content)) {
+    return true
+  }
+
+  // 2. Personal introduction / complainant identification
+  const hasIntro = /\b(?:my name is|i am|this is|mera naam|hamara naam|ente peru|naa peru|nanna hesaru|amar naam|meraa naam)\b/i.test(content)
+
+  // 3. Incident occurrence / timeline opening
+  const hasTimelineAnchor = /\b(?:two days ago|three days ago|four days ago|five days ago|few days ago|yesterday|last week|last month|on \d{1,2}(?:st|nd|rd|th)?|do din pehle|teen din pehle|char din pehle|kal |parso |recently|today morning|today afternoon)\b/i.test(content)
+
+  // 4. Incident narrative triggers (describing what happened in a fresh scam)
+  const hasScamNarrative = /\b(?:someone took|guy called|travel agent called|he took my|she took my|called and asked|posing as|pretending to be|fake website|booked a flight|pension money|deposited \d+|transferred \d+|lost a total of|cheated me of|fraudster stole|unauthorized debit of|money was debited|took all my)\b/i.test(content)
+
+  if (hasIntro && (hasTimelineAnchor || hasScamNarrative || content.length > 50)) {
+    return true
+  }
+
+  if (hasTimelineAnchor && (hasScamNarrative || content.length > 60)) {
+    return true
+  }
+
+  if (hasScamNarrative && content.length > 70) {
+    return true
+  }
+
+  return false
+}
+
 export function detectLanguage(text: string): SupportedLanguage {
   const trimmed = text.trim()
   if (!trimmed) return 'en'
@@ -944,7 +977,20 @@ export async function processWhatsAppTurn(
       return { reply: promptMsg }
     }
 
-    // 3. ANY OTHER MESSAGE (UTR, Bank Name, narrative, voice note) -> AUTOMATICALLY READ & UPDATE ACTIVE COMPLAINT!
+    // 3. Check if citizen is reporting a fresh cybercrime incident narrative (not just an update)
+    if (isNewIncidentNarrative(noteText, voiceTranscript)) {
+      session.stage = 'AWAITING_INCIDENT'
+      session.accumulatedText = noteText
+      session.incidentId = undefined
+      session.extractedData = undefined
+      session.pendingUpdateText = undefined
+      session.pendingMediaUrl = undefined
+      session.pendingVisionEvidence = undefined
+      session.forceNewComplaint = false
+      return await createAndSaveNewComplaint(session, noteText, mediaUrl, voiceTranscript)
+    }
+
+    // 4. ANY OTHER MESSAGE (UTR, Bank Name, narrative, voice note) -> AUTOMATICALLY READ & UPDATE ACTIVE COMPLAINT!
     return await updateExistingComplaint(session, session.incidentId, noteText)
   }
 

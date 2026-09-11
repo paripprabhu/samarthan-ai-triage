@@ -46,11 +46,13 @@ function DashboardContent() {
   const [updates, setUpdates] = useState<ComplaintUpdate[]>([])
   const [callModalHotline, setCallModalHotline] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
-  const [loadingRecord, setLoadingRecord] = useState(Boolean(paramId && !triageResult))
+  const [loadingRecord, setLoadingRecord] = useState(Boolean(paramId && triageResult?.incidentId !== paramId))
   const hi = language === 'hi'
   const mounted = useRef(false)
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const initialSavedFor = useRef<string | null>(null)
+  const paramIdRef = useRef<string | null>(paramId)
+  paramIdRef.current = paramId
 
   useEffect(() => {
     setTimeout(() => { mounted.current = true }, 0)
@@ -75,7 +77,7 @@ function DashboardContent() {
 
     getById(paramId)
       .then(record => {
-        if (isCancelled) return
+        if (isCancelled || paramIdRef.current !== paramId) return
         if (record) {
           setTriageResult({
             incidentId: record.incidentId,
@@ -123,7 +125,7 @@ function DashboardContent() {
       })
 
     return () => { isCancelled = true }
-  }, [paramId, triageResult, getById, setTriageResult, router, hi])
+  }, [paramId, getById, setTriageResult, router, hi])
 
   const showToast = (msg: string) => {
     setToast(msg)
@@ -161,6 +163,7 @@ function DashboardContent() {
   // so a complaint is saved even if the user leaves the page within 2 seconds.
   useEffect(() => {
     if (!triageResult) return
+    if (paramId && triageResult.incidentId !== paramId) return
     if (initialSavedFor.current === triageResult.incidentId) return
     initialSavedFor.current = triageResult.incidentId
     const incidentId = triageResult.incidentId
@@ -368,7 +371,7 @@ function DashboardContent() {
     if (newUpdates) setUpdates(newUpdates)
   }
 
-  if (loadingRecord || (!triageResult && paramId)) {
+  if (loadingRecord || (paramId && triageResult?.incidentId !== paramId)) {
     return (
       <main className="min-h-screen bg-[#FAFAFA] flex flex-col font-sans">
         <Navbar language={language} onLanguageToggle={() => setLanguage(language === 'en' ? 'hi' : 'en')} />
