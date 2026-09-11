@@ -4,7 +4,18 @@ import { RecommendedChannel, FraudType } from './scenarios'
 // complaint predates recommendedChannel (older records don't store it).
 export function inferChannelFromFraudType(
   fraudType: FraudType,
+  amount?: number,
+  bankName?: string,
+  utrNumber?: string,
 ): { channel: RecommendedChannel; target: string } {
+  // If there is monetary loss, a transaction UTR, or an identified bank,
+  // the immediate golden-hour priority is ALWAYS to freeze stolen funds with the bank!
+  if ((amount !== undefined && amount > 0) || utrNumber || (bankName && bankName !== 'Not Provided' && bankName !== 'Bank Nodal Desk')) {
+    if (fraudType !== 'Investment Scam' && fraudType !== 'E-Commerce Scams') {
+      return { channel: 'bank', target: (bankName && bankName !== 'Not Provided' && bankName !== 'Bank Nodal Desk') ? bankName : 'the bank' }
+    }
+  }
+
   switch (fraudType) {
     case 'Women/Children Related Crime':
     case 'Hate Speech':
@@ -22,7 +33,7 @@ export function inferChannelFromFraudType(
     case 'UPI Fraud':
     case 'OTP Fraud':
     case 'Fake Customer Care':
-      return { channel: 'bank', target: 'the bank' }
+      return { channel: 'bank', target: (bankName && bankName !== 'Not Provided' && bankName !== 'Bank Nodal Desk') ? bankName : 'the bank' }
     default:
       return { channel: 'helpline', target: '1930' }
   }

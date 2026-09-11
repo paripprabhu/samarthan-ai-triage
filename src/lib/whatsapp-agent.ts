@@ -1,5 +1,5 @@
 import OpenAI from 'openai'
-import { generateId, TriageResult, FreezeStep, ApplicableLaw, IT_ACT_SECTIONS } from '@/data/scenarios'
+import { generateId, TriageResult, FreezeStep, ApplicableLaw, IT_ACT_SECTIONS, RecommendedChannel } from '@/data/scenarios'
 import { inferChannelFromFraudType } from '@/data/escalationChannels'
 import { SupportedLanguage, LANGUAGE_MAP, SUPPORTED_LANGUAGES } from '@/lib/i18n/languages'
 import {
@@ -983,9 +983,12 @@ async function createAndSaveNewComplaint(
             role: 'system',
             content: `You are an Indian cybercrime triage officer. Return ONLY JSON matching TriageResult schema. Fields: fraudType (Financial Fraud, Women/Children Related Crime, Extortion & Blackmail, Identity Theft, E-Commerce Scams, Investment Scam, Other Cyber Crime), fraudsterIdentifier, complainantName, amount (number), bankName, accountNumber, upiId, ifscCode, utrNumber, timeline, summary (2 sentences in English), summaryHi (2 sentences in Hindi), summaryRegional (2 sentences in ${targetLangName} / ${targetNative}), complaintDraft (formal police complaint in English), complaintDraftHi (formal police complaint in Hindi), complaintDraftRegional (formal police complaint in ${targetLangName} / ${targetNative}), freezeSteps (string[]), applicableLaws (string[]), frauderContact, recommendedChannel ("bank"|"agency"|"platform"|"helpline"), recommendedChannelTarget.
 
-MANDATORY BANKING DETAILS: If the user provides a 12-digit UPI UTR / transaction reference number, beneficiary UPI handle, or victim's bank name (e.g. HDFC Bank, SBI), extract them into "utrNumber", "upiId", and "bankName", and include them in "frauderContact".
-
-COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"), and leave the address/city as "[Address / city — to be provided]".`,
+CRITICAL CLASSIFICATION & ROUTING RULES:
+1. FINANCIAL FRAUD VS IDENTITY THEFT: If money was stolen, debited, or transferred from a bank/UPI/wallet, OR if the fraudster posed as a bank employee, asked for KYC details, OTP, PIN, password, or card numbers to take money, this is ALWAYS "Financial Fraud" (NEVER "Identity Theft")!
+   - "Identity Theft" is ONLY for cases where NO money was stolen from the victim's own accounts (e.g. fake profile, forged PAN/Aadhaar used for loan in victim's name).
+   - Whenever money was lost or debited (amount > 0 or UTR / UPI / bank mentioned), recommendedChannel MUST be "bank" and recommendedChannelTarget MUST be the victim's bank name (e.g. "HDFC Bank", "SBI") or "the bank".
+2. MANDATORY BANKING DETAILS: If the user provides a 12-digit UPI UTR / transaction reference number, beneficiary UPI handle, or victim's bank name (e.g. HDFC Bank, SBI), extract them into "utrNumber", "upiId", and "bankName", and include them in "frauderContact".
+3. COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a real name if the person explicitly states their own name in the narrative ("my name is X", "mera naam X hai"). If filing on behalf of someone else (e.g. "on behalf of X"), X is the victim, NOT the complainant! Set complainantName to the filer's name (or "Anonymous Complainant" if unnamed), and open complaintDraft with "I am filing this complaint on behalf of X regarding...". Otherwise set it to "Anonymous Complainant", open complaintDraft with "I am filing this complaint regarding..." (never "I, Anonymous Complainant"), and leave the address/city as "[Address / city — to be provided]".`,
           },
           { role: 'user', content: incidentText },
         ],
@@ -995,8 +998,7 @@ COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a rea
 
       const parsed = JSON.parse(completion.choices[0].message.content || '{}')
       const incidentId = generateId()
-      const fraudType = (parsed.fraudType || 'Financial Fraud') as any
-      const channelInfo = inferChannelFromFraudType(fraudType)
+      let fraudType = (parsed.fraudType || 'Financial Fraud') as any
 
       const onBehalfOfTarget: string | null = extractMultilingualOnBehalfOf(incidentText)
       const selfIntroName: string | null = extractMultilingualComplainant(incidentText)
@@ -1062,12 +1064,29 @@ COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a rea
         ? parsed.upiId.trim()
         : (extracted.upi || undefined)
 
+      const finalAmount = Number(parsed.amount) || extracted.amount || 0
+
+      // Auto-correct: If money was stolen from a bank/UPI account or bank/UTR/UPI details are present,
+      // it is unequivocally Financial Fraud requiring an immediate bank freeze (never UIDAI Aadhaar lock)!
+      if (fraudType === 'Identity Theft' && (finalAmount > 0 || finalUtr || (finalBank && finalBank !== 'Not Provided') || finalUpi)) {
+        fraudType = 'Financial Fraud'
+      }
+
+      const channelInfo = inferChannelFromFraudType(fraudType, finalAmount, finalBank, finalUtr)
+      let resolvedChannel: RecommendedChannel = parsed.recommendedChannel || channelInfo.channel
+      let resolvedTarget: string = parsed.recommendedChannelTarget || channelInfo.target
+
+      if (finalAmount > 0 || finalUtr || (finalBank && finalBank !== 'Not Provided')) {
+        resolvedChannel = 'bank'
+        resolvedTarget = (finalBank && finalBank !== 'Not Provided') ? finalBank : 'the bank'
+      }
+
       triageResult = {
         incidentId,
         fraudType,
         fraudsterIdentifier: parsed.fraudsterIdentifier || extracted.fraudster || extracted.upi || extracted.phone || 'Not Identified',
         complainantName: finalComplainant,
-        amount: Number(parsed.amount) || extracted.amount || 0,
+        amount: finalAmount,
         urgencyLevel: 'CRITICAL',
         summary: parsed.summary || 'Cyber fraud reported via WhatsApp triage bot.',
         summaryHi: parsed.summaryHi || 'व्हाट्सएप ट्रायज बॉट के माध्यम से साइबर धोखाधड़ी दर्ज की गई।',
@@ -1085,8 +1104,8 @@ COMPLAINANT: This report comes via WhatsApp. Only set "complainantName" to a rea
         timeline: new Date().toLocaleString(),
         freezeSteps,
         applicableLaws,
-        recommendedChannel: channelInfo.channel,
-        recommendedChannelTarget: channelInfo.target,
+        recommendedChannel: resolvedChannel,
+        recommendedChannelTarget: resolvedTarget,
       }
     } catch {
       triageResult = generateFallbackResult(incidentText, extracted, session.language)
@@ -1202,7 +1221,7 @@ function generateFallbackResult(text: string, ext: ReturnType<typeof quickExtrac
   const namedComplainant = extractMultilingualComplainant(text)
   const complainantName = namedComplainant || 'Anonymous Complainant'
   const detectedCategory = inferCategoryFromMultilingualText(text)
-  const channelInfo = inferChannelFromFraudType(detectedCategory)
+  const channelInfo = inferChannelFromFraudType(detectedCategory, amount, ext.bankName, ext.utr)
 
   const draftOpenerEn = onBehalfOfTarget
     ? `${namedComplainant ? `I, ${namedComplainant}, am` : 'I am'} filing this formal complaint on behalf of ${onBehalfOfTarget} regarding`

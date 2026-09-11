@@ -123,9 +123,22 @@ function fromRow(row: Record<string, any>): SavedComplaint {
     ? row.bank_name
     : (detectedBankMatch ? detectedBankMatch[0].toUpperCase() + (detectedBankMatch[0].toLowerCase().includes('bank') ? '' : ' Bank') : row.bank_name)
 
+  const hasFinancialLoss = (Number(row.amount) || 0) > 0 || resolvedUtr || (resolvedBank && resolvedBank !== 'Not Provided' && resolvedBank !== 'Bank Nodal Desk')
+  let resolvedChannel = row.recommended_channel
+  let resolvedTarget = row.recommended_channel_target
+  let resolvedFraudType = row.fraud_type
+
+  if (hasFinancialLoss && resolvedChannel === 'agency' && (resolvedTarget === 'UIDAI' || resolvedTarget === 'Aadhaar')) {
+    resolvedChannel = 'bank'
+    resolvedTarget = (resolvedBank && resolvedBank !== 'Not Provided' && resolvedBank !== 'Bank Nodal Desk') ? resolvedBank : 'the bank'
+  }
+  if (hasFinancialLoss && resolvedFraudType === 'Identity Theft') {
+    resolvedFraudType = 'Financial Fraud'
+  }
+
   return normalize({
     incidentId: row.incident_id,
-    fraudType: row.fraud_type,
+    fraudType: resolvedFraudType,
     fraudsterIdentifier: row.fraudster_identifier ?? row.victim_name ?? '',
     complainantName: row.complainant_name ?? '',
     amount: Number(row.amount) || 0,
@@ -145,8 +158,8 @@ function fromRow(row: Record<string, any>): SavedComplaint {
     timeline: row.timeline,
     freezeSteps: row.freeze_steps,
     applicableLaws: row.applicable_laws,
-    recommendedChannel: row.recommended_channel,
-    recommendedChannelTarget: row.recommended_channel_target,
+    recommendedChannel: resolvedChannel,
+    recommendedChannelTarget: resolvedTarget,
     savedAt: row.saved_at,
     language: row.language,
     status: row.status,

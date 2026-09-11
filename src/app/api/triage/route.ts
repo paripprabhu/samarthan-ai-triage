@@ -533,9 +533,14 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
     const detectedFraudsterInText = extractMultilingualFraudster(userText)
 
     const normalizedCategoryHint = normalizeCategoryHint(categoryHint)
-    const resolvedFraudType = (VALID_FRAUD_TYPES.includes(parsed.fraudType)
+    let resolvedFraudType = (VALID_FRAUD_TYPES.includes(parsed.fraudType)
       ? parsed.fraudType
       : (normalizedCategoryHint || (categoryHint && VALID_FRAUD_TYPES.includes(categoryHint) ? categoryHint : 'Other Cyber Crime'))) as TriageResult['fraudType']
+
+    // If money was debited from a bank/UPI or banking traces exist, it is Financial Fraud (not Identity Theft)
+    if (resolvedFraudType === 'Identity Theft' && (finalAmount > 0 || detectedUtr || detectedBank || detectedUpi)) {
+      resolvedFraudType = 'Financial Fraud'
+    }
 
     const safeContactParts: string[] = []
     if (parsed.frauderContact && !parsed.frauderContact.toLowerCase().includes('not provided')) {
@@ -612,8 +617,12 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
         parsed.summaryRegional,
         targetLanguage === 'hi' ? str(parsed.summaryHi, '') : str(parsed.summary, '')
       ),
-      recommendedChannel: parsed.recommendedChannel,
-      recommendedChannelTarget: parsed.recommendedChannelTarget,
+      recommendedChannel: (finalAmount > 0 || detectedUtr || (detectedBank && detectedBank !== 'Not Provided')) && resolvedFraudType !== 'Investment Scam' && resolvedFraudType !== 'E-Commerce Scams'
+        ? 'bank'
+        : (parsed.recommendedChannel || inferChannelFromFraudType(resolvedFraudType, finalAmount, detectedBank || undefined, detectedUtr || undefined).channel),
+      recommendedChannelTarget: (finalAmount > 0 || detectedUtr || (detectedBank && detectedBank !== 'Not Provided')) && resolvedFraudType !== 'Investment Scam' && resolvedFraudType !== 'E-Commerce Scams'
+        ? ((detectedBank && detectedBank !== 'Not Provided') ? detectedBank : str(parsed.bankName, 'the bank'))
+        : (parsed.recommendedChannelTarget || inferChannelFromFraudType(resolvedFraudType, finalAmount, detectedBank || undefined, detectedUtr || undefined).target),
     }
 
     return NextResponse.json(safe)
