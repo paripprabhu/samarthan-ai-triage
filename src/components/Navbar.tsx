@@ -180,7 +180,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <button
                     onClick={() => {
-                      signIn({ name: 'Parichay Prabhu', aadhaar: '****-****-8421' })
+                      signIn({ name: 'Pratham Kamath', aadhaar: '****-****-8421' })
                       setUser(getUser())
                     }}
                     className="hidden lg:inline-flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100/80 border border-border rounded-md px-3.5 py-2.5 h-10 transition-colors"

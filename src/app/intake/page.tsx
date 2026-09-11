@@ -73,7 +73,7 @@ function IntakeContent() {
       const user = getUser()
       const onBehalfOfTarget = extractMultilingualOnBehalfOf(finalTxt)
       const detectedSelfName = extractMultilingualComplainant(finalTxt)
-      const detectedName = detectedSelfName || user?.name || 'Parichay Prabhu'
+      const detectedName = detectedSelfName || user?.name || 'Pratham Kamath'
 
       const rawCat = (categoryParam && categoryParam !== 'auto') ? categoryParam : inferCategoryFromMultilingualText(finalTxt)
       const mappedCat = normalizeCategoryHint(rawCat) || inferCategoryFromMultilingualText(finalTxt)

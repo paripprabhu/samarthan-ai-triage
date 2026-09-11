@@ -51,8 +51,8 @@ CRITICAL INSTRUCTIONS:
       * X is the VICTIM / person on whose behalf the complaint is filed. X is NOT the complainant!
       * The COMPLAINANT is the person who is ACTUALLY COMPLAINING / submitting the report.
       * If the filer explicitly states their own name (e.g. "My name is Rahul Verma and on behalf of Ramesh Sharma I am filing"): complainantName MUST be "Rahul Verma" (the person filing), NOT Ramesh Sharma!
-      * If the filer does NOT state their own name in the text, use the COMPLAINANT IDENTITY provided below (e.g. "Parichay Prabhu"). The complainantName MUST be the person actually complaining ("Parichay Prabhu"), NOT the person on whose behalf it is filed!
-      * In complaintDraft: Begin with: "I, [Complainant Name], am filing this formal complaint on behalf of [X] regarding..." (e.g. "I, Parichay Prabhu, am filing this formal cybercrime complaint on behalf of Ramesh Sharma...").
+      * If the filer does NOT state their own name in the text, use the COMPLAINANT IDENTITY provided below (e.g. "Pratham Kamath"). The complainantName MUST be the person actually complaining ("Pratham Kamath"), NOT the person on whose behalf it is filed!
+      * In complaintDraft: Begin with: "I, [Complainant Name], am filing this formal complaint on behalf of [X] regarding..." (e.g. "I, Pratham Kamath, am filing this formal cybercrime complaint on behalf of Ramesh Sharma...").
       * In complaintDraftHi: "मैं, [शिकायतकर्ता का नाम], [X] की ओर से यह औपचारिक शिकायत दर्ज करा रहा हूँ..."
       * In summary / summaryHi: Clearly state that the complainant is filing on behalf of X.
       * Under NO circumstances extract X or the complainant as the fraudsterIdentifier!

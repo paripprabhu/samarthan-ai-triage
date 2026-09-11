@@ -4,7 +4,7 @@ Run each on **both** surfaces:
 - **Live WhatsApp** — message the linked bot number (+91 63038 07967)
 - **Website simulator** — landing page → "Or check it out on WhatsApp" → simulator modal
 
-Name auto-fills as **Parichay Prabhu** (DigiLocker), so prompts carry no name.
+Name auto-fills as **Pratham Kamath** (DigiLocker), so prompts carry no name.
 
 ---
 

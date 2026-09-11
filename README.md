@@ -131,7 +131,7 @@ bot script).
 - **Dual write** — the web app writes to `localStorage` (instant) and the DB API (persistent).
 
 Seed data: `scripts/reset-and-seed-complaints.mjs` wipes the table and inserts **3 canonical
-demo complaints** (all "Parichay Prabhu", EN+HI):
+demo complaints** (all "Pratham Kamath", EN+HI):
 
 1. `INC-2026-7001` — fake SBI KYC call. Has **simulated edits** (UTRs added later, bank lien
    confirmed), status `UNDER_INVESTIGATION`.

@@ -55,7 +55,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
 
   const handleDirectLogin = () => {
     signIn({
-      name: name.trim() || 'Parichay Prabhu',
+      name: name.trim() || 'Pratham Kamath',
       aadhaar: getMaskedAadhaar(),
     })
     onSuccess()
@@ -161,7 +161,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                           required
                           value={name}
                           onChange={(e) => { setName(e.target.value); setNameError(false) }}
-                          placeholder="e.g. Parichay Prabhu"
+                          placeholder="e.g. Pratham Kamath"
                           className={`w-full border rounded-md pl-10 pr-4 py-2.5 text-base sm:text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:ring-2 transition-all ${nameError ? 'border-red-400 focus:ring-red-200' : 'border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/10'}`}
                         />
                       </div>

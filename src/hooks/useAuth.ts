@@ -10,7 +10,7 @@ export interface DigiLockerUser {
 }
 
 export const DEFAULT_USER: DigiLockerUser = {
-  name: 'Parichay Prabhu',
+  name: 'Pratham Kamath',
   aadhaar: '****-****-8421',
   dob: '15/03/1994',
   verified: true,
@@ -28,7 +28,12 @@ export function useAuth() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_USER))
         return DEFAULT_USER
       }
-      return JSON.parse(raw)
+      const parsed = JSON.parse(raw)
+      if (parsed && (typeof parsed.name !== 'string' || parsed.name.toLowerCase().includes('parichay') || !parsed.name.trim())) {
+        parsed.name = 'Pratham Kamath'
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed))
+      }
+      return parsed
     } catch {
       return DEFAULT_USER
     }
@@ -37,7 +42,7 @@ export function useAuth() {
   const signIn = useCallback((customUser?: Partial<DigiLockerUser>) => {
     if (typeof window === 'undefined') return
     const user: DigiLockerUser = {
-      name: customUser?.name?.trim() || 'Parichay Prabhu',
+      name: customUser?.name?.trim() || 'Pratham Kamath',
       aadhaar: customUser?.aadhaar?.trim() || '****-****-8421',
       dob: customUser?.dob || '15/03/1994',
       verified: true,
