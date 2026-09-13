@@ -157,11 +157,15 @@ npm run dev            # http://localhost:3000
 Runs in **mock mode** with no keys — the AI paths return pre-baked responses so the full
 UI/UX is testable offline.
 
-**For live AI + persistence**, create `.env.local`:
+**For live AI + persistence**, copy the example env file and fill in your own keys:
 
 ```bash
-OPENAI_API_KEY=sk-...            # gpt-4o-mini (triage), gpt-4o (WhatsApp agent + Vision), whisper-1
-DATABASE_URL=postgres://...      # Neon
+cp .env.example .env.local
+```
+
+```bash
+OPENAI_API_KEY=sk-...            # your own key — gpt-4o-mini (triage), gpt-4o (WhatsApp agent + Vision), whisper-1
+DATABASE_URL=postgres://...      # your own Neon project (free tier is enough)
 NEXT_PUBLIC_APP_URL=https://...  # base URL used in WhatsApp tracking links (optional)
 ```
 
@@ -171,6 +175,10 @@ Then:
 node scripts/migrate.mjs                    # create tables
 node scripts/reset-and-seed-complaints.mjs  # load the 3 demo complaints
 ```
+
+Running with your own keys locally is **unlimited** — the daily 1-request-per-visitor
+cap (see below) only applies to the shared hosted demo, to protect that deployment's
+own OpenAI key from abuse.
 
 ### Running the WhatsApp bot
 
@@ -183,6 +191,15 @@ For always-on `$0` hosting, run it under `launchd` (macOS) — see
 deployed site reads its status from Postgres regardless of where the bot runs.
 
 ---
+
+## Rate limiting on the hosted demo
+
+The public deployment allows **1 triage request per day per visitor** (tracked by IP in the
+`daily_rate_limits` Postgres table, see `src/lib/rateLimit.ts`), since each run spends this
+project's own OpenAI key. Hitting the cap returns a 429 with a message pointing to this repo.
+
+This limit does not apply when you clone the repo and run it with your own `OPENAI_API_KEY`
+(see Quick start above) — it's only enforced against the maintainer's shared hosted key.
 
 ## Testing
 

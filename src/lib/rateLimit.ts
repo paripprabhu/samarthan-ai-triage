@@ -1,33 +1,35 @@
-// Simple in-memory rate limiter for API routes
-// Production: use Upstash Redis or similar
-const requestCounts = new Map<string, { count: number; resetTime: number }>()
-const WINDOW_MS = 60 * 1000 // 1 minute
-const MAX_REQUESTS_PER_WINDOW = 10 // 10 requests per minute
+import { neon } from '@neondatabase/serverless'
 
-// Periodic inline cleanup when map size exceeds 500
-export function rateLimit(identifier: string): { allowed: boolean; remaining: number } {
-  const now = Date.now()
+// Daily per-IP cap on the hosted demo, since triage calls hit a paid OpenAI key.
+// Bring your own OPENAI_API_KEY (see .env.example) and this limit no longer applies to you locally —
+// it only guards the shared hosted deployment.
+const MAX_PER_DAY = 1
 
-  if (requestCounts.size > 500) {
-    requestCounts.forEach((record, key) => {
-      if (now > record.resetTime) {
-        requestCounts.delete(key)
-      }
-    })
-  }
+function getClientIp(req: Request): string {
+  const forwarded = req.headers.get('x-forwarded-for')
+  if (forwarded) return forwarded.split(',')[0].trim()
+  return req.headers.get('x-real-ip') || 'unknown'
+}
 
-  const record = requestCounts.get(identifier)
+export async function checkDailyLimit(req: Request): Promise<{ allowed: boolean; ip: string }> {
+  const dbUrl = process.env.DATABASE_URL
+  // No DB configured (e.g. a local BYO-key setup) — nothing to gate against, allow.
+  if (!dbUrl) return { allowed: true, ip: 'local' }
 
-  if (!record || now > record.resetTime) {
-    // New window
-    requestCounts.set(identifier, { count: 1, resetTime: now + WINDOW_MS })
-    return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - 1 }
-  }
+  const ip = getClientIp(req)
+  const today = new Date().toISOString().slice(0, 10) // YYYY-MM-DD (UTC)
+  const sql = neon(dbUrl)
 
-  if (record.count < MAX_REQUESTS_PER_WINDOW) {
-    record.count++
-    return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - record.count }
-  }
+  const rows = await sql`
+    insert into daily_rate_limits (ip, day, count)
+    values (${ip}, ${today}, 1)
+    on conflict (ip, day) do update
+      set count = daily_rate_limits.count + 1
+      where daily_rate_limits.count < ${MAX_PER_DAY}
+    returning count
+  `
 
-  return { allowed: false, remaining: 0 }
+  // If the WHERE clause blocked the update (limit already hit), no row comes back.
+  const allowed = rows.length > 0
+  return { allowed, ip }
 }

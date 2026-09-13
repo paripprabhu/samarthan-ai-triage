@@ -171,6 +171,13 @@ function IntakeContent() {
 
       const resp = await fetch('/api/triage', { method: 'POST', body: formData, signal: controller.signal })
 
+      if (resp.status === 429) {
+        setError(hi
+          ? 'आज की मुफ़्त टेस्ट सीमा पूरी हो गई है (प्रति दिन 1 बार)। कल दोबारा कोशिश करें, या अपनी OpenAI API key के साथ इसे लोकल पर चलाएँ (README देखें)।'
+          : 'Daily test limit reached (1 per day on this shared demo). Try again tomorrow, or run this project locally with your own OpenAI API key (see README) for unlimited use.')
+        return
+      }
+
       let result: TriageResult
       if (resp.ok) {
         result = await resp.json()

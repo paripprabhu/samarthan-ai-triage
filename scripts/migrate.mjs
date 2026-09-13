@@ -51,6 +51,15 @@ try {
   )`
   await sql`insert into bot_state (id) values ('whatsapp') on conflict (id) do nothing`
 
+  // Per-IP daily cap on the hosted triage demo (protects the shared OpenAI key).
+  await sql`
+  create table if not exists daily_rate_limits (
+    ip text not null,
+    day date not null,
+    count int not null default 0,
+    primary key (ip, day)
+  )`
+
   // Additive migrations for pre-existing tables
   await sql`alter table complaints add column if not exists recommended_channel text not null default 'helpline'`
   await sql`alter table complaints add column if not exists recommended_channel_target text not null default '1930'`

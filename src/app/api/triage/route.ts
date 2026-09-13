@@ -22,6 +22,7 @@ import {
 import OpenAI from 'openai'
 import { Buffer } from 'node:buffer'
 import { NEUTRAL_WHISPER_PROMPT, normalizeSpeechTranscript } from '@/lib/speech-normalizer'
+import { checkDailyLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -190,6 +191,14 @@ function getOnBehalfOfOpener(lang: string, complainant: string, victim: string):
 }
 
 export async function POST(req: NextRequest) {
+  const { allowed } = await checkDailyLimit(req)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Daily test limit reached. This shared demo allows 1 triage run per day per visitor. Try again tomorrow, or run the project locally with your own OpenAI API key (see README) for unlimited use.' },
+      { status: 429 }
+    )
+  }
+
   let categoryHint: string | null = null
   let userText = ''
   let targetLanguage = 'en'
