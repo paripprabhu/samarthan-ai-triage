@@ -246,24 +246,35 @@ const CACHE_TTL = 30000 // 30s
 
 export function useComplaints() {
   const getAll = useCallback(async (forceRefresh = false): Promise<SavedComplaint[]> => {
-    // Check memory cache first
-    const cached = (globalThis as any).__complaintsCache
-    if (!forceRefresh && cached && Date.now() - cached.time < CACHE_TTL) {
-      return cached.data
+    // Read complaints filed on this user's browser/device only
+    const local = readLocal()
+    if (local.length === 0) return []
+
+    // If refresh requested, sync updates from DB for ONLY this user's incident IDs
+    if (forceRefresh) {
+      try {
+        const updated = await Promise.all(
+          local.map(async (c) => {
+            try {
+              const res = await apiGet(c.incidentId)
+              if (res.ok) {
+                const row = await res.json()
+                if (row && row.incident_id) {
+                  return fromRow(row)
+                }
+              }
+            } catch { /* keep local copy */ }
+            return c
+          })
+        )
+        writeLocal(updated)
+        return updated
+      } catch {
+        return local
+      }
     }
 
-    try {
-      const res = await apiGet()
-      if (res.ok) {
-        const rows = await res.json()
-        const remote: SavedComplaint[] = rows.map(fromRow)
-        writeLocal(remote)
-        // Cache in memory
-        ;(globalThis as any).__complaintsCache = { data: remote, time: Date.now() }
-        return remote
-      }
-    } catch { /* fall through */ }
-    return readLocal()
+    return local
   }, [])
 
   const save = useCallback(async (complaint: Omit<SavedComplaint, 'savedAt' | 'status' | 'statusHistory' | 'evidenceImages' | 'updates'>) => {
@@ -281,7 +292,19 @@ export function useComplaints() {
     })
 
     const all = readLocal()
-    if (!all.some(c => c.incidentId === complaint.incidentId)) {
+    const idx = all.findIndex(c => c.incidentId === complaint.incidentId)
+    if (idx >= 0) {
+      // Preserve status, history, images, and updates when updating an existing complaint
+      all[idx] = {
+        ...record,
+        status: all[idx].status || record.status,
+        statusHistory: all[idx].statusHistory?.length ? all[idx].statusHistory : record.statusHistory,
+        evidenceImages: all[idx].evidenceImages || [],
+        updates: all[idx].updates || [],
+        savedAt: all[idx].savedAt || record.savedAt,
+      }
+      writeLocal([...all])
+    } else {
       writeLocal([record, ...all])
     }
 
@@ -293,14 +316,22 @@ export function useComplaints() {
   }, [])
 
   const getById = useCallback(async (incidentId: string): Promise<SavedComplaint | undefined> => {
+    const localMatch = readLocal().find(c => c.incidentId === incidentId)
     try {
       const res = await apiGet(incidentId)
       if (res.ok) {
         const row = await res.json()
-        if (row) return fromRow(row)
+        if (row && row.incident_id) {
+          const fresh = fromRow(row)
+          if (localMatch) {
+            const all = readLocal()
+            writeLocal(all.map(c => c.incidentId === incidentId ? fresh : c))
+          }
+          return fresh
+        }
       }
-    } catch { /* fall through */ }
-    return readLocal().find(c => c.incidentId === incidentId)
+    } catch { /* fall through to local */ }
+    return localMatch
   }, [])
 
   const writeStatus = useCallback(async (
