@@ -194,7 +194,7 @@ export async function POST(req: NextRequest) {
   const { allowed } = await checkDailyLimit(req)
   if (!allowed) {
     return NextResponse.json(
-      { error: 'Daily test limit reached. This shared demo allows 1 triage run per day per visitor. Try again tomorrow, or run the project locally with your own OpenAI API key (see README) for unlimited use.' },
+      { error: 'Daily test limit reached. This shared demo allows 5 triage runs per day per visitor. Try again tomorrow, or run the project locally with your own OpenAI API key (see README) for unlimited use.' },
       { status: 429 }
     )
   }
