@@ -3,14 +3,15 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, AlertCircle, FileText, Mic, ImagePlus, ShieldAlert, CheckCircle2, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, AlertCircle, FileText, Mic, ImagePlus, ShieldAlert, CheckCircle2, X, Lock, ShieldCheck } from 'lucide-react'
 import { useTriage } from '@/context/TriageContext'
 import { SCENARIOS, TriageResult, generateId } from '@/data/scenarios'
 import { inferChannelFromFraudType } from '@/data/escalationChannels'
 import AudioRecorder from '@/components/AudioRecorder'
 import LoadingTriage from '@/components/LoadingTriage'
 import Navbar from '@/components/Navbar'
-import { useAuth } from '@/hooks/useAuth'
+import DigiLockerModal from '@/components/DigiLockerModal'
+import { useAuth, DigiLockerUser } from '@/hooks/useAuth'
 import { getTranslation } from '@/lib/i18n/translations'
 import { LANGUAGE_MAP } from '@/lib/i18n/languages'
 import {
@@ -36,10 +37,12 @@ function IntakeContent() {
   const { language, setLanguage, scenarioId, setTriageResult, sharedImage, setSharedImage } = useTriage()
   const t = getTranslation(language)
   const meta = LANGUAGE_MAP[language] || LANGUAGE_MAP.en
-  const { getUser } = useAuth()
+  const { getUser, signOut } = useAuth()
   const hi = language === 'hi'
   const scenario = SCENARIOS.find(s => s.id === scenarioId)
 
+  const [currentUser, setCurrentUser] = useState<DigiLockerUser | null>(null)
+  const [digiLockerModalOpen, setDigiLockerModalOpen] = useState(false)
   const [textValue, setTextValue] = useState('')
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [voiceTranscript, setVoiceTranscript] = useState('')
@@ -50,12 +53,19 @@ function IntakeContent() {
   const fileRef = useRef<HTMLInputElement>(null)
   const hasAutoStarted = useRef(false)
 
+  useEffect(() => {
+    setCurrentUser(getUser())
+    const handler = () => setCurrentUser(getUser())
+    window.addEventListener('samarthan_auth_change', handler)
+    return () => window.removeEventListener('samarthan_auth_change', handler)
+  }, [getUser])
+
   const buildClientFallback = (textOverride?: string): TriageResult => {
     const finalTxt = textOverride !== undefined ? textOverride : [textValue, voiceTranscript].filter(Boolean).join('\n').trim()
     const user = getUser()
     const onBehalfOfTarget = extractMultilingualOnBehalfOf(finalTxt)
     const detectedSelfName = extractMultilingualComplainant(finalTxt)
-    const detectedName = detectedSelfName || user?.name || 'Pratham Kamath'
+    const detectedName = detectedSelfName || user?.name || (hi ? 'अज्ञात नागरिक' : 'Anonymous Complainant')
 
     const rawCat = (categoryParam && categoryParam !== 'auto') ? categoryParam : inferCategoryFromMultilingualText(finalTxt)
     const mappedCat = normalizeCategoryHint(rawCat) || inferCategoryFromMultilingualText(finalTxt)
@@ -276,6 +286,60 @@ function IntakeContent() {
           </h1>
         </div>
 
+        {/* ── IDENTITY STATUS / DIGILOCKER SIMULATOR CARD ── */}
+        {currentUser ? (
+          <div className="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 sm:p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center flex-shrink-0 text-white shadow-sm">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-bold text-zinc-900">{currentUser.name}</span>
+                  <span className="inline-flex items-center gap-1 text-[11px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    {hi ? 'डिजीलॉकर सत्यापित नागरिक' : 'DigiLocker Verified Citizen'}
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-500 mt-0.5">Aadhaar: {currentUser.aadhaar} • Verified via MeitY Sandbox</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => { signOut(); setCurrentUser(null) }}
+              className="text-xs text-zinc-500 hover:text-red-600 font-medium px-2.5 py-1.5 rounded-md hover:bg-zinc-100 transition cursor-pointer shrink-0"
+            >
+              {hi ? 'लॉग आउट' : 'Sign Out'}
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 bg-zinc-50/90 border border-zinc-200 rounded-xl p-3.5 sm:p-4 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0 text-orange-600 mt-0.5">
+                <Lock className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-zinc-900">
+                  {hi ? 'पहचान सत्यापन (वैकल्पिक)' : 'Identity Verification (Optional)'}
+                </p>
+                <p className="text-xs text-zinc-500 leading-relaxed mt-0.5">
+                  {hi
+                    ? 'आप बिना लॉगिन किए भी सीधे रिपोर्ट कर सकते हैं (आपके द्वारा बताए गए नाम का उपयोग होगा)। या प्रमाणित शिकायत के लिए डिजीलॉकर सिमुलेशन का उपयोग करें।'
+                    : 'You can file directly without signing in — the AI will use the name you mention in your statement. Or simulate DigiLocker for a verified citizen FIR.'}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDigiLockerModalOpen(true)}
+              className="inline-flex items-center justify-center gap-1.5 bg-orange-500 hover:bg-orange-600 active:scale-[0.99] text-white text-xs font-semibold px-3.5 py-2.5 rounded-lg transition shadow-sm cursor-pointer shrink-0"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>{hi ? 'डिजीलॉकर सिमुलेशन' : 'Simulate DigiLocker'}</span>
+            </button>
+          </div>
+        )}
+
         {/* ── FORM GRID ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -379,6 +443,15 @@ function IntakeContent() {
         </button>
 
       </div>
+
+      <DigiLockerModal
+        open={digiLockerModalOpen}
+        onClose={() => setDigiLockerModalOpen(false)}
+        onSuccess={() => {
+          setDigiLockerModalOpen(false)
+          setCurrentUser(getUser())
+        }}
+      />
     </main>
   )
 }

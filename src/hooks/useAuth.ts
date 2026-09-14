@@ -10,7 +10,7 @@ export interface DigiLockerUser {
 }
 
 export const DEFAULT_USER: DigiLockerUser = {
-  name: 'Pratham Kamath',
+  name: 'Aarav Sharma',
   aadhaar: '****-****-8421',
   dob: '15/03/1994',
   verified: true,
@@ -20,29 +20,24 @@ const STORAGE_KEY = 'samarthan_user'
 
 export function useAuth() {
   const getUser = useCallback((): DigiLockerUser | null => {
-    if (typeof window === 'undefined') return DEFAULT_USER
+    if (typeof window === 'undefined') return null
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw === 'SIGNED_OUT') return null
-      if (!raw) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_USER))
-        return DEFAULT_USER
-      }
+      if (!raw || raw === 'SIGNED_OUT') return null
       const parsed = JSON.parse(raw)
-      if (parsed && (typeof parsed.name !== 'string' || parsed.name.toLowerCase().includes('parichay') || !parsed.name.trim())) {
-        parsed.name = 'Pratham Kamath'
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed))
+      if (parsed && typeof parsed === 'object' && parsed.verified && typeof parsed.name === 'string' && parsed.name.trim()) {
+        return parsed
       }
-      return parsed
+      return null
     } catch {
-      return DEFAULT_USER
+      return null
     }
   }, [])
 
   const signIn = useCallback((customUser?: Partial<DigiLockerUser>) => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return null
     const user: DigiLockerUser = {
-      name: customUser?.name?.trim() || 'Pratham Kamath',
+      name: customUser?.name?.trim() || 'Aarav Sharma',
       aadhaar: customUser?.aadhaar?.trim() || '****-****-8421',
       dob: customUser?.dob || '15/03/1994',
       verified: true,

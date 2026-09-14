@@ -70,20 +70,20 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
     }
     setNameError(false)
     setStep('redirecting')
-    setTimeout(() => setStep('otp'), 1800)
+    setTimeout(() => setStep('otp'), 1400)
   }
 
   const handleOTPVerify = () => {
     if (otp.length === 6) {
       setStep('success')
-      const user = signIn({
+      signIn({
         name: name.trim(),
         aadhaar: getMaskedAadhaar(),
       })
       setTimeout(() => {
         onSuccess()
         onClose()
-      }, 1600)
+      }, 1400)
     } else {
       setOtpError(true)
       setTimeout(() => setOtpError(false), 1500)
@@ -119,39 +119,46 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
 
             <AnimatePresence mode="wait">
 
-              {/* INTRO / MOCK SIGN IN STEP */}
+              {/* INTRO / SIMULATED SIGN IN STEP */}
               {step === 'intro' && (
                 <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-5 sm:p-6 overflow-y-auto">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0 shadow-sm">
                       <ShieldCheck className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-zinc-900">Sign in with DigiLocker</h2>
-                      <p className="text-xs text-zinc-500">Government of India • MeitY Sandbox</p>
+                      <p className="text-xs text-zinc-500">Government of India • Simulated KYC Sandbox</p>
                     </div>
                   </div>
 
-                  {/* 1-Click Direct Demo Login */}
-                  <button
-                    type="button"
-                    onClick={handleDirectLogin}
-                    className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover active:scale-[0.99] text-white rounded-xl py-3 font-medium text-sm transition-all shadow-sm mb-3.5 min-h-[44px] cursor-pointer"
-                  >
-                    <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                    <span>1-Click Direct Login (Verified Citizen)</span>
-                  </button>
-
-                  <div className="relative flex py-1 items-center mb-3.5">
-                    <div className="flex-grow border-t border-zinc-200"></div>
-                    <span className="flex-shrink mx-2 text-xs font-medium text-zinc-400 uppercase tracking-wider">or sign in with custom details</span>
-                    <div className="flex-grow border-t border-zinc-200"></div>
+                  {/* Quick Personas for Testing */}
+                  <div className="mb-4">
+                    <span className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">Select a Demo Citizen or Type Below</span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => { setName('Aarav Sharma'); setAadhaar('5842 1920 8421'); setNameError(false) }}
+                        className={`text-left p-2.5 rounded-xl border transition text-xs cursor-pointer ${name === 'Aarav Sharma' ? 'border-orange-500 bg-orange-50/60 ring-1 ring-orange-400' : 'border-zinc-200 hover:border-zinc-300 bg-zinc-50/50'}`}
+                      >
+                        <div className="font-semibold text-zinc-900">Aarav Sharma</div>
+                        <div className="text-[10px] text-zinc-500 mt-0.5">UID: ****-8421</div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setName('Priya Patel'); setAadhaar('6391 8204 4392'); setNameError(false) }}
+                        className={`text-left p-2.5 rounded-xl border transition text-xs cursor-pointer ${name === 'Priya Patel' ? 'border-orange-500 bg-orange-50/60 ring-1 ring-orange-400' : 'border-zinc-200 hover:border-zinc-300 bg-zinc-50/50'}`}
+                      >
+                        <div className="font-semibold text-zinc-900">Priya Patel</div>
+                        <div className="text-[10px] text-zinc-500 mt-0.5">UID: ****-4392</div>
+                      </button>
+                    </div>
                   </div>
 
                   <form onSubmit={handleStartAuth} className="space-y-4 mb-4">
                     <div>
                       <label htmlFor="digilocker-name" className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
-                        Your Full Name (As per Govt ID) <span className="text-red-500">*</span>
+                        Citizen Full Name <span className="text-red-500">*</span>
                       </label>
                       <div className="relative flex items-center">
                         <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -161,16 +168,16 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                           required
                           value={name}
                           onChange={(e) => { setName(e.target.value); setNameError(false) }}
-                          placeholder="e.g. Pratham Kamath"
-                          className={`w-full border rounded-md pl-10 pr-4 py-2.5 text-base sm:text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:ring-2 transition-all ${nameError ? 'border-red-400 focus:ring-red-200' : 'border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/10'}`}
+                          placeholder="e.g. Ramesh Sharma"
+                          className={`w-full border rounded-lg pl-10 pr-4 py-2.5 text-base sm:text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:ring-2 transition-all ${nameError ? 'border-red-400 focus:ring-red-200' : 'border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/10'}`}
                         />
                       </div>
-                      {nameError && <p className="text-xs text-red-500 mt-1">Please enter your name to verify identity.</p>}
+                      {nameError && <p className="text-xs text-red-500 mt-1">Please enter a citizen name to verify identity.</p>}
                     </div>
 
                     <div>
                       <label htmlFor="digilocker-aadhaar" className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
-                        Aadhaar / DigiLocker ID
+                        Aadhaar / DigiLocker ID (Simulated)
                       </label>
                       <div className="relative flex items-center">
                         <CreditCard className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -180,19 +187,19 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                           value={aadhaar}
                           onChange={(e) => setAadhaar(e.target.value)}
                           placeholder="e.g. 5432 9876 1234 (optional)"
-                          className="w-full border border-zinc-200 rounded-md pl-10 pr-4 py-2.5 text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 transition-all"
+                          className="w-full border border-zinc-200 rounded-lg pl-10 pr-4 py-2.5 text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 transition-all"
                         />
                       </div>
-                      <p className="text-xs text-zinc-400 mt-1">Leave blank to use default masked ID ****-****-8421</p>
+                      <p className="text-[11px] text-zinc-400 mt-1">Leave empty to use mock masked Aadhaar ID</p>
                     </div>
 
-                    <div className="bg-orange-50/80 border border-orange-100 rounded-md p-3.5 space-y-1">
+                    <div className="bg-orange-50/80 border border-orange-100 rounded-xl p-3.5 space-y-1">
                       <p className="text-xs font-semibold text-orange-900 flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-orange-600 flex-shrink-0" />
-                        Aadhaar KYC Verification
+                        Government-Grade Citizen Verification
                       </p>
-                      <p className="text-xs text-orange-950/70 leading-relaxed">
-                        Formal police complaint drafts & statements will be filed with this verified name.
+                      <p className="text-[11px] text-orange-950/70 leading-relaxed">
+                        Formal police complaint drafts & statements will automatically bind to this verified citizen identity.
                       </p>
                     </div>
 
@@ -201,7 +208,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                       className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 active:scale-[0.99] text-white rounded-xl py-3.5 font-semibold text-sm transition-all shadow-sm min-h-[44px] cursor-pointer"
                     >
                       <ShieldCheck className="w-4 h-4" />
-                      Continue with DigiLocker
+                      <span>Simulate DigiLocker OTP →</span>
                     </button>
                   </form>
 
@@ -268,12 +275,21 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     className={`w-full border rounded-md p-3 text-center text-2xl font-mono tracking-[0.5em] text-zinc-900 bg-zinc-50 outline-none focus:ring-2 transition-all ${otpError ? 'border-red-400 focus:ring-red-200' : 'border-zinc-200 focus:ring-zinc-900'}`}
                   />
                   {otpError && <p className="text-xs text-red-500 mt-1">Please enter 6 digits.</p>}
-                  <p className="text-xs text-zinc-400 mt-2 mb-5">Hint: enter any 6-digit code (e.g. 123456)</p>
+                  <div className="flex items-center justify-between text-xs text-zinc-400 mt-2.5 mb-5">
+                    <span>Enter any 6 digits (sandbox)</span>
+                    <button
+                      type="button"
+                      onClick={() => setOtp('123456')}
+                      className="text-orange-600 hover:text-orange-700 font-semibold cursor-pointer underline"
+                    >
+                      ⚡ Auto-fill 123456
+                    </button>
+                  </div>
 
                   <button
                     onClick={handleOTPVerify}
                     disabled={otp.length < 6}
-                    className="w-full bg-primary hover:bg-primary-hover disabled:opacity-40 text-white rounded-md py-3 font-semibold text-sm transition-all"
+                    className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white rounded-xl py-3.5 font-semibold text-sm transition-all shadow-sm cursor-pointer"
                   >
                     Verify & Complete Sign In
                   </button>

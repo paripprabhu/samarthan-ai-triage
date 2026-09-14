@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Globe, FileText, LogOut, User, ChevronDown, Zap, Sun, Moon } from 'lucide-react'
+import { Globe, FileText, LogOut, User, ChevronDown, Zap, Sun, Moon, ShieldCheck } from 'lucide-react'
 import { useAuth, DigiLockerUser } from '@/hooks/useAuth'
 import { useTheme } from '@/context/ThemeContext'
 import { SupportedLanguage, LANGUAGE_MAP } from '@/lib/i18n/languages'
@@ -179,21 +179,10 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
               ) : (
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <button
-                    onClick={() => {
-                      signIn({ name: 'Pratham Kamath', aadhaar: '****-****-8421' })
-                      setUser(getUser())
-                    }}
-                    className="hidden lg:inline-flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100/80 border border-border rounded-md px-3.5 py-2.5 h-10 transition-colors"
-                    title="Direct 1-Click Login (Verified Citizen)"
-                  >
-                    <Zap className="w-4 h-4 text-zinc-400" />
-                    <span>⚡ Instant</span>
-                  </button>
-
-                  <button
                     onClick={() => setModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-white bg-primary hover:bg-primary-hover rounded-md px-3 sm:px-5 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer shrink-0"
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-white bg-primary hover:bg-primary-hover rounded-md px-3 sm:px-5 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer shrink-0 shadow-sm"
                   >
+                    <ShieldCheck className="w-4 h-4" />
                     <span className="hidden sm:inline">{t.nav.signInDigiLocker}</span>
                     <span className="sm:hidden">DigiLocker</span>
                   </button>
