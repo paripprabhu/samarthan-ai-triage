@@ -71,6 +71,15 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
         {/* Subtle National Tricolor Ribbon */}
         <div className="h-[3px] w-full bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
 
+        {/* 🏆 Hackathon Award Banner */}
+        <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 text-white py-2 px-3 sm:px-4 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm text-center tracking-wide">
+          <span className="text-base sm:text-lg">🏆</span>
+          <span>
+            {hi
+              ? 'तृतीय स्थान विजेता (3rd Place) — Build What Moves India Hackathon • OpenAI × Varun Mayya'
+              : '3rd Place Winner — Build What Moves India Hackathon • OpenAI × Varun Mayya'}
+          </span>
+        </div>
 
         <header className="border-b border-zinc-200/80 transition-all">
           <div className="max-w-6xl mx-auto px-3 sm:px-6 h-[58px] sm:h-[72px] flex items-center justify-between">

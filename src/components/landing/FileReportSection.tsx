@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useTriage } from '@/context/TriageContext'
 import {
   DollarSign, User, ShieldAlert, Fingerprint, ShoppingCart, Briefcase,
-  Plus, ArrowUp, Mic, Phone, MessageCircle, Globe, ExternalLink,
+  Plus, ArrowUp, ArrowRight, Mic, Phone, MessageCircle, Globe, ExternalLink,
 } from 'lucide-react'
 import WhatsAppChoiceModal from '@/components/WhatsAppChoiceModal'
 import WhatsAppSimulatorModal from '@/components/WhatsAppSimulatorModal'
@@ -344,25 +344,38 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
               {loc.waHeading}
             </h3>
 
-            <p className="text-xs sm:text-sm text-zinc-600 mb-6 leading-relaxed">
-              {loc.waDesc}
+            {/* Offline notice */}
+            <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed text-left flex items-start gap-2.5 max-w-lg mx-auto">
+              <span className="text-base shrink-0">⚠️</span>
+              <div>
+                <strong>{language === 'hi' ? 'लाइव व्हाट्सएप बॉट ऑफ़लाइन है:' : 'Live Phone Bot Offline:'}</strong>{' '}
+                {language === 'hi'
+                  ? 'लाइव फोन बॉट अभी बंद है। टेस्टिंग के लिए कृपया नीचे दिए गए "इन-ऐप व्हाट्सएप सिम्युलेटर" का उपयोग करें।'
+                  : 'The companion phone daemon is currently offline. Please use the In-App WhatsApp Simulator for testing.'}
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-zinc-600 mb-6 leading-relaxed max-w-lg mx-auto">
+              {language === 'hi'
+                ? 'इन-ऐप व्हाट्सएप सिम्युलेटर खोलें और वॉइस नोट, मैसेज या स्क्रीनशॉट भेजकर लाइव ट्रायज का अनुभव लें।'
+                : 'Launch our in-browser WhatsApp simulator to test voice notes, screenshot evidence, and legal triage on the exact same GPT-4o engine.'}
             </p>
 
             <div className="flex items-center justify-center">
               <button
                 type="button"
-                onClick={() => setIsChoiceModalOpen(true)}
+                onClick={() => setIsSimulatorOpen(true)}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#1fa851] active:scale-[0.99] text-white rounded-xl px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-semibold transition-all shadow-md hover:shadow-lg cursor-pointer min-h-[44px]"
               >
                 <MessageCircle className="w-5 h-5 fill-white" />
-                <span>{loc.waBtn}</span>
-                <ExternalLink className="w-4 h-4 opacity-80 rtl:rotate-180" />
+                <span>{language === 'hi' ? 'इन-ऐप व्हाट्सएप सिम्युलेटर खोलें' : 'Launch In-App WhatsApp Simulator'}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
               </button>
             </div>
 
-            <div className="mt-5 inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-md bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-800">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <span>{loc.waActive}</span>
+            <div className="mt-5 inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-md bg-amber-50 border border-amber-200 text-xs font-medium text-amber-800">
+              <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+              <span>{language === 'hi' ? 'लाइव बॉट ऑफ़लाइन • सिम्युलेटर 100% सक्रिय' : 'Live Bot Offline • In-App Simulator 100% Active'}</span>
             </div>
           </div>
         )}

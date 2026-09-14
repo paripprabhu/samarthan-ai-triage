@@ -1,11 +1,17 @@
 # Samarthan — AI Cyber Crime Triage
 
+### 🏆 3rd Place Winner — Build What Moves India Hackathon
+**Organized by OpenAI × Varun Mayya**
+
 > Cyber fraud empties an account in minutes. The official complaint takes days.
 > Samarthan closes that gap: you say what happened — in Hindi or English, by voice, text, or
-> screenshot, on the web **or over WhatsApp** — and in under a minute you get a filed complaint
+> screenshot, on the web **or over the in-app WhatsApp simulator** — and in under a minute you get a filed complaint
 > that cites the right law, classifies urgency, and tells you exactly who to call to freeze the money.
 
 **AI-Powered Citizen Cybercrime Triage & Incident Reporting Platform.**
+
+> ⚠️ **Testing Notice for Evaluators / Judges:**
+> The physical companion phone bot daemon is currently offline. **Please use the In-App WhatsApp Simulator** on the live deployment to evaluate the complete multi-modal WhatsApp triage, voice notes, and complaint generation flow. It runs the exact same GPT-4o engine and Baileys conversation pipeline in-browser with zero phone required.
 
 ---
 

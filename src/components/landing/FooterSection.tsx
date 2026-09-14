@@ -321,6 +321,7 @@ export default function FooterSection({ language }: FooterSectionProps) {
                 {t.aboutTitle}
               </h4>
               <ul className="space-y-3 text-sm text-zinc-600">
+                <li className="font-semibold text-amber-700 dark:text-amber-400">🏆 3rd Place — Build What Moves India (OpenAI × Varun Mayya)</li>
                 <li>{t.portalTag}</li>
                 <li>{t.digilockerVerified}</li>
                 <li>{t.poweredBy}</li>

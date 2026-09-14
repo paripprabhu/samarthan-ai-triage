@@ -105,12 +105,10 @@ export default function HeroSection({ language }: HeroSectionProps) {
           {/* Left: copy (wider, commanding presence) */}
           <div className="w-full lg:col-span-7 xl:col-span-7 max-w-[580px] mx-auto lg:mx-0 flex flex-col justify-center">
             {/* Eyebrow Pill */}
-            <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 shadow-xs mb-4 backdrop-blur-sm self-start">
-              <span className="flex h-2 w-2 relative">
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 tracking-tight">
-                {trans.hero.badge}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/70 border border-amber-300 dark:border-amber-700/80 shadow-xs mb-4 backdrop-blur-sm self-start">
+              <span className="text-sm">🏆</span>
+              <span className="text-xs font-bold text-amber-900 dark:text-amber-200 tracking-tight">
+                3rd Place Winner — Build What Moves India Hackathon (OpenAI × Varun Mayya)
               </span>
             </div>
 
@@ -250,7 +248,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                       className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 hover:underline transition-colors cursor-pointer py-1"
                     >
                       <MessageCircle className="w-4 h-4 fill-emerald-600 text-emerald-600 dark:fill-emerald-500 dark:text-emerald-500" />
-                      <span>{trans.hero.ctaWhatsApp}</span>
+                      <span>{hi ? 'व्हाट्सएप AI सिम्युलेटर (लाइव बॉट ऑफ़लाइन)' : 'Test WhatsApp AI Flow (In-App Simulator)'}</span>
                     </button>
                   </div>
                 )}
@@ -316,7 +314,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                           className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 hover:underline transition-colors py-1 cursor-pointer"
                         >
                           <MessageCircle className="w-3.5 h-3.5 fill-emerald-600 text-emerald-600 dark:fill-emerald-500 dark:text-emerald-500" />
-                          <span>{trans.hero.ctaWhatsApp}</span>
+                          <span>{hi ? 'व्हाट्सएप AI सिम्युलेटर (लाइव बॉट ऑफ़लाइन)' : 'Test WhatsApp AI Flow (In-App Simulator)'}</span>
                         </button>
                       </div>
                     </div>

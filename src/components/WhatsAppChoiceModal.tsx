@@ -363,13 +363,29 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
 
         {/* Options Content */}
         <div className="p-4 sm:p-6 space-y-3.5 sm:space-y-4 overflow-y-auto">
+
+          {/* ⚠️ Bot Offline Warning Callout */}
+          <div className="p-3.5 sm:p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/70 flex items-start gap-3 text-xs leading-relaxed text-red-900 dark:text-red-200 shadow-xs">
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-sm block text-red-950 dark:text-red-100 mb-0.5">
+                {isHi ? '⚠️ लाइव व्हाट्सएप बॉट वर्तमान में बंद / ऑफ़लाइन है' : '⚠️ Live WhatsApp Companion Bot Is Currently Offline'}
+              </span>
+              <span className="text-red-800 dark:text-red-300">
+                {isHi
+                  ? 'फोन से जुड़ा लाइव व्हाट्सएप बॉट (+91 63038 07967) वर्तमान में चालू नहीं है। कृपया टेस्टिंग और मूल्यांकन के लिए नीचे दिए गए "इन-ऐप व्हाट्सएप सिम्युलेटर" का उपयोग करें — यह बिल्कुल समान GPT-4o AI ट्रायज इंजन को सीधे ब्राउज़र में चलाता है।'
+                  : 'The companion phone WhatsApp bot (+91 63038 07967) is currently offline / not running. For hackathon testing and evaluation, please use the In-App WhatsApp Simulator below — it runs the identical GPT-4o triage and conversation engine directly in your browser with zero phone required.'}
+              </span>
+            </div>
+          </div>
+
           {/* Option 1: In-App WhatsApp Web Simulator */}
           <div
             onClick={() => {
               onClose()
               onOpenSimulator()
             }}
-            className="group relative p-4 sm:p-5 rounded-xl border-2 border-emerald-500/70 dark:border-emerald-500/60 bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40 transition-all cursor-pointer shadow-xs hover:shadow-md"
+            className="group relative p-4 sm:p-5 rounded-xl border-2 border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 transition-all cursor-pointer shadow-xs hover:shadow-md ring-2 ring-emerald-500/20"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3.5">
@@ -381,14 +397,14 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
                     <span className="font-bold text-sm sm:text-base text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors indic-headline">
                       {t.simTitle}
                     </span>
-                    <span className="bg-emerald-200/80 dark:bg-emerald-800/60 text-emerald-900 dark:text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                      {t.recommended}
+                    <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
+                      {isHi ? 'टेस्टिंग हेतु अनुशंसित' : '⭐ Active for Testing'}
                     </span>
                   </div>
                   <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1.5 leading-relaxed indic-body">
                     {t.simDesc}
                   </p>
-                  <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform">
+                  <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform bg-white dark:bg-zinc-800 px-3 py-1.5 rounded-lg border border-emerald-300 dark:border-emerald-700 shadow-2xs">
                     <span className="indic-body">{t.simLaunch}</span>
                     <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                   </div>
@@ -398,38 +414,27 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
           </div>
 
           {/* Option 2: Real WhatsApp Bot */}
-          <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-800/40 space-y-3">
+          <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-800/40 space-y-3 opacity-75">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-lg bg-[#25D366] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                <div className="w-10 h-10 rounded-lg bg-zinc-400 text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                   <Smartphone className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-sm sm:text-base text-zinc-900 dark:text-zinc-100 indic-headline">
+                    <span className="font-bold text-sm sm:text-base text-zinc-700 dark:text-zinc-300 indic-headline">
                       {t.realTitle}
                     </span>
-                    <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-100/70 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md indic-body">
-                      {t.realTag}
+                    <span className="text-xs font-semibold text-red-700 dark:text-red-400 bg-red-100/80 dark:bg-red-950/60 px-2 py-0.5 rounded-md indic-body">
+                      {isHi ? '🔴 बॉट ऑफ़लाइन' : '🔴 Bot Offline'}
                     </span>
                   </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 leading-relaxed indic-body">
-                    {t.realDesc}
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed indic-body">
+                    {isHi
+                      ? 'लाइव फोन ब्रिज (+91 63038 07967) वर्तमान में बंद है। वास्तविक रिस्पांस के लिए कृपया ऊपर दिए गए सिम्युलेटर का उपयोग करें।'
+                      : 'The real phone bridge (+91 63038 07967) daemon is not running. Use the In-App Simulator above to test.'}
                   </p>
                 </div>
-              </div>
-            </div>
-
-            {/* Heads-up / Offline notice callout */}
-            <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
-              <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold block mb-0.5 indic-headline">
-                  {t.evalHeadsUp}
-                </span>
-                <span className="indic-body">
-                  {t.evalNotice}
-                </span>
               </div>
             </div>
 
