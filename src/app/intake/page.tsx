@@ -46,12 +46,101 @@ function IntakeContent() {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [isRateLimited, setIsRateLimited] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const hasAutoStarted = useRef(false)
+
+  const buildClientFallback = (textOverride?: string): TriageResult => {
+    const finalTxt = textOverride !== undefined ? textOverride : [textValue, voiceTranscript].filter(Boolean).join('\n').trim()
+    const user = getUser()
+    const onBehalfOfTarget = extractMultilingualOnBehalfOf(finalTxt)
+    const detectedSelfName = extractMultilingualComplainant(finalTxt)
+    const detectedName = detectedSelfName || user?.name || 'Pratham Kamath'
+
+    const rawCat = (categoryParam && categoryParam !== 'auto') ? categoryParam : inferCategoryFromMultilingualText(finalTxt)
+    const mappedCat = normalizeCategoryHint(rawCat) || inferCategoryFromMultilingualText(finalTxt)
+    const cleanAmount = extractMultilingualAmount(finalTxt)
+    const detectedFraudster = extractMultilingualFraudster(finalTxt)
+    const utrRes = extractMultilingualUTR(finalTxt)
+    const detectedUpi = extractMultilingualUPI(finalTxt) || finalTxt.match(/[\w.-]+@[\w.-]+/)?.[0]
+    const detectedIfsc = extractMultilingualIFSC(finalTxt)
+    const idNum = generateId()
+    const inferred = inferChannelFromFraudType(mappedCat)
+
+    return {
+      incidentId: idNum,
+      fraudsterIdentifier: detectedFraudster,
+      complainantName: detectedName,
+      fraudType: mappedCat,
+      recommendedChannel: inferred.channel,
+      recommendedChannelTarget:
+        inferred.channel === 'bank'
+          ? (finalTxt.match(/sbi|hdfc|icici|axis|kotak|pnb/i)?.[0]?.toUpperCase() || 'the bank')
+          : inferred.target,
+      frauderContact: detectedFraudster !== 'Not Identified' ? detectedFraudster : 'Unknown',
+      amount: cleanAmount || (mappedCat === 'Financial Fraud' ? 15000 : 0),
+      bankName: finalTxt.match(/sbi|hdfc|icici|axis|kotak|pnb/i)?.[0]?.toUpperCase() || 'N/A',
+      accountNumber: 'N/A',
+      upiId: detectedUpi || undefined,
+      ifscCode: detectedIfsc || undefined,
+      utrNumber: utrRes.utr || undefined,
+      timeline: new Date().toLocaleString('en-IN'),
+      summary: finalTxt.length > 20 ? finalTxt.substring(0, 180) + '...' : `Cyber incident reported under ${mappedCat}.`,
+      summaryHi: `${mappedCat} के तहत साइबर घटना दर्ज की गई।`,
+      summaryRegional: language === 'hi'
+        ? `${mappedCat} के तहत साइबर घटना दर्ज की गई।`
+        : (language !== 'en' ? `[${meta.nativeName}]: ${finalTxt.substring(0, 140) || mappedCat}` : undefined),
+      language,
+      complaintDraft: onBehalfOfTarget
+        ? `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Complaint Regarding ${mappedCat}\n\nRespected Sir/Madam,\n\nI, ${detectedName}, hereby lodge a formal complaint on behalf of ${onBehalfOfTarget} regarding an unauthorized incident: ${finalTxt || 'Online cyber fraud'}.\n\nKindly investigate the matter and initiate legal proceedings under IT Act.\n\nYours faithfully,\n${detectedName}`
+        : `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Complaint Regarding ${mappedCat}\n\nRespected Sir/Madam,\n\nI, ${detectedName}, hereby lodge a formal complaint regarding an unauthorized incident: ${finalTxt || 'Online cyber fraud'}.\n\nKindly investigate the matter and initiate legal proceedings under IT Act.\n\nYours faithfully,\n${detectedName}`,
+      complaintDraftHi: onBehalfOfTarget
+        ? `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, ${onBehalfOfTarget} की ओर से इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया आईटी अधिनियम के तहत त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`
+        : `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया आईटी अधिनियम के तहत त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`,
+      complaintDraftRegional: language === 'hi'
+        ? (onBehalfOfTarget
+            ? `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, ${onBehalfOfTarget} की ओर से इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`
+            : `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`)
+        : (language !== 'en'
+            ? getRegionalComplaintDraft(language, detectedName, onBehalfOfTarget, mappedCat, finalTxt || mappedCat, cleanAmount)
+            : undefined),
+      freezeSteps: [
+        {
+          step: 1,
+          action: 'Call 1930 Cybercrime Helpline',
+          actionHi: '1930 साइबर हेल्पलाइन पर कॉल करें',
+          detail: 'Report immediately for emergency bank account freezing and golden hour triage.',
+          detailHi: 'आपातकालीन बैंक खाता फ्रीज करने के लिए तुरंत रिपोर्ट करें।',
+          hotline: '1930',
+          url: 'https://cybercrime.gov.in'
+        },
+        {
+          step: 2,
+          action: 'File Official NCRP Complaint',
+          actionHi: 'NCRP पोर्टल पर आधिकारिक शिकायत दर्ज करें',
+          detail: 'Submit this complaint draft to cybercrime.gov.in for police jurisdiction.',
+          detailHi: 'पुलिस अधिकार क्षेत्र के लिए cybercrime.gov.in पर यह शिकायत ड्राफ्ट जमा करें।',
+          hotline: undefined,
+          url: 'https://cybercrime.gov.in'
+        }
+      ],
+      applicableLaws: [
+        {
+          section: 'IT Act, Section 66D',
+          title: 'Cheating by personation by using computer resource',
+          titleHi: 'कंप्यूटर संसाधन का उपयोग करके प्रतिरूपण द्वारा धोखाधड़ी',
+          reason: 'Applies to online fraud, digital cheating, and cyber extortion.',
+          reasonHi: 'ऑनलाइन धोखाधड़ी और डिजिटल ठगी पर लागू होता है।',
+        }
+      ],
+      urgencyLevel: 'HIGH' as const,
+    }
+  }
 
   const handleAIAnalyze = async (forcedText?: string, forcedImg?: File) => {
     setIsLoading(true)
     setError('')
+    setIsRateLimited(false)
 
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
       setError(hi
@@ -68,92 +157,6 @@ function IntakeContent() {
     const timeoutId = setTimeout(() => controller.abort(), 90000)
 
     const finalTxtForFallback = [forcedText || textValue, voiceTranscript].filter(Boolean).join('\n').trim()
-    const buildClientFallback = (): TriageResult => {
-      const finalTxt = finalTxtForFallback
-      const user = getUser()
-      const onBehalfOfTarget = extractMultilingualOnBehalfOf(finalTxt)
-      const detectedSelfName = extractMultilingualComplainant(finalTxt)
-      const detectedName = detectedSelfName || user?.name || 'Pratham Kamath'
-
-      const rawCat = (categoryParam && categoryParam !== 'auto') ? categoryParam : inferCategoryFromMultilingualText(finalTxt)
-      const mappedCat = normalizeCategoryHint(rawCat) || inferCategoryFromMultilingualText(finalTxt)
-      const cleanAmount = extractMultilingualAmount(finalTxt)
-      const detectedFraudster = extractMultilingualFraudster(finalTxt)
-      const utrRes = extractMultilingualUTR(finalTxt)
-      const detectedUpi = extractMultilingualUPI(finalTxt) || finalTxt.match(/[\w.-]+@[\w.-]+/)?.[0]
-      const detectedIfsc = extractMultilingualIFSC(finalTxt)
-      const idNum = generateId()
-      const inferred = inferChannelFromFraudType(mappedCat)
-
-      return {
-        incidentId: idNum,
-        fraudsterIdentifier: detectedFraudster,
-        complainantName: detectedName,
-        fraudType: mappedCat,
-        recommendedChannel: inferred.channel,
-        recommendedChannelTarget:
-          inferred.channel === 'bank'
-            ? (finalTxt.match(/sbi|hdfc|icici|axis|kotak|pnb/i)?.[0]?.toUpperCase() || 'the bank')
-            : inferred.target,
-        frauderContact: detectedFraudster !== 'Not Identified' ? detectedFraudster : 'Unknown',
-        amount: cleanAmount || (mappedCat === 'Financial Fraud' ? 15000 : 0),
-        bankName: finalTxt.match(/sbi|hdfc|icici|axis|kotak|pnb/i)?.[0]?.toUpperCase() || 'N/A',
-        accountNumber: 'N/A',
-        upiId: detectedUpi || undefined,
-        ifscCode: detectedIfsc || undefined,
-        utrNumber: utrRes.utr || undefined,
-        timeline: new Date().toLocaleString('en-IN'),
-        summary: finalTxt.length > 20 ? finalTxt.substring(0, 180) + '...' : `Cyber incident reported under ${mappedCat}.`,
-        summaryHi: `${mappedCat} के तहत साइबर घटना दर्ज की गई।`,
-        summaryRegional: language === 'hi'
-          ? `${mappedCat} के तहत साइबर घटना दर्ज की गई।`
-          : (language !== 'en' ? `[${meta.nativeName}]: ${finalTxt.substring(0, 140) || mappedCat}` : undefined),
-        language,
-        complaintDraft: onBehalfOfTarget
-          ? `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Complaint Regarding ${mappedCat}\n\nRespected Sir/Madam,\n\nI, ${detectedName}, hereby lodge a formal complaint on behalf of ${onBehalfOfTarget} regarding an unauthorized incident: ${finalTxt || 'Online cyber fraud'}.\n\nKindly investigate the matter and initiate legal proceedings under IT Act.\n\nYours faithfully,\n${detectedName}`
-          : `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Complaint Regarding ${mappedCat}\n\nRespected Sir/Madam,\n\nI, ${detectedName}, hereby lodge a formal complaint regarding an unauthorized incident: ${finalTxt || 'Online cyber fraud'}.\n\nKindly investigate the matter and initiate legal proceedings under IT Act.\n\nYours faithfully,\n${detectedName}`,
-        complaintDraftHi: onBehalfOfTarget
-          ? `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, ${onBehalfOfTarget} की ओर से इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया आईटी अधिनियम के तहत त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`
-          : `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया आईटी अधिनियम के तहत त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`,
-        complaintDraftRegional: language === 'hi'
-          ? (onBehalfOfTarget
-              ? `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, ${onBehalfOfTarget} की ओर से इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`
-              : `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`)
-          : (language !== 'en'
-              ? getRegionalComplaintDraft(language, detectedName, onBehalfOfTarget, mappedCat, finalTxt || mappedCat, cleanAmount)
-              : undefined),
-        freezeSteps: [
-          {
-            step: 1,
-            action: 'Call 1930 Cybercrime Helpline',
-            actionHi: '1930 साइबर हेल्पलाइन पर कॉल करें',
-            detail: 'Report immediately for emergency bank account freezing and golden hour triage.',
-            detailHi: 'आपातकालीन बैंक खाता फ्रीज करने के लिए तुरंत रिपोर्ट करें।',
-            hotline: '1930',
-            url: 'https://cybercrime.gov.in'
-          },
-          {
-            step: 2,
-            action: 'File Official NCRP Complaint',
-            actionHi: 'NCRP पोर्टल पर आधिकारिक शिकायत दर्ज करें',
-            detail: 'Submit this complaint draft to cybercrime.gov.in for police jurisdiction.',
-            detailHi: 'पुलिस अधिकार क्षेत्र के लिए cybercrime.gov.in पर यह शिकायत ड्राफ्ट जमा करें।',
-            hotline: undefined,
-            url: 'https://cybercrime.gov.in'
-          }
-        ],
-        applicableLaws: [
-          {
-            section: 'IT Act, Section 66D',
-            title: 'Cheating by personation by using computer resource',
-            titleHi: 'कंप्यूटर संसाधन का उपयोग करके प्रतिरूपण द्वारा धोखाधड़ी',
-            reason: 'Applies to online fraud, digital cheating, and cyber extortion.',
-            reasonHi: 'ऑनलाइन धोखाधड़ी और डिजिटल ठगी पर लागू होता है।',
-          }
-        ],
-        urgencyLevel: 'HIGH' as const,
-      }
-    }
 
     try {
       const formData = new FormData()
@@ -169,12 +172,17 @@ function IntakeContent() {
       const user = getUser()
       if (user?.name) formData.append('complainantName', user.name)
 
-      const resp = await fetch('/api/triage', { method: 'POST', body: formData, signal: controller.signal })
+      const headers: Record<string, string> = {}
+      const userKey = typeof window !== 'undefined' ? (localStorage.getItem('openai_api_key') || localStorage.getItem('user_openai_key')) : null
+      if (userKey) headers['x-openai-key'] = userKey
+
+      const resp = await fetch('/api/triage', { method: 'POST', headers, body: formData, signal: controller.signal })
 
       if (resp.status === 429) {
+        setIsRateLimited(true)
         setError(hi
-          ? 'आज की मुफ़्त टेस्ट सीमा पूरी हो गई है (प्रति दिन 1 बार)। कल दोबारा कोशिश करें, या अपनी OpenAI API key के साथ इसे लोकल पर चलाएँ (README देखें)।'
-          : 'Daily test limit reached (1 per day on this shared demo). Try again tomorrow, or run this project locally with your own OpenAI API key (see README) for unlimited use.')
+          ? 'आज की मुफ़्त ऑनलाइन AI टेस्ट सीमा पूरी हो गई है (प्रति दिन 5 बार)। आप नीचे दिए गए बटन से तुरंत ऑफलाइन AI ट्रायज के साथ टेस्ट जारी रख सकते हैं।'
+          : 'Daily online AI test limit reached (5 per day on this shared demo). You can continue evaluating immediately using the instant offline AI triage below with 0 cost.')
         return
       }
 
@@ -183,7 +191,7 @@ function IntakeContent() {
         result = await resp.json()
       } else {
         console.warn('[intake] Serverless triage non-ok, using smart dynamic client fallback')
-        result = buildClientFallback()
+        result = buildClientFallback(finalTxtForFallback)
       }
       setTriageResult(result)
       router.push('/dashboard')
@@ -192,7 +200,7 @@ function IntakeContent() {
         // Network hang past 90s - don't dead-end the user. Serve the
         // rule-based client result and continue to the dashboard.
         console.warn('[intake] Triage request timed out, using client fallback')
-        setTriageResult(buildClientFallback())
+        setTriageResult(buildClientFallback(finalTxtForFallback))
         router.push('/dashboard')
       } else {
         setError(err instanceof Error ? err.message : (hi ? 'कुछ गलत हो गया।' : 'Something went wrong.'))
@@ -338,9 +346,25 @@ function IntakeContent() {
 
         {error && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3.5 sm:p-4 text-red-700 text-xs sm:text-sm">
-            <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-            {error}
+            className="flex flex-col gap-3 bg-red-50 border border-red-200 rounded-lg p-3.5 sm:p-4 text-red-700 text-xs sm:text-sm">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <div>{error}</div>
+            </div>
+            {isRateLimited && (
+              <button
+                type="button"
+                onClick={() => {
+                  const fallbackResult = buildClientFallback()
+                  setTriageResult(fallbackResult)
+                  router.push('/dashboard')
+                }}
+                className="self-start inline-flex items-center gap-1.5 bg-red-700 hover:bg-red-800 text-white font-semibold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer shadow-sm"
+              >
+                <span>⚡ {hi ? 'ऑफलाइन AI ट्रायज के साथ जारी रखें (0 API लागत)' : 'Continue with Instant Offline AI (0 API Cost)'}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
           </motion.div>
         )}
 

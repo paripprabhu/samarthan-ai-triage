@@ -1,8 +1,33 @@
 import { neon } from '@neondatabase/serverless'
+import fs from 'node:fs'
+import path from 'node:path'
 
-const DB = process.env.DATABASE_URL
-if (!DB) { console.error('❌ DATABASE_URL not set'); process.exit(1) }
-const sql = neon(DB)
+// Load DATABASE_URL from environment or local env files
+let dbUrl = process.env.DATABASE_URL
+if (!dbUrl) {
+  for (const file of ['.env.local', '.env']) {
+    try {
+      const envPath = path.resolve(process.cwd(), file)
+      if (fs.existsSync(envPath)) {
+        const lines = fs.readFileSync(envPath, 'utf-8').split('\n')
+        for (const line of lines) {
+          const match = line.match(/^\s*DATABASE_URL\s*=\s*(.*)?\s*$/)
+          if (match) {
+            dbUrl = match[1].trim().replace(/^['"]|['"]$/g, '')
+            break
+          }
+        }
+      }
+    } catch {}
+    if (dbUrl) break
+  }
+}
+
+if (!dbUrl) {
+  console.error('❌ DATABASE_URL not set in environment or .env.local')
+  process.exit(1)
+}
+const sql = neon(dbUrl)
 
 try {
   await sql`

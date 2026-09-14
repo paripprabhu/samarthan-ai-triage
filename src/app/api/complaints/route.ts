@@ -6,7 +6,7 @@ export const maxDuration = 60
 
 function getDb() {
   const url = process.env.DATABASE_URL
-  if (!url) throw new Error('DATABASE_URL not configured')
+  if (!url) return null
   return neon(url)
 }
 
@@ -15,6 +15,9 @@ function getDb() {
 export async function GET(req: NextRequest) {
   try {
     const sql = getDb()
+    if (!sql) {
+      return NextResponse.json([])
+    }
     const id = req.nextUrl.searchParams.get('id')
     if (id) {
       const rows = await sql`SELECT * FROM complaints WHERE incident_id = ${id} LIMIT 1`
@@ -46,6 +49,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const sql = getDb()
+    if (!sql) {
+      return NextResponse.json({ ok: true, fallback: 'localStorage' })
+    }
     await sql`
       INSERT INTO complaints (
         incident_id, fraud_type, fraudster_identifier, complainant_name,
@@ -130,6 +136,9 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const sql = getDb()
+    if (!sql) {
+      return NextResponse.json({ ok: true, fallback: 'localStorage' })
+    }
 
     // Build dynamic SET clauses - supports any combination of fields
     const sets: string[] = []

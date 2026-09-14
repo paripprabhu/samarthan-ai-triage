@@ -172,13 +172,11 @@ NEXT_PUBLIC_APP_URL=https://...  # base URL used in WhatsApp tracking links (opt
 Then:
 
 ```bash
-node scripts/migrate.mjs                    # create tables
-node scripts/reset-and-seed-complaints.mjs  # load the 3 demo complaints
+npm run migrate    # create tables (automatically reads .env.local)
+npm run seed       # load the 3 demo complaints
 ```
 
-Running with your own keys locally is **unlimited** — the daily 1-request-per-visitor
-cap (see below) only applies to the shared hosted demo, to protect that deployment's
-own OpenAI key from abuse.
+Running with your own keys locally is **unlimited** — the rate limiter is disabled during local development.
 
 ### Running the WhatsApp bot
 
@@ -192,14 +190,15 @@ deployed site reads its status from Postgres regardless of where the bot runs.
 
 ---
 
-## Rate limiting on the hosted demo
+## Rate limiting & offline testing on the hosted demo
 
-The public deployment allows **1 triage request per day per visitor** (tracked by IP in the
-`daily_rate_limits` Postgres table, see `src/lib/rateLimit.ts`), since each run spends this
-project's own OpenAI key. Hitting the cap returns a 429 with a message pointing to this repo.
+The public deployment allows **5 triage requests per day per visitor** (tracked by IP in the
+`daily_rate_limits` Postgres table, see `src/lib/rateLimit.ts`), allowing thorough multi-modal
+testing (text, voice, screenshots) while protecting the shared OpenAI API budget.
 
-This limit does not apply when you clone the repo and run it with your own `OPENAI_API_KEY`
-(see Quick start above) — it's only enforced against the maintainer's shared hosted key.
+- **Instant Offline AI Fallback**: If the limit is reached, a direct one-click action (*"⚡ Continue with Instant Offline AI (0 API Cost)"*) allows continuous testing without blocking the user.
+- **Clone & Run with Zero Keys**: Anyone cloning the repository can run the entire platform locally with zero API keys and zero database setup using dynamic offline AI synthesis and localStorage.
+- **BYO Key (Bring Your Own Key)**: To run live AI triage locally or test against personal limits, simply provide `OPENAI_API_KEY` in `.env.local` or pass the `x-openai-key` request header.
 
 ## Testing
 

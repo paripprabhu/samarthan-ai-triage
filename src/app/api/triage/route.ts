@@ -312,7 +312,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const apiKey = process.env.OPENAI_API_KEY
+    const clientKey = req.headers.get('x-openai-key')?.trim()
+    const apiKey = (clientKey && clientKey.startsWith('sk-')) ? clientKey : process.env.OPENAI_API_KEY
     if (!apiKey) {
       console.warn('[triage] OPENAI_API_KEY missing, returning dynamic fallback')
       const fallback = await getDynamicMock()

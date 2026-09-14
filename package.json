@@ -6,6 +6,8 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
+    "migrate": "node scripts/migrate.mjs",
+    "seed": "node scripts/reset-and-seed-complaints.mjs",
     "whatsapp-bot": "node scripts/whatsapp-bot.mjs",
     "lint": "next lint"
   },

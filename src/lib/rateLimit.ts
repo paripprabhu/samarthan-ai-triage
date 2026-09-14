@@ -3,7 +3,7 @@ import { neon } from '@neondatabase/serverless'
 // Daily per-IP cap on the hosted demo, since triage calls hit a paid OpenAI key.
 // Bring your own OPENAI_API_KEY (see .env.example) and this limit no longer applies to you locally —
 // it only guards the shared hosted deployment.
-const MAX_PER_DAY = 1
+const MAX_PER_DAY = process.env.MAX_DAILY_TRIAGE ? parseInt(process.env.MAX_DAILY_TRIAGE, 10) : 5
 
 function getClientIp(req: Request): string {
   const forwarded = req.headers.get('x-forwarded-for')
@@ -12,6 +12,17 @@ function getClientIp(req: Request): string {
 }
 
 export async function checkDailyLimit(req: Request): Promise<{ allowed: boolean; ip: string }> {
+  // If user brought their own OpenAI API key in headers, allow unlimited access
+  const byoKey = req.headers.get('x-openai-key')
+  if (byoKey && byoKey.startsWith('sk-')) {
+    return { allowed: true, ip: 'byo-key' }
+  }
+
+  // Only enforce rate limiting in production or if explicitly enabled
+  if (process.env.NODE_ENV !== 'production' && process.env.ENABLE_RATE_LIMIT !== 'true') {
+    return { allowed: true, ip: 'local-unlimited' }
+  }
+
   const dbUrl = process.env.DATABASE_URL
   // No DB configured (e.g. a local BYO-key setup) — nothing to gate against, allow.
   if (!dbUrl) return { allowed: true, ip: 'local' }
