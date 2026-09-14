@@ -71,14 +71,17 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
         {/* Subtle National Tricolor Ribbon */}
         <div className="h-[3px] w-full bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
 
-        {/* 🏆 Hackathon Award Banner */}
-        <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 text-white py-2 px-3 sm:px-4 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm text-center tracking-wide">
-          <span className="text-base sm:text-lg">🏆</span>
-          <span>
-            {hi
-              ? 'तृतीय स्थान विजेता (3rd Place) — Build What Moves India Hackathon • OpenAI × Varun Mayya'
-              : '3rd Place Winner — Build What Moves India Hackathon • OpenAI × Varun Mayya'}
-          </span>
+        {/* 🏆 Hackathon Award Bar (Subtle Golden Line) */}
+        <div className="bg-amber-50/90 dark:bg-amber-950/40 border-b border-amber-200/80 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 text-[11px] sm:text-xs py-1 px-3 sm:px-4 text-center font-medium">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-300">
+              🏆 {hi ? 'तृतीय स्थान विजेता (3rd Place)' : '3rd Place Winner'} — Build What Moves India Hackathon
+            </span>
+            <span className="text-amber-600/60 dark:text-amber-400/60 hidden sm:inline">•</span>
+            <span className="text-amber-800/90 dark:text-amber-300/90 font-medium">
+              OpenAI × Varun Mayya
+            </span>
+          </div>
         </div>
 
         <header className="border-b border-zinc-200/80 transition-all">
