@@ -117,14 +117,16 @@ export default function HowItWorks({ language }: HowItWorksProps) {
   ]
 
   return (
-    <section id="how-it-works" className="py-10 sm:py-14 md:py-16 bg-surface border-t border-zinc-200/80">
+    <section id="how-it-works" className="relative py-12 sm:py-16 md:py-20 bg-surface border-t border-border overflow-hidden">
+      <div aria-hidden="true" className="absolute right-[-12rem] top-24 h-80 w-80 rounded-full border border-primary/10" />
+      <div aria-hidden="true" className="absolute right-[-7rem] top-36 h-52 w-52 rounded-full border border-amber-500/15" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto text-center">
-          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-1.5 sm:mb-2">
+        <div className="relative mb-10 sm:mb-12 md:mb-16 max-w-2xl mx-auto text-center">
+          <p className="text-xs font-bold text-primary uppercase tracking-[0.14em] mb-2">
             {t.howItWorks.eyebrow}
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-[-0.03em]">
             {t.howItWorks.title}
           </h2>
           <p className="mt-2 sm:mt-2.5 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
@@ -133,7 +135,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
         </div>
 
         {/* 3 Step Cards */}
-        <div className="space-y-12 sm:space-y-16 md:space-y-20">
+        <div className="relative space-y-14 sm:space-y-20 md:space-y-24">
           {steps.map((step, i) => (
             <div
               key={step.n}
@@ -142,16 +144,16 @@ export default function HowItWorks({ language }: HowItWorksProps) {
               {/* Text column (5 cols) */}
               <div className="lg:col-span-5">
                 <div className="flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-3">
-                  <span className="text-sm sm:text-base font-sans font-extrabold text-primary bg-primary-tint border border-primary/20 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg">
+                  <span className="text-sm sm:text-base font-sans font-extrabold text-primary bg-primary-tint border border-primary/20 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md">
                     {step.n}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-850 border border-zinc-200 dark:border-zinc-700 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg shadow-2xs">
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300 bg-white/80 dark:bg-zinc-850 border border-border px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md shadow-2xs">
                     <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
                     {step.duration}
                   </span>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-tight leading-snug">{step.title}</h3>
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-[-0.025em] leading-snug">{step.title}</h3>
                 <p className="mt-2.5 sm:mt-3 text-zinc-600 dark:text-zinc-300 leading-relaxed text-sm sm:text-base">{step.body}</p>
 
                 {/* Grounded feature point list */}
@@ -159,7 +161,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
                   {step.points.map((point, ptIdx) => (
                     <div
                       key={ptIdx}
-                      className="flex items-start gap-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 text-xs sm:text-[13px] font-medium text-zinc-700 dark:text-zinc-300 shadow-2xs"
+                      className="flex items-start gap-2 p-2 sm:p-2.5 rounded-md bg-white/85 dark:bg-zinc-900 border border-border text-xs sm:text-[13px] font-medium text-zinc-700 dark:text-zinc-300 shadow-2xs"
                     >
                       <span className="shrink-0 mt-0.5">{point.icon}</span>
                       <span className="leading-snug">{point.text}</span>
@@ -170,7 +172,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
 
               {/* Screenshot column: 7 cols */}
               <div className="lg:col-span-7">
-                <div className="rounded-xl sm:rounded-[18px] border border-zinc-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.04)] sm:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12),0_4px_16px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-300 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.18),0_8px_24px_rgba(0,0,0,0.06)] group">
+                <div className="how-it-works-preview rounded-xl border border-primary/15 dark:border-primary/30 bg-white dark:bg-zinc-900 shadow-[var(--shadow-panel)] overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_52px_-28px_rgba(17,33,54,0.48)] group">
                   {/* Browser top chrome bar */}
                   <div className="h-8 md:h-9 px-3 sm:px-4 bg-zinc-100/90 dark:bg-zinc-850 border-b border-zinc-200/80 dark:border-zinc-800 flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -179,7 +181,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
                       <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 dark:bg-zinc-600 block" />
                     </div>
                     <span className="text-xs font-sans font-medium text-zinc-400 dark:text-zinc-500 tracking-tight select-none">
-                      {step.n === '01' ? 'samarthan.gov.in/intake' : step.n === '02' ? 'samarthan.gov.in/dossier' : 'samarthan.gov.in/complaints'}
+                      {step.n === '01' ? 'samarthan.app/intake' : step.n === '02' ? 'samarthan.app/dossier' : 'samarthan.app/complaints'}
                     </span>
                     <span className="w-3" />
                   </div>
@@ -189,7 +191,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
                     <img
                       src={step.shot}
                       alt={step.title}
-                      className="w-full h-auto object-cover object-top block transition-transform duration-500 group-hover:scale-[1.012]"
+                      className="how-it-works-shot w-full h-auto object-cover object-top block transition-transform duration-500 group-hover:scale-[1.012]"
                     />
                   </div>
                 </div>

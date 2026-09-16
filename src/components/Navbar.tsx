@@ -67,12 +67,12 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
       />
 
       {/* Unified Sticky Header Container (prevents banner wrapping overlaps on mobile) */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md">
+      <div className="sticky top-0 z-40 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl shadow-[0_1px_0_rgba(30,58,95,0.08)]">
         {/* Subtle National Tricolor Ribbon */}
         <div className="h-[3px] w-full bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
 
         {/* 🏆 Hackathon Award Bar (Subtle Golden Line) */}
-        <div className="bg-amber-50/90 dark:bg-amber-950/40 border-b border-amber-200/80 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 text-[11px] sm:text-xs py-1 px-3 sm:px-4 text-center font-medium">
+        <div className="bg-amber-50/80 dark:bg-amber-950/30 border-b border-amber-200/70 dark:border-amber-800/50 text-amber-900 dark:text-amber-200 text-[11px] sm:text-xs py-1 px-3 sm:px-4 text-center font-medium">
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-300">
               🏆 {hi ? 'तृतीय स्थान विजेता (3rd Place)' : '3rd Place Winner'} — Build What Moves India Hackathon
@@ -84,12 +84,12 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
           </div>
         </div>
 
-        <header className="border-b border-zinc-200/80 transition-all">
+        <header className="border-b border-border/80 transition-all">
           <div className="max-w-6xl mx-auto px-3 sm:px-6 h-[58px] sm:h-[72px] flex items-center justify-between">
 
             {/* Logo */}
             <button onClick={() => router.push('/')} className="flex items-center gap-2 sm:gap-3 group text-start">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-md bg-primary flex items-center justify-center text-white group-hover:bg-primary-hover transition-colors shadow-xs shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-md bg-primary flex items-center justify-center text-white group-hover:bg-primary-hover transition-colors shadow-sm ring-1 ring-primary/15 shrink-0">
                 <BotMessageSquareIcon size={19} />
               </div>
               <div className="flex flex-col">
@@ -97,7 +97,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                   <span className="font-bold text-zinc-950 dark:text-white text-base md:text-lg tracking-tight">
                     {t.appName}
                   </span>
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold text-primary bg-primary-tint dark:bg-blue-950/60 border border-primary/20 dark:border-blue-800/60 px-1.5 py-0.5 rounded">
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary-tint dark:bg-blue-950/60 border border-primary/20 dark:border-blue-800/60 px-1.5 py-0.5 rounded-sm">
                     {t.citizenHelpdesk}
                   </span>
                 </div>
@@ -115,7 +115,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                 onClick={() => router.push('/complaints')}
                 aria-label={t.nav.myComplaints}
                 title={t.nav.myComplaints}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100/80 border border-border rounded-md px-2.5 sm:px-4 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700 hover:text-primary hover:bg-primary-tint/70 border border-border rounded-md px-2.5 sm:px-4 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer"
               >
                 <FileText className="w-4 h-4 text-zinc-500 shrink-0" />
                 <span className="hidden md:inline">{t.nav.myComplaints}</span>
@@ -126,7 +126,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                 onClick={() => setLangPickerOpen(true)}
                 aria-label={t.nav.selectLanguage}
                 title={t.nav.selectLanguage}
-                className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium text-zinc-700 border border-border hover:bg-zinc-100/80 rounded-md px-2.5 sm:px-3 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer shrink-0"
+                className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-semibold text-zinc-700 border border-border hover:bg-primary-tint/70 rounded-md px-2.5 sm:px-3 py-2 sm:py-2.5 h-9 sm:h-10 transition-colors cursor-pointer shrink-0"
               >
                 <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 shrink-0" />
                 <span className="font-semibold whitespace-nowrap">{currentLangMeta.nativeName}</span>
@@ -138,7 +138,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                 onClick={toggleTheme}
                 aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
                 title={theme === 'dark' ? (hi ? 'लाइट मोड' : 'Switch to Light Mode') : (hi ? 'डार्क मोड' : 'Switch to Dark Mode')}
-                className="inline-flex items-center justify-center text-zinc-700 hover:text-zinc-950 border border-border hover:bg-zinc-100/80 rounded-md w-9 sm:w-10 h-9 sm:h-10 transition-colors cursor-pointer shrink-0"
+                className="inline-flex items-center justify-center text-zinc-700 hover:text-primary border border-border hover:bg-primary-tint/70 rounded-md w-9 sm:w-10 h-9 sm:h-10 transition-colors cursor-pointer shrink-0"
               >
                 {theme === 'dark' ? (
                   <Sun className="w-4 h-4 text-amber-400" />

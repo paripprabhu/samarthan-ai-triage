@@ -41,6 +41,12 @@
   --radius-control: 0.375rem;   /* 6px - buttons, inputs, chips */
   --radius-card: 0.5rem;        /* 8px - cards, panels, modals  */
   --radius: 0.375rem;           /* default alias               */
+
+  /* Civic workstation details — intentionally quiet, never ornamental. */
+  --signal-line: rgba(30, 58, 95, 0.16);
+  --signal-dot: rgba(180, 83, 9, 0.72);
+  --surface-elevated: rgba(255, 255, 255, 0.9);
+  --shadow-panel: 0 18px 44px -28px rgba(17, 33, 54, 0.38);
 }
 
 .dark {
@@ -75,6 +81,10 @@
   --warning: #F59E0B;
 
   --ring: #3E78B8;
+  --signal-line: rgba(147, 197, 253, 0.18);
+  --signal-dot: rgba(251, 191, 36, 0.72);
+  --surface-elevated: rgba(20, 24, 31, 0.92);
+  --shadow-panel: 0 18px 44px -28px rgba(0, 0, 0, 0.72);
 }
 
 html {
@@ -84,10 +94,54 @@ html {
 
 body {
   background-color: var(--background);
+  background-image: radial-gradient(circle at 10% -8%, rgba(30, 58, 95, 0.055), transparent 27rem);
   color: var(--foreground);
   font-family: 'Inter', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Noto Sans Gujarati', 'Noto Sans Kannada', 'Noto Sans Oriya', 'Noto Sans Malayalam', 'Noto Sans Gurmukhi', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(30, 58, 95, 0.18);
+  color: var(--foreground);
+}
+
+/* Shared, code-native signal geometry used only as a restrained backdrop. */
+.signal-grid {
+  background-image:
+    linear-gradient(var(--signal-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--signal-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 84%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 84%);
+}
+
+.signal-path {
+  stroke: var(--signal-line);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 8;
+  animation: signal-travel 15s linear infinite;
+}
+
+.signal-node {
+  fill: var(--signal-dot);
+  filter: drop-shadow(0 0 7px var(--signal-dot));
+}
+
+@keyframes signal-travel {
+  to { stroke-dashoffset: -150; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-path { animation: none; }
+
+  .how-it-works-preview,
+  .how-it-works-preview:hover,
+  .how-it-works-preview .how-it-works-shot,
+  .how-it-works-preview:hover .how-it-works-shot {
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* ── Unified 3-Tier Typography System ─────────────────────── */
