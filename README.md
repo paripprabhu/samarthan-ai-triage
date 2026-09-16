@@ -1,298 +1,228 @@
-# Samarthan: AI Cyber Crime Triage
+# Samarthan — Golden-Hour Cybercrime Triage
 
-### 3rd Place Winner, Build What Moves India Hackathon
-**Organized by OpenAI x Varun Mayya**
+> Turn an urgent cybercrime narrative into a clear, actionable incident packet—by text, voice, or screenshot—so a citizen can reach the right official channel faster.
 
-> Cyber fraud empties an account in minutes. The official complaint takes days.
-> Samarthan closes that gap: say what happened, in Hindi or English, by voice, text, or
-> screenshot, on the web or over the in-app WhatsApp simulator, and in under a minute get a
-> filed complaint that cites the right law, classifies urgency, and tells you exactly who to
-> call to freeze the money.
+**Samarthan** is an AI-assisted cybercrime triage prototype for India. It helps a victim describe what happened in their own words, extracts time-sensitive evidence such as UTRs and UPI IDs, prepares a formal complaint draft, and guides the next immediate action.
 
-**AI-powered citizen cybercrime triage and incident reporting platform.**
+**3rd Place Winner — Build What Moves India Hackathon**
+OpenAI × Varun Mayya
 
-> **Testing notice for evaluators and judges:** the physical companion phone bot daemon is
-> currently offline. Use the in-app WhatsApp simulator on the live deployment to evaluate the
-> full multi-modal WhatsApp triage, voice notes, and complaint generation flow. It runs the
-> same GPT-4o engine and Baileys conversation pipeline in-browser, no phone required.
+> [!IMPORTANT]
+> Samarthan is a hackathon prototype, not a government portal or a legal service. It does **not** submit complaints to the National Cyber Crime Reporting Portal (NCRP), banks, police, or platforms. Users must verify all information and file real complaints through [cybercrime.gov.in](https://cybercrime.gov.in) or call **1930** for urgent financial cyber fraud.
 
----
+## Why Samarthan exists
 
-## The problem
+In a cyber-fraud emergency, the most useful information is often scattered across voice notes, screenshots, payment confirmations, and panic-driven messages. A citizen may not know the fraud category, the relevant legal provisions, or which institution to contact first.
 
-When someone in India is defrauded online, the money moves through mule accounts within the
-first hour, the "golden hour." The official channel, cybercrime.gov.in and the 1930 helpline,
-works but is slow for a panicking victim:
+Samarthan focuses on that first, high-pressure moment:
 
-- the complaint form is in legal English and asks which section of the IT Act applies;
-- it asks the victim to self-classify the crime before they can proceed;
-- it does not say, up front, who to call first (bank's nodal officer, the platform, a specific
-  agency) to actually stop the transfer.
+- accept a free-form explanation instead of a long form;
+- identify the money trail and missing evidence;
+- create a structured complaint draft;
+- prioritize urgent actions such as calling **1930** and notifying the victim's bank; and
+- route the user to the appropriate official helpline or portal.
 
-The freeze instructions that matter most in the first hour go unread, and the complaint is
-filed after the money is gone.
+## What the product does
 
-## The answer
+### Multimodal incident intake
 
-One free-form input. Voice note, typed description, or a payment/chat screenshot. No fields to
-guess, no category to pick, no wizard.
+The web experience accepts:
 
-The AI reads it and returns, in about 60 seconds:
+- typed incident descriptions;
+- voice recordings with live, rolling captions; and
+- payment, chat, or social-media screenshots.
 
-- a formal complaint draft (English and Hindi), ready to file or hand to a bank;
-- the applicable law: IT Act 2000 sections and BNS 2023 sections, with the reason each applies;
-- an urgency level (CRITICAL, HIGH, MEDIUM, LOW);
-- golden-hour freeze steps: call 1930, quote the UTR, contact the named bank desk;
-- escalation routing: whether this goes to a bank, a platform (Instagram, Meta), an agency
-  (UIDAI, RBI Sachet, Consumer Helpline), or the 1930 helpline, with the real hotline number
-  for that route.
+The interface supports **12 Indian languages**: English, Hindi, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam, and Punjabi. Urdu layouts switch to right-to-left presentation automatically.
 
-The same engine runs on a WhatsApp bot, since that is where most of India already is.
+### AI-assisted triage
 
-> Prototype. Not an official government portal. All demo data is synthetic. Real complaints
-> must be filed at [cybercrime.gov.in](https://cybercrime.gov.in).
+For a submitted incident, Samarthan produces a structured `TriageResult` containing:
 
----
+- fraud category and urgency level;
+- complainant, alleged fraudster, bank, account, UPI, IFSC, UTR, amount, and timeline details when available;
+- an English and Hindi complaint draft, with selected regional-language support where available;
+- applicable IT Act and BNS references with contextual explanations;
+- immediate freeze and evidence-preservation steps; and
+- a recommended escalation path: bank, platform, agency, or the cybercrime helpline.
 
-## What's built
+The application treats model output as incomplete by default. It normalizes fields before rendering them, fills safe defaults for missing values, generates incident IDs server-side, and falls back to rule-based local triage if a live request fails.
 
-### 1. Web intake and dashboard
+### Complaint workspace
 
-| Route | Does |
-|---|---|
-| `/` | Landing page. Live mic demo in the hero: record, see a waveform react to your voice, see a live transcript, get a preliminary classification. |
-| `/intake` | Full intake: voice (Whisper), text, or screenshot (GPT-4o Vision). Feeds `/api/triage`. |
-| `/dashboard` | The filed complaint: urgency badge, complaint draft (EN/HI), applicable laws, freeze stepper, Smart Actions (routed escalation), evidence vault, status tracker, print to PDF. |
-| `/complaints` | List of everything filed on this device plus everything in the DB. |
+After triage, the dashboard provides:
 
-Live captions: the browser Web Speech API is unreliable (a known Chromium network bug), so the
-recorder streams 4-second audio chunks to `/api/transcribe-chunk` (Whisper) and shows a rolling
-transcript as you speak.
+- urgency and golden-hour guidance;
+- editable complaint drafts and a print-friendly version;
+- an evidence vault for screenshots;
+- follow-up updates that can extract newly supplied UTRs, bank details, or corrected amounts;
+- a simulated case-status timeline for demo purposes; and
+- Smart Actions that point the user to relevant real helplines and official portals.
 
-### 2. AI triage pipeline (`/api/triage`)
+The product intentionally labels simulated bank, platform, agency, and status actions. The phone links and portal links are real; Samarthan does not transmit the complaint to those institutions.
 
-1. Multimodal intake: Whisper for audio, GPT-4o Vision for screenshots, plain text.
-2. Structured extraction: `gpt-4o-mini`, JSON mode, returns the full `TriageResult`: fraud
-   type, fraudster identifiers (Instagram handle, website, phone, UPI ID, in separate fields),
-   amount, bank/account/UPI, timeline, EN and HI complaint drafts, `freezeSteps[]`,
-   `applicableLaws[]`, `urgencyLevel`, `recommendedChannel` and `recommendedChannelTarget`.
-3. Hardening: every field passes through a normalizer before it reaches the UI. A partial or
-   malformed model response can never reach React: missing arrays become safe defaults, amount
-   is coerced to a number, `incidentId` is generated server-side (the model is never trusted to
-   mint it), generic junk names collapse to "Anonymous Complainant."
-4. Timeouts: a 45s server-side safety timeout inside a 60s route budget. The client waits 90s
-   and falls back to a locally built result plus redirect rather than showing a failure state.
+### WhatsApp experience
 
-### 3. Escalation routing
+Samarthan has two WhatsApp surfaces backed by the same conversation engine:
 
-Not every fraud goes to the same place. The triage AI picks a `recommendedChannel` and the
-dashboard's Smart Actions card renders the matching next step (simulated for the demo, marked
-with a "Simulated" badge; real hotline numbers are real `tel:` links):
+1. **In-app WhatsApp simulator** — the recommended demo path. It supports text, screenshots, voice notes, follow-up updates, complaint status questions, and starting a new case.
+2. **Optional companion bot** — a Baileys / WhatsApp Multi-Device worker that can be run separately and reports its connection state to the web app through Neon.
 
-| Channel | Example | Real hotline shown |
-|---|---|---|
-| `bank` | UPI, OTP, or card fraud where a bank is named | 1930 and the bank's nodal desk |
-| `platform` | Impersonation, fake profile, sextortion on a named platform | 1930, Childline 1098, Women Helpline 181 |
-| `agency` | Aadhaar/PAN misuse to UIDAI 1947, deposit scam to RBI Sachet, e-commerce to Consumer 1915 | that agency's line |
-| `helpline` | Anything else, money lost with no entity named | 1930 |
+The WhatsApp agent can distinguish an additive loss (for example, “another ₹15,000 was taken”) from a correction (“the amount was actually ₹80,000”). Its `NEW` command is deliberately sticky so messages cannot accidentally update an earlier case while a new complaint is being collected.
 
-Tracker status `PLATFORM_REPORTED` sits between `BANK_NOTIFIED` and `FIR_FILED`.
+The current live WhatsApp path is English-first: incoming voice notes are translated to English before triage. The web interface is the primary multilingual experience.
 
-### 4. WhatsApp bot: two surfaces, one engine
+## How it works
 
-Both surfaces POST to `/api/whatsapp`, which calls `processWhatsAppTurn()` in
-`src/lib/whatsapp-agent.ts`.
+```text
+Citizen describes the incident
+        ↓
+Text, audio, and/or screenshot analysis
+        ↓
+Structured extraction and urgency assessment
+        ↓
+Complaint draft + evidence checklist + escalation guidance
+        ↓
+Citizen calls 1930 / contacts the bank / files on the official portal
+```
 
-- Live WhatsApp: `scripts/whatsapp-bot.mjs` (Baileys, WhatsApp Web multi-device). Runs on a
-  laptop via launchd, at zero hosting cost. It publishes status, QR, linked phone, and
-  heartbeat to the Neon `bot_state` table, and Vercel's `/api/whatsapp/live` reads that, so the
-  website shows the real connection state without the bot needing to be reachable.
-- Website simulator: `WhatsAppSimulatorModal.tsx`. Same webhook, `isSimulator: true`. Lets a
-  judge try the WhatsApp flow without scanning a QR.
+### AI pipeline
 
-What the bot handles:
+- **Audio:** Whisper transcription powers final voice analysis; short chunks provide best-effort live captions.
+- **Screenshots:** GPT-4o Vision extracts relevant cybercrime evidence from payment and chat screenshots.
+- **Web triage:** GPT-4o-mini returns a structured JSON response for the web intake flow.
+- **WhatsApp conversation:** GPT-4o handles the more stateful, multi-turn update and complaint-generation flow.
+- **Speech normalization:** a language-aware normalization pass helps recover clean Indic-script transcripts when speech recognition returns mixed or mismatched scripts.
 
-- File a complaint from a free-form message, a voice note (Whisper), or a screenshot (Vision).
-- Follow-up updates: any later message ("the UTR is 4482", "bank is HDFC", a screenshot) is
-  read by AI and merged into the active complaint.
-- Additive vs corrective amounts: "another 15,000 was taken" adds to the total; "the amount was
-  actually 80,000" replaces it. An AI flag (`amountIsAdditional`) decides which.
-- `NEW` is a sticky mode. Once the user says `NEW`, every following message is forced down the
-  new-complaint path (never an update to the old case) until a fresh complaint is actually
-  filed. Survives a cold serverless lambda.
-- Status query: "what's the status of my complaint" returns a case status card.
-- Language: Hindi, English, or Hinglish, auto-detected; replies match.
-- Never dead-ends: any internal error returns HTTP 200 with an actionable message ("re-send
-  that, or call 1930"), never a 500.
+The hosted demo applies a daily, per-IP triage limit to protect the shared API budget. Local development is unlimited by default, and a user can provide their own API key for live requests.
 
-### 5. Data
+## Escalation guidance
 
-Neon PostgreSQL, serverless HTTP driver (works in the Next.js route and in the plain Node bot
-script).
+Samarthan recommends an immediate route based on the reported incident. These are guidance links and numbers, not automated integrations.
 
-- `complaints`: one row per incident. `incident_id`, `fraud_type`, `fraudster_identifier`,
-  `complainant_name`, `amount`, `urgency_level`, EN/HI `summary` and `complaint_draft`,
-  `frauder_contact`, `bank_name`, `account_number`, `upi_id`, `timeline`, `freeze_steps`
-  (jsonb), `applicable_laws` (jsonb), `status`, `status_history` (jsonb), `evidence_images`
-  (jsonb), `updates` (jsonb), `recommended_channel` and `recommended_channel_target`.
-- `bot_state`: a single row the WhatsApp bot writes and `/api/whatsapp/live` reads.
-- Dual write: the web app writes to `localStorage` (instant) and the DB API (persistent).
+| Incident pattern | Suggested next step |
+| --- | --- |
+| UPI, OTP, card, or bank-transfer fraud | Call **1930** immediately and notify the victim's bank |
+| Social-media harassment, impersonation, or sextortion | Preserve evidence, report the account, and use NCRP / relevant support helplines |
+| Aadhaar or PAN misuse | Use UIDAI or Income Tax guidance alongside an NCRP report |
+| Unregulated investment or deposit scheme | Report through RBI Sachet and call 1930 where money is at risk |
+| Marketplace or non-delivery scam | Preserve transaction details and use Consumer Helpline / NCRP guidance |
 
-Seed data: `scripts/reset-and-seed-complaints.mjs` wipes the table and inserts 3 canonical demo
-complaints (all "Pratham Kamath", EN and HI):
+## Architecture
 
-1. `INC-2026-7001`: fake SBI KYC call. Has simulated edits (UTRs added later, bank lien
-   confirmed), status `UNDER_INVESTIGATION`.
-2. `INC-2026-7002`: Instagram storefront non-delivery. The transaction UTR is missing; an
-   update and a freeze step spell out retrieving and adding it. Status `SUBMITTED`.
-3. `INC-2026-7003`: loan-app extortion. Fully completed: 3 UTRs, 3 evidence images,
-   `PLATFORM_REPORTED` plus `FIR_FILED`, FIR 318/2026.
+```text
+Next.js 16 + React 19 + Tailwind CSS
+│
+├── Web intake and dashboard
+│   ├── TriageContext: in-progress incident state
+│   ├── useComplaints: local-first complaint persistence
+│   └── Components: evidence, updates, printable draft, routing, status demo
+│
+├── API routes
+│   ├── /api/triage             multimodal web triage
+│   ├── /api/transcribe-chunk   live-caption transcription
+│   ├── /api/followup           follow-up extraction and draft updates
+│   ├── /api/complaints         complaint persistence
+│   ├── /api/whatsapp           WhatsApp/simulator webhook
+│   └── /api/whatsapp/live      companion-bot connection state
+│
+├── OpenAI
+│   ├── Whisper
+│   ├── GPT-4o-mini
+│   └── GPT-4o / Vision
+│
+└── Neon Postgres (optional)
+    ├── complaints
+    ├── bot_state
+    └── daily_rate_limits
+```
 
-### 6. Bilingual throughout
+### Data model and persistence
 
-Hindi and English on every screen and in every AI output. Toggle in the navbar. The triage
-model always drafts both `complaint_draft` and `complaint_draft_hi`.
+The application is local-first:
 
----
+- Every web complaint is saved to browser `localStorage` immediately.
+- If `DATABASE_URL` is configured, the same record is also persisted to Neon Postgres.
+- The complaint record contains structured incident details, the generated drafts, freeze steps, legal references, status history, evidence metadata, and follow-up updates.
 
-## Quick start
+The repository's seed scripts only use synthetic demo data. Do not use the prototype to store real personal, financial, or identity documents without adding production-grade authentication, access controls, encryption, retention controls, and consent handling.
+
+## Local development
+
+### Prerequisites
+
+- Node.js 20+ (Node 22 is used by the companion-worker deployment setup)
+- npm
+
+### Run with no keys
 
 ```bash
 npm install
-npm run dev            # http://localhost:3000
+npm run dev
 ```
 
-Runs in mock mode with no keys. The AI paths return pre-baked responses so the full UI/UX is
-testable offline.
+Open [http://localhost:3000](http://localhost:3000). Without an OpenAI key, Samarthan uses its local rule-based fallback so that the complete user interface and complaint flow remain demoable.
 
-For live AI and persistence, copy the example env file and fill in your own keys:
+### Enable live AI and persistence
+
+Copy the environment template:
 
 ```bash
 cp .env.example .env.local
 ```
 
-```bash
-OPENAI_API_KEY=sk-...            # your own key: gpt-4o-mini (triage), gpt-4o (WhatsApp agent + Vision), whisper-1
-DATABASE_URL=postgres://...      # your own Neon project (free tier is enough)
-NEXT_PUBLIC_APP_URL=https://...  # base URL used in WhatsApp tracking links (optional)
-```
-
-Then:
+Then provide the values you need:
 
 ```bash
-npm run migrate    # create tables (reads .env.local automatically)
-npm run seed       # load the 3 demo complaints
+OPENAI_API_KEY=sk-...
+DATABASE_URL=postgres://...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-Running with your own keys locally is unlimited. The rate limiter is disabled during local
-development.
-
-### Running the WhatsApp bot
+Create the database tables and load synthetic demo cases:
 
 ```bash
-npm run whatsapp-bot     # scans a QR on first run; state -> bot_state table
+npm run migrate
+npm run seed
 ```
 
-For always-on zero-cost hosting, run it under launchd (macOS); see
-`~/Library/LaunchAgents/com.samarthan.whatsappbot.plist`. It publishes to the DB, so the
-deployed site reads its status from Postgres regardless of where the bot runs.
-
----
-
-## Rate limiting and offline testing on the hosted demo
-
-The public deployment allows 5 triage requests per day per visitor (tracked by IP in the
-`daily_rate_limits` Postgres table, see `src/lib/rateLimit.ts`), enough for thorough
-multi-modal testing (text, voice, screenshots) while protecting the shared OpenAI API budget.
-
-- Instant offline AI fallback: if the limit is reached, a one-click action ("Continue with
-  Instant Offline AI, 0 API cost") allows continuous testing without blocking the user.
-- Clone and run with zero keys: anyone cloning the repository can run the entire platform
-  locally with zero API keys and zero database setup, using dynamic offline AI synthesis and
-  localStorage.
-- Bring your own key: to run live AI triage locally or test against personal limits, provide
-  `OPENAI_API_KEY` in `.env.local` or pass the `x-openai-key` request header.
-
-## Testing
-
-`WHATSAPP_TEST_PROMPTS.md` covers 10 prompts across both WhatsApp surfaces: one-shot file,
-Hinglish, the menu flow, follow-up UTR, additive amount, `NEW` leading to a distinct incident,
-status query, vague input, garbage input, extortion. As of the last run: 10/10 on both surfaces
-in production.
+### Optional: run the WhatsApp companion worker
 
 ```bash
-npm run build            # production build
-npx tsc --noEmit         # type check
+npm run whatsapp-bot
 ```
 
----
+The companion worker creates a QR-based WhatsApp Multi-Device connection and publishes connection state to Neon. For a reliable presentation, use the in-app WhatsApp simulator; it exercises the same conversation endpoint without requiring a linked device.
 
-## Architecture
+## Validation
 
-```
-src/
-  app/
-    api/
-      triage/route.ts            multimodal AI triage and full output normalizer
-      whatsapp/route.ts          WhatsApp webhook (live bot and simulator)
-      whatsapp/live/route.ts     reads bot_state, serves connection status to the site
-      complaints/route.ts        CRUD for the complaints table
-      followup/route.ts          AI action-point generation for updates
-      transcribe-chunk/route.ts  short-audio Whisper endpoint for live captions
-    intake/page.tsx              voice / text / screenshot intake
-    dashboard/page.tsx           filed complaint, smart actions, evidence, tracker
-    complaints/page.tsx          list view
-    page.tsx                     landing (hero mic demo)
-  components/
-    AudioRecorder.tsx            mic, live waveform, chunk-streamed captions
-    SmartActions.tsx             routed escalation card (bank / platform / agency / helpline)
-    FreezeStepper.tsx  ApplicableLaws.tsx  UrgencyBadge.tsx  FIRTracker.tsx
-    EvidenceVault.tsx  ComplaintUpdates.tsx  PrintableComplaint.tsx
-    WhatsAppSimulatorModal.tsx   in-browser WhatsApp flow
-    WhatsAppQRModal.tsx  WhatsAppChoiceModal.tsx
-    landing/                     HeroSection, HowItWorks, ComparisonTable, TrustStrip, ...
-  lib/
-    whatsapp-agent.ts            the WhatsApp conversation engine (file / update / NEW / status)
-  data/
-    scenarios.ts                 TriageResult type, COMPLAINT_STATUSES, demo scenarios
-  hooks/
-    useComplaints.ts             localStorage <-> Neon sync and record normalizer
-    useAuth.ts                   DigiLocker-style identity (localStorage)
-scripts/
-  migrate.mjs                    create complaints and bot_state tables
-  reset-and-seed-complaints.mjs  wipe and load the 3 canonical demo complaints
-  whatsapp-bot.mjs               Baileys bot, publishes state to bot_state
+```bash
+npx tsc --noEmit
+npm run build
 ```
 
----
+Useful manual test scenarios are documented in:
 
-## Key decisions
+- [TEST_PROMPTS.md](TEST_PROMPTS.md) for the web triage flow;
+- [WHATSAPP_TEST_PROMPTS.md](WHATSAPP_TEST_PROMPTS.md) for the simulator and conversation flow; and
+- [FINAL_TEST_PLAN.md](FINAL_TEST_PLAN.md) for broader demo verification.
 
-- `gpt-4o-mini` for web triage, `gpt-4o` for the WhatsApp agent and all Vision. Mini is fast
-  and cheap enough for the 60s web budget; the WhatsApp agent does more multi-turn reasoning
-  (update vs new, additive vs corrective) and Vision needs the full model.
-- Server mints the `incidentId`. The model kept echoing the schema's example id, so it is now
-  generated in the route and regex-guarded.
-- Normalize everything before it reaches React. A partial AI response is expected, not
-  exceptional; the UI must never crash on a missing array or a string where a number belongs.
-- `NEW` is sticky, not per-turn. A one-turn reset let the next message get re-attached to the
-  old case by the DB auto-restore. The flag now persists until a complaint is actually filed.
-- Bot on a laptop, state in Postgres. Every free WhatsApp host either wanted a card or shut
-  down. Running Baileys locally and syncing state through the DB costs nothing, and the
-  deployed site still shows a correct live status.
-- Neon over Supabase: zero cold start, plain SQL over HTTP, same client in the route and the
-  Node script.
+## Repository map
 
----
+| Path | Responsibility |
+| --- | --- |
+| `src/app` | Pages and API routes |
+| `src/components` | Intake, dashboard, WhatsApp, and landing-page UI |
+| `src/context/TriageContext.tsx` | In-progress triage state and selected language |
+| `src/hooks/useComplaints.ts` | Local/remote complaint persistence and record normalization |
+| `src/lib/whatsapp-agent.ts` | Multi-turn WhatsApp complaint engine |
+| `src/lib/i18n` | Supported languages, translations, and multilingual extraction helpers |
+| `src/data` | Scenario data, types, legal-section catalog, and escalation copy |
+| `scripts` | Database migration, synthetic seeding, and WhatsApp worker utilities |
+| `supabase/schema.sql` | Reference SQL schema |
 
-## Disclaimer
+## Scope and safety
 
-- Synthetic data only. Every scenario, demo complaint, and mock response is fictitious.
-- Not an official government portal. A prototype simulation. File real complaints at
-  [cybercrime.gov.in](https://cybercrime.gov.in).
-- Demonstrative. Built to show AI-powered UX for an urgent citizen service, not to replace or
-  impersonate official channels. The escalation, bank, and platform actions are simulated.
-
-## Helpline
-
-National Cyber Crime Helpline: [1930](tel:1930). Portal: [cybercrime.gov.in](https://cybercrime.gov.in). Police: [112](tel:112).
+- All included scenarios and seeded complaints are synthetic.
+- Samarthan drafts information for a citizen to review; it does not provide legal advice.
+- Samarthan does not claim to file FIRs, submit NCRP reports, freeze bank accounts, or contact third parties on the user's behalf.
+- For a real financial cyber-fraud emergency in India, call **1930** immediately and file through [cybercrime.gov.in](https://cybercrime.gov.in).
