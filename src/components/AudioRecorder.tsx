@@ -20,7 +20,7 @@ const BAR_COUNT = 28
 const CHUNK_MS = 4000
 
 const MIC_ERROR_I18N: Record<SupportedLanguage, string> = {
-  en: 'Microphone permission denied. Please allow mic access in browser settings.',
+  en: 'Microphone access is off. Allow it in your browser settings.',
   hi: 'माइक्रोफोन अनुमति अस्वीकृत। कृपया ब्राउज़र सेटिंग में माइक की अनुमति दें।',
   bn: 'মাইক্রোফোনের অনুমতি প্রত্যাখ্যাত হয়েছে। অনুগ্রহ করে ব্রাউজার সেটিংসে মাইকের অনুমতি দিন।',
   mr: 'मायक्रोफोन परवानगी नाकारली. कृपया ब्राउझर सेटिंग्जमध्ये माइकला अनुमती द्या.',
@@ -35,7 +35,7 @@ const MIC_ERROR_I18N: Record<SupportedLanguage, string> = {
 }
 
 const AUDIO_READY_I18N: Record<SupportedLanguage, string> = {
-  en: '✓ Recording ready',
+  en: '✓ Recording is ready',
   hi: '✓ रिकॉर्डिंग तैयार है',
   bn: '✓ রেকর্ডিং প্রস্তুত',
   mr: '✓ रेकॉर्डिंग तयार आहे',
@@ -147,7 +147,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       // haven't managed a single successful caption yet, so one dropped
       // chunk mid-stream doesn't overwrite text that's already showing.
       if (!finalTranscriptRef.current) {
-        setCaptionError(language === 'en' ? 'Live captions unavailable right now' : `${t.intake.listening}`)
+        setCaptionError(language === 'en' ? 'Live captions are not available right now' : `${t.intake.listening}`)
       }
     }
   }
@@ -271,7 +271,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
 
   if (permissionDenied) {
     return (
-      <div className={clsx("rounded-lg p-4 text-sm border indic-body", isDark ? "bg-red-500/10 border-red-500/30 text-red-300" : "bg-red-50 border-red-200 text-red-700")}>
+      <div className={clsx("rounded-lg border p-4 text-sm indic-body", isDark ? "bg-red-500/10 border-red-500/30 text-red-300" : "border-red-200 bg-red-50 text-red-700")}>
         {MIC_ERROR_I18N[language] || MIC_ERROR_I18N.en}
       </div>
     )
@@ -284,19 +284,19 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
         <button
           onClick={recording ? stopRecording : startRecording}
           className={clsx(
-            'relative rounded-full flex items-center justify-center transition-transform duration-150 shadow-sm border',
+            'relative flex items-center justify-center rounded-lg border transition-transform duration-150',
             isLg ? 'w-20 h-20' : 'w-16 h-16',
             'focus:outline-none focus:ring-2 focus:ring-offset-2',
-            isDark ? 'focus:ring-offset-zinc-950 border-primary/50' : 'focus:ring-offset-white border-primary-active',
+            isDark ? 'focus:ring-offset-zinc-950 border-primary/50' : 'focus:ring-offset-card border-primary-active',
             recording
               ? 'bg-red-500 hover:bg-red-600 focus:ring-red-500/50 scale-105 border-red-600'
-              : 'bg-primary hover:bg-primary-hover focus:ring-primary/40 text-white'
+              : 'bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-primary/40'
           )}
           aria-label={recording ? 'Stop recording' : 'Start recording'}
         >
           {recording && (
             <span
-              className="absolute inset-0 rounded-full bg-red-500/40"
+              className="absolute inset-0 rounded-lg bg-red-500/30"
               style={{ transform: `scale(${1 + levels[0] * 0.5})`, transition: 'transform 80ms linear' }}
             />
           )}
@@ -315,7 +315,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
               key={i}
               className={clsx(
                 isLg ? 'w-1 rounded-full' : 'w-[3px] rounded-full',
-                recording ? 'bg-primary' : (isDark ? 'bg-zinc-700' : 'bg-zinc-200')
+                recording ? 'bg-primary' : (isDark ? 'bg-zinc-700' : 'bg-border')
               )}
               style={{
                 height: `${Math.max(3, lvl * (isLg ? 48 : 40))}px`,
@@ -332,7 +332,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
           </div>
         )}
 
-        <p className={clsx("text-center", isLg ? "text-xs sm:text-sm font-medium" : "text-xs", isDark ? "text-white/60" : "text-zinc-500")}>
+        <p className={clsx("text-center", isLg ? "text-xs sm:text-sm font-medium" : "text-xs", isDark ? "text-white/60" : "text-muted-foreground")}>
           {recording
             ? t.intake.stopRecording
             : t.intake.startRecording}
@@ -341,7 +341,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
 
       {/* Live caption */}
       {recording && (
-        <div className={clsx("rounded-md p-2.5 text-xs min-h-[2.5rem] max-h-24 overflow-y-auto", isDark ? "bg-white/5 text-white/80" : "bg-white text-zinc-600 border border-zinc-200")}>
+        <div className={clsx("max-h-24 min-h-[2.5rem] overflow-y-auto rounded-md p-2.5 text-xs", isDark ? "bg-white/5 text-white/80" : "border border-border bg-surface text-muted-foreground")}>
           {liveText || (captionError
             ? <span className="text-amber-600">{captionError}</span>
             : <span className="opacity-50 flex items-center gap-1.5"><Loader2 className="w-3 h-3 animate-spin" />{t.intake.listening}</span>
@@ -351,7 +351,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
 
       {/* Playback */}
       {blobUrl && !recording && (
-        <div className={clsx("rounded-lg p-2.5 border", isDark ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200")}>
+        <div className={clsx("rounded-md border p-2.5", isDark ? "bg-green-500/10 border-green-500/30" : "border-green-200 bg-green-50")}>
           <p className={clsx("text-[10px] font-semibold mb-1.5 uppercase tracking-wide indic-body", isDark ? "text-green-400" : "text-green-700")}>
             {AUDIO_READY_I18N[language] || AUDIO_READY_I18N.en}
           </p>

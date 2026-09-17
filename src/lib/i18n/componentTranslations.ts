@@ -47,7 +47,7 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     pa: "ਟਾਈਪਿੰਗ ਦੀ ਲੋੜ ਨਹੀਂ, 12 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਆਵਾਜ਼ ਰਾਹੀਂ ਸ਼ਿਕਾਇਤ",
   },
   {
-    en: "1-click identity verification with DigiLocker (Aadhaar/PAN)",
+    en: "Demo identity check with DigiLocker (Aadhaar/PAN)",
     hi: "डिजीलॉकर के साथ 1-क्लिक पहचान सत्यापन (आधार/पैन)",
     bn: "ডিজিলকারের মাধ্যমে ১-ক্লিকে পরিচয় যাচাইকরণ (আধার/প্যান)",
     mr: "डिजीलॉकरद्वारे १-क्लिक ओळख पडताळणी (आधार/पॅन)",
@@ -61,7 +61,7 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     pa: "ਡਿਜੀਲੌਕਰ ਨਾਲ 1-ਕਲਿੱਕ ਪਛਾਣ ਤਸਦੀਕ (ਆਧਾਰ/ਪੈਨ)",
   },
   {
-    en: "Direct 1930 Helpline operator handoff with pre-filled case brief",
+    en: "Prepare a summary for your 1930 call",
     hi: "1930 हेल्पलाइन ऑपरेटर को पूरा केस डेटा सीधे ट्रांसफर",
     bn: "১৯৩০ হেল্পলাইন অপারেটরের কাছে সম্পূর্ণ কেস বিবরণ সরাসরি হস্তান্তর",
     mr: "१९३० हेल्पलाइन ऑपरेटरला संपूर्ण केस डेटा थेट हस्तांतरित",
@@ -75,7 +75,7 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     pa: "1930 ਹੈਲਪਲਾਈਨ ਆਪਰੇਟਰ ਨੂੰ ਪੂਰਾ ਕੇਸ ਵੇਰਵਾ ਸਿੱਧਾ ਟ੍ਰਾਂਸਫਰ",
   },
   {
-    en: "Actionable bank freeze guide with UTR & account transaction tracking",
+    en: "Guide to ask your bank to freeze funds with UTR details",
     hi: "UTR और खाता लेनदेन ट्रैकिंग के साथ बैंक खाता फ्रीज गाइड",
     bn: "UTR এবং লেনদেন ট্র্যাকিং সহ ব্যাঙ্ক অ্যাকাউন্ট ফ্রিজ গাইড",
     mr: "UTR आणि व्यवहार ट्रॅकिंगसह बँक खाते फ्रीज मार्गदर्शक",
@@ -117,7 +117,7 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     pa: "ਛੇੜਛਾੜ-ਮੁਕਤ ਲੌਗਸ ਦੇ ਨਾਲ ਸੁਰੱਖਿਅਤ ਸਬੂਤ ਵਾਲਟ",
   },
   {
-    en: "24x7 WhatsApp companion bot for automated live case updates",
+    en: "24/7 WhatsApp bot for report updates",
     hi: "रियल-टाइम केस अपडेट के लिए 24x7 व्हाट्सएप बॉट साथी",
     bn: "লাইভ কেস আপডেটের জন্য ২৪x৭ হোয়াটসঅ্যাপ সঙ্গী বট",
     mr: "थेट केस अपडेटसाठी २४x७ व्हॉट्सॲप बॉट सहाय्यक",
@@ -251,7 +251,7 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
 // 6 Complaint Statuses across 12 languages
 export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<SupportedLanguage, string>> = {
   SUBMITTED: {
-    en: 'Complaint Registered',
+    en: 'Report saved in this demo',
     hi: 'शिकायत पंजीकृत',
     bn: 'অভিযোগ নথিভুক্ত',
     mr: 'तक्रार नोंदवली',
@@ -265,7 +265,7 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     pa: 'ਸ਼ਿਕਾਇਤ ਦਰਜ ਹੋਈ',
   },
   BANK_NOTIFIED: {
-    en: 'Bank Nodal Officer Notified',
+    en: 'Demo: bank contact step completed',
     hi: 'बैंक नोडल अधिकारी को सूचित',
     bn: 'ব্যাঙ্ক নোডাল অফিসারকে জানানো হয়েছে',
     mr: 'बँक नोडल अधिकाऱ्यास सूचित केले',
@@ -279,7 +279,7 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     pa: 'ਬੈਂਕ ਨੋਡਲ ਅਧਿਕਾਰੀ ਨੂੰ ਸੂਚਿਤ ਕੀਤਾ',
   },
   PLATFORM_REPORTED: {
-    en: 'Platform / Agency Report Filed',
+    en: 'Demo: platform or agency step completed',
     hi: 'प्लेटफ़ॉर्म / एजेंसी को रिपोर्ट दर्ज',
     bn: 'প্ল্যাটফর্ম / এজেন্সিতে রিপোর্ট দাখিল',
     mr: 'प्लॅटफॉर्म / एजन्सीकडे तक्रार दाखल',
@@ -293,7 +293,7 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     pa: 'ਪਲੇਟਫਾਰਮ / ਏਜੰਸੀ ਕੋਲ ਰਿਪੋਰਟ ਦਰਜ',
   },
   FIR_FILED: {
-    en: 'FIR Registered (NCRP)',
+    en: 'Demo: FIR step completed',
     hi: 'प्राथमिकी दर्ज (NCRP)',
     bn: 'এফআইআর দায়ের (NCRP)',
     mr: 'एफआयआर नोंदवला (NCRP)',
@@ -307,7 +307,7 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     pa: 'ਐਫਆਈਆਰ ਦਰਜ (NCRP)',
   },
   UNDER_INVESTIGATION: {
-    en: 'Under Investigation',
+    en: 'Demo: review stage',
     hi: 'जांच जारी',
     bn: 'তদন্ত চলছে',
     mr: 'तपास सुरू',
@@ -321,7 +321,7 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     pa: 'ਜਾਂਚ ਜਾਰੀ ਹੈ',
   },
   RESOLVED: {
-    en: 'Disposed / Resolved',
+    en: 'Demo: case closed',
     hi: 'निपटाया / समाधान हुआ',
     bn: 'মীমাংসিত / সমাধান হয়েছে',
     mr: 'निकाली काढले / निराकरण झाले',
@@ -509,11 +509,11 @@ export const FIR_TRACKER_I18N: Record<SupportedLanguage, {
   resolvedBtn: string
 }> = {
   en: {
-    header: 'Complaint Status Tracker',
-    liveBadge: 'Live',
-    demoControls: 'Demo Controls',
-    advanceBtn: 'Advance to next stage',
-    resolvedBtn: 'Complaint resolved',
+    header: 'Report status (demo)',
+    liveBadge: 'Demo',
+    demoControls: 'Demo controls',
+    advanceBtn: 'Show next demo stage',
+    resolvedBtn: 'Demo complete',
   },
   hi: {
     header: 'शिकायत स्थिति ट्रैकर',
@@ -879,16 +879,16 @@ export const SMART_ACTIONS_I18N: Record<SupportedLanguage, {
   openCybercrime: string
 }> = {
   en: {
-    header: 'Smart Escalation',
-    simulatedBadge: 'Simulated',
-    bankActionTitle: '1-Click Bank Email',
-    bankActionSimulating: 'Connecting to bank nodal cyber desk (demo)...',
-    bankActionDone: 'Bank nodal officer notified & freeze logged (demo)',
-    bankActionDesc: 'Simulates drafting and sending freeze notice to bank nodal desk',
-    routePoliceTitle: 'Route to Police',
-    routePoliceLocating: 'Fetching GPS location (demo)...',
-    routePoliceDesc: 'Simulates finding the nearest Cyber Cell',
-    realContacts: 'Real contacts',
+    header: 'Next steps',
+    simulatedBadge: 'Demo',
+    bankActionTitle: 'Bank freeze request',
+    bankActionSimulating: 'Preparing a demo request for your bank…',
+    bankActionDone: 'Demo: bank freeze request marked as sent',
+    bankActionDesc: 'Demo: prepare a request to freeze funds with your bank',
+    routePoliceTitle: 'Police report step',
+    routePoliceLocating: 'Choosing a demo cyber police station…',
+    routePoliceDesc: 'Demo: find a cyber police station',
+    realContacts: 'Official contacts',
     call1930: 'Cyber Helpline 1930',
     openCybercrime: 'Open cybercrime.gov.in',
   },
@@ -1067,21 +1067,21 @@ export const DASHBOARD_EXTRA_I18N: Record<SupportedLanguage, {
   retrievingReport: string
 }> = {
   en: {
-    subtitle: 'Details extracted by AI. Review, edit, and take action immediately.',
-    newReportBtn: 'New Report',
-    complaintDetailsHeader: 'Complaint Details',
-    crimeCategoryLabel: 'Crime Category',
-    fraudsterContactLabel: 'Fraudster Contact',
-    editableLabel: 'Editable',
+    subtitle: 'Review the details, then take the next step.',
+    newReportBtn: 'New report',
+    complaintDetailsHeader: 'Report details',
+    crimeCategoryLabel: 'Scam type',
+    fraudsterContactLabel: 'Scammer contact',
+    editableLabel: 'You can edit',
     call1930Btn: 'Call 1930 Helpline',
-    liveEmergencyBadge: 'Live Emergency',
-    shareStatusBtn: 'Share Status',
-    liveBadge: 'Live',
-    actionTrackingHeader: 'Action & Tracking',
-    actionTrackingDesc: 'Execute the next steps immediately.',
-    recommendedImmediateHeader: 'Recommended Immediate Actions',
-    liveGuidanceBadge: 'Live Guidance',
-    retrievingReport: 'Retrieving Official Complaint Report...',
+    liveEmergencyBadge: 'Emergency',
+    shareStatusBtn: 'Share report',
+    liveBadge: 'Available',
+    actionTrackingHeader: 'Report steps',
+    actionTrackingDesc: 'Use the steps that fit your report.',
+    recommendedImmediateHeader: 'Do this now',
+    liveGuidanceBadge: 'Guidance',
+    retrievingReport: 'Loading saved report...',
   },
   hi: {
     subtitle: 'AI द्वारा विवरण निकाला गया। संपादित करें और तुरंत कार्रवाई करें।',

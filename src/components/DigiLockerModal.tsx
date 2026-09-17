@@ -112,7 +112,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
             aria-modal="true"
           >
             {step !== 'success' && (
-              <button onClick={onClose} aria-label="Close" className="absolute top-4 right-4 p-1.5 rounded-md hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition-colors z-10 cursor-pointer">
+              <button onClick={onClose} aria-label="Close dialog" className="absolute top-4 right-4 p-1.5 rounded-md hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition-colors z-10 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             )}
@@ -128,13 +128,13 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-zinc-900">Sign in with DigiLocker</h2>
-                      <p className="text-xs text-zinc-500">Government of India • Simulated KYC Sandbox</p>
+                      <p className="text-xs text-zinc-500">Demo only • not connected to DigiLocker</p>
                     </div>
                   </div>
 
                   {/* Quick Personas for Testing */}
                   <div className="mb-4">
-                    <span className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">Select a Demo Citizen or Type Below</span>
+                    <span className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">Choose a demo person or enter a name</span>
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         type="button"
@@ -158,7 +158,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                   <form onSubmit={handleStartAuth} className="space-y-4 mb-4">
                     <div>
                       <label htmlFor="digilocker-name" className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
-                        Citizen Full Name <span className="text-red-500">*</span>
+                        Full name <span className="text-red-500">*</span>
                       </label>
                       <div className="relative flex items-center">
                         <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -172,12 +172,12 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                           className={`w-full border rounded-lg pl-10 pr-4 py-2.5 text-base sm:text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:ring-2 transition-all ${nameError ? 'border-red-400 focus:ring-red-200' : 'border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/10'}`}
                         />
                       </div>
-                      {nameError && <p className="text-xs text-red-500 mt-1">Please enter a citizen name to verify identity.</p>}
+                      {nameError && <p className="text-xs text-red-500 mt-1">Enter a name to continue.</p>}
                     </div>
 
                     <div>
                       <label htmlFor="digilocker-aadhaar" className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
-                        Aadhaar / DigiLocker ID (Simulated)
+                        Aadhaar / DigiLocker ID (demo)
                       </label>
                       <div className="relative flex items-center">
                         <CreditCard className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -190,16 +190,16 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                           className="w-full border border-zinc-200 rounded-lg pl-10 pr-4 py-2.5 text-sm text-zinc-900 bg-zinc-50/70 placeholder:text-zinc-400 outline-none focus:bg-white focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 transition-all"
                         />
                       </div>
-                      <p className="text-[11px] text-zinc-400 mt-1">Leave empty to use mock masked Aadhaar ID</p>
+                      <p className="text-[11px] text-zinc-400 mt-1">Leave blank to use a demo masked ID.</p>
                     </div>
 
                     <div className="bg-orange-50/80 border border-orange-100 rounded-xl p-3.5 space-y-1">
                       <p className="text-xs font-semibold text-orange-900 flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-orange-600 flex-shrink-0" />
-                        Government-Grade Citizen Verification
+                        Demo identity check
                       </p>
                       <p className="text-[11px] text-orange-950/70 leading-relaxed">
-                        Formal police complaint drafts & statements will automatically bind to this verified citizen identity.
+                        Your name will appear in the report draft in this demo.
                       </p>
                     </div>
 
@@ -208,13 +208,13 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                       className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 active:scale-[0.99] text-white rounded-xl py-3.5 font-semibold text-sm transition-all shadow-sm min-h-[44px] cursor-pointer"
                     >
                       <ShieldCheck className="w-4 h-4" />
-                      <span>Simulate DigiLocker OTP →</span>
+                      <span>Continue with demo OTP →</span>
                     </button>
                   </form>
 
                   <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-400">
                     <Lock className="w-3 h-3" />
-                    <span>256-bit encrypted DigiLocker mock sandbox</span>
+                    <span>Demo only. No real DigiLocker sign-in.</span>
                   </div>
                 </motion.div>
               )}
@@ -230,8 +230,8 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     <Loader2 className="w-14 h-14 text-orange-400 animate-spin absolute inset-0" />
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-semibold text-zinc-900">Connecting to DigiLocker…</p>
-                    <p className="text-xs text-zinc-500 mt-1">Requesting OTP authentication for <strong className="text-zinc-800">{name}</strong></p>
+                    <p className="text-sm font-semibold text-zinc-900">Preparing DigiLocker demo…</p>
+                    <p className="text-xs text-zinc-500 mt-1">Preparing a demo OTP for <strong className="text-zinc-800">{name}</strong></p>
                   </div>
                 </motion.div>
               )}
@@ -245,17 +245,17 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-zinc-900">Aadhaar OTP Verification</h2>
-                      <p className="text-xs text-zinc-500">Enter the OTP sent to your registered mobile</p>
+                      <p className="text-xs text-zinc-500">Enter the demo OTP</p>
                     </div>
                   </div>
 
                   <div className="bg-zinc-50 border border-zinc-200 rounded-md p-3.5 mb-4 space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-zinc-500">Citizen:</span>
+                      <span className="text-zinc-500">Name:</span>
                       <span className="font-semibold text-zinc-900">{name}</span>
                     </div>
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-zinc-500">Linked Aadhaar:</span>
+                      <span className="text-zinc-500">Demo Aadhaar:</span>
                       <span className="font-mono font-semibold text-zinc-900">{getMaskedAadhaar()}</span>
                     </div>
                   </div>
@@ -274,9 +274,9 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     placeholder="______"
                     className={`w-full border rounded-md p-3 text-center text-2xl font-mono tracking-[0.5em] text-zinc-900 bg-zinc-50 outline-none focus:ring-2 transition-all ${otpError ? 'border-red-400 focus:ring-red-200' : 'border-zinc-200 focus:ring-zinc-900'}`}
                   />
-                  {otpError && <p className="text-xs text-red-500 mt-1">Please enter 6 digits.</p>}
+                  {otpError && <p className="text-xs text-red-500 mt-1">Enter 6 digits.</p>}
                   <div className="flex items-center justify-between text-xs text-zinc-400 mt-2.5 mb-5">
-                    <span>Enter any 6 digits (sandbox)</span>
+                    <span>Enter any 6 digits (demo)</span>
                     <button
                       type="button"
                       onClick={() => setOtp('123456')}
@@ -291,7 +291,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     disabled={otp.length < 6}
                     className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white rounded-xl py-3.5 font-semibold text-sm transition-all shadow-sm cursor-pointer"
                   >
-                    Verify & Complete Sign In
+                    Verify and sign in
                   </button>
                 </motion.div>
               )}
@@ -306,7 +306,7 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
                     </div>
                   </motion.div>
                   <div className="text-center">
-                    <p className="text-base font-bold text-zinc-900">Verified via DigiLocker</p>
+                    <p className="text-base font-bold text-zinc-900">Demo sign-in complete</p>
                     <p className="text-sm font-semibold text-green-700 mt-0.5">Welcome, {name}</p>
                     <p className="text-xs text-zinc-400 mt-1">ID: {getMaskedAadhaar()}</p>
                   </div>
@@ -320,4 +320,3 @@ export default function DigiLockerModal({ open, onClose, onSuccess }: DigiLocker
     </AnimatePresence>
   )
 }
-

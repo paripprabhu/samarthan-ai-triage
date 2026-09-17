@@ -23,15 +23,15 @@ const COMPARISON_I18N: Record<string, {
 }> = {
   en: {
     eyebrow: "Why Samarthan",
-    headline: "Built differently, on purpose",
-    subheadline: "We obsessed over the critical golden hour details legacy systems ignore. Here is what that means for victims every single second.",
+    headline: "A simpler way to start",
+    subheadline: "Use one place to tell your story, review your report, and see what to do next.",
     samarthanTitle: "Samarthan",
-    recommended: "Recommended",
-    samarthanDesc: "Everything a victim needs in the golden hour, without the administrative runaround.",
-    samarthanBtn: "Start for Free",
-    othersTitle: "The others",
-    othersDesc: "Common friction points victims encounter with legacy reporting platforms.",
-    othersBtn: "See Why Victims Switch",
+    recommended: "Start here",
+    samarthanDesc: "A clear report flow when you need help quickly.",
+    samarthanBtn: "Start a report",
+    othersTitle: "Other reporting tools",
+    othersDesc: "Things that can make reporting harder.",
+    othersBtn: "See how it works",
   },
   hi: {
     eyebrow: "समर्थन क्यों?",
@@ -306,4 +306,3 @@ export default function ComparisonTable({ language }: ComparisonTableProps) {
     </section>
   )
 }
-

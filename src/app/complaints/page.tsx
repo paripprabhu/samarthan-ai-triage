@@ -8,7 +8,6 @@ import {
 } from 'lucide-react'
 import { useComplaints, SavedComplaint } from '@/hooks/useComplaints'
 import { useTriage } from '@/context/TriageContext'
-import { COMPLAINT_STATUS_LABELS } from '@/data/scenarios'
 import {
   COMPLAINT_STATUS_LABELS_12,
   CRIME_CATEGORY_LABELS_12,
@@ -20,10 +19,10 @@ import Navbar from '@/components/Navbar'
 import { getTranslation } from '@/lib/i18n/translations'
 
 const URGENCY_COLORS: Record<string, string> = {
-  CRITICAL: 'bg-red-100 text-red-800 border-red-200',
-  HIGH:     'bg-red-50 text-red-700 border-red-200',
-  MEDIUM:   'bg-amber-50 text-amber-700 border-amber-200',
-  LOW:      'bg-green-50 text-green-700 border-green-200',
+  CRITICAL: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-500/15 dark:text-red-300 dark:border-red-500/30',
+  HIGH:     'bg-red-50 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-300 dark:border-red-500/30',
+  MEDIUM:   'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30',
+  LOW:      'bg-green-50 text-green-700 border-green-200 dark:bg-green-500/10 dark:text-green-300 dark:border-green-500/30',
 }
 
 export default function ComplaintsPage() {
@@ -84,25 +83,25 @@ export default function ComplaintsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white font-sans pb-24">
+    <main className="min-h-screen bg-background font-sans pb-24">
       <Navbar language={language} onLanguageToggle={() => setLanguage(language === 'en' ? 'hi' : 'en')} />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8 rounded-xl border border-border bg-card p-4 sm:p-5 shadow-card">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
               {t.complaints.title}
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-500 mt-1">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               {t.complaints.subtitle}
             </p>
           </div>
 
           <button
             onClick={() => router.push('/')}
-            className="self-start sm:self-auto inline-flex items-center gap-2 text-xs font-semibold bg-[#1A3A6B] hover:bg-[#152d54] text-white rounded-xl px-4 py-2.5 transition-all shadow-sm cursor-pointer min-h-[44px]"
+            className="self-start sm:self-auto inline-flex items-center gap-2 text-xs font-semibold bg-primary hover:bg-primary-hover text-primary-foreground rounded-lg px-4 py-2.5 transition-all shadow-sm cursor-pointer min-h-[44px]"
           >
             {t.complaints.fileNew}
             <ArrowUpRight className="w-4 h-4 rtl:rotate-90" />
@@ -117,20 +116,20 @@ export default function ComplaintsPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border border-dashed border-zinc-200 rounded-2xl p-8 sm:p-14 flex flex-col items-center justify-center text-center bg-zinc-50/50"
+            className="border border-dashed border-border-strong rounded-xl p-8 sm:p-14 flex flex-col items-center justify-center text-center bg-surface shadow-card"
           >
-            <div className="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center mb-4">
-              <FileText className="w-6 h-6 text-zinc-400" />
+            <div className="w-12 h-12 rounded-lg bg-primary-tint flex items-center justify-center mb-4 border border-border">
+              <FileText className="w-6 h-6 text-primary" />
             </div>
-            <p className="text-base font-semibold text-zinc-800">
+            <p className="text-base font-semibold text-foreground">
               {t.complaints.emptyTitle}
             </p>
-            <p className="text-xs text-zinc-500 mt-1.5 max-w-sm leading-relaxed">
+            <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
               {t.complaints.emptyDesc}
             </p>
             <button
               onClick={() => router.push('/')}
-              className="mt-6 inline-flex items-center gap-2 text-xs font-semibold bg-[#1A3A6B] hover:bg-[#152d54] text-white rounded-xl px-5 py-3 transition-all shadow-sm cursor-pointer min-h-[44px]"
+              className="mt-6 inline-flex items-center gap-2 text-xs font-semibold bg-primary hover:bg-primary-hover text-primary-foreground rounded-lg px-5 py-3 transition-all shadow-sm cursor-pointer min-h-[44px]"
             >
               {t.complaints.fileNew}
               <ArrowUpRight className="w-3.5 h-3.5 rtl:rotate-90" />
@@ -138,7 +137,11 @@ export default function ComplaintsPage() {
           </motion.div>
         ) : (
           <div className="space-y-3 sm:space-y-4">
-            {complaints.map((c, i) => (
+            {complaints.map((c, i) => {
+              const caseStatus = c.status ?? 'SUBMITTED'
+              const statusLabel = COMPLAINT_STATUS_LABELS_12[caseStatus]?.[language] || COMPLAINT_STATUS_LABELS_12[caseStatus]?.en || caseStatus
+
+              return (
               <motion.div
                 key={c.incidentId}
                 initial={{ opacity: 0, y: 8 }}
@@ -148,37 +151,39 @@ export default function ComplaintsPage() {
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleOpen(c) }}
                 role="button"
                 tabIndex={0}
-                className="group cursor-pointer border border-zinc-200 rounded-xl sm:rounded-2xl bg-white hover:border-zinc-400 hover:shadow-md transition-all p-4 sm:p-5 flex items-start gap-3.5 sm:gap-4 focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                className="group cursor-pointer border border-border rounded-xl bg-card hover:border-border-strong hover:shadow-card transition-all p-3 sm:p-4 flex items-stretch gap-3 sm:gap-4 focus:outline-none focus:ring-2 focus:ring-primary"
               >
-                {/* Icon */}
-                <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0 mt-0.5">
-                  <AlertCircle className="w-5 h-5 text-zinc-500" />
+                {/* Priority marker */}
+                <div className="flex shrink-0 pt-0.5">
+                  <div className={`w-9 h-9 rounded-lg border flex items-center justify-center ${URGENCY_COLORS[c.urgencyLevel] || URGENCY_COLORS.MEDIUM}`}>
+                    <AlertCircle className="w-4 h-4" />
+                  </div>
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                    <span className="text-xs font-mono font-bold text-zinc-900">{c.incidentId}</span>
+                <div className="flex-1 min-w-0 py-0.5">
+                  <div className="flex items-center justify-between gap-3 mb-1.5">
+                    <span className="text-xs font-mono font-bold text-foreground truncate">{c.incidentId}</span>
                     <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${URGENCY_COLORS[c.urgencyLevel] || URGENCY_COLORS.MEDIUM}`}>
                       {URGENCY_LABELS_12[c.urgencyLevel]?.[language] || c.urgencyLevel}
                     </span>
-                    <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded border bg-zinc-50 text-zinc-600 border-zinc-200">
-                      {COMPLAINT_STATUS_LABELS_12[c.status ?? 'SUBMITTED']?.[language] || COMPLAINT_STATUS_LABELS_12[c.status ?? 'SUBMITTED']?.en || c.status}
-                    </span>
                   </div>
-                  <p className="text-sm font-semibold text-zinc-900 mb-1">
+                  <p className="text-sm font-semibold text-foreground mb-1">
                     {CRIME_CATEGORY_LABELS_12[c.fraudType]?.[language] || c.fraudType}
                   </p>
-                  <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                     {c.summaryRegional && language !== 'en' && language !== 'hi' ? c.summaryRegional : (hi ? (c.summaryHi || c.summary) : c.summary)}
                   </p>
-                  <div className="flex items-center gap-3 mt-2.5 flex-wrap">
-                    <div className="flex items-center gap-1 text-xs text-zinc-400">
+                  <div className="mt-3 border-t border-border pt-2.5 flex items-center gap-3 flex-wrap">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary bg-primary-tint border border-border rounded px-2 py-0.5">
+                      {statusLabel}
+                    </span>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock className="w-3 h-3" />
                       {formatDate(c.savedAt)}
                     </div>
                     {c.amount > 0 && (
-                      <span className="text-xs text-zinc-700 font-semibold">
+                      <span className="text-xs text-foreground font-semibold">
                         ₹{(Number(c.amount) || 0).toLocaleString('en-IN')} {LOST_LABEL_12[language] || 'lost'}
                       </span>
                     )}
@@ -186,13 +191,13 @@ export default function ComplaintsPage() {
                 </div>
 
                 {/* Arrow */}
-                <ChevronRight className="w-5 h-5 text-zinc-300 group-hover:text-zinc-600 shrink-0 mt-2 transition-colors rtl:rotate-180" />
+                <ChevronRight className="w-5 h-5 text-muted-foreground opacity-60 group-hover:text-primary group-hover:opacity-100 shrink-0 mt-2 transition-colors rtl:rotate-180" />
               </motion.div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
     </main>
   )
 }
-

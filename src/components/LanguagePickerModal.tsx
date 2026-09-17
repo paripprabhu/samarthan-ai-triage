@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Check, Globe } from 'lucide-react'
 import { SUPPORTED_LANGUAGES, SupportedLanguage } from '@/lib/i18n/languages'
+import { SCREEN_COPY } from '@/lib/i18n/screenCopy'
 
 interface LanguagePickerModalProps {
   open: boolean
@@ -19,6 +20,7 @@ export default function LanguagePickerModal({
   onClose,
 }: LanguagePickerModalProps) {
   const modalRef = useRef<HTMLDivElement>(null)
+  const copy = SCREEN_COPY[currentLanguage].languagePicker
 
   // Close on Escape key
   useEffect(() => {
@@ -59,16 +61,16 @@ export default function LanguagePickerModal({
                 </div>
                 <div>
                   <h2 id="lang-modal-title" className="text-base font-bold text-zinc-900 dark:text-white leading-tight">
-                    Select Your Language / भाषा चुनें
+                    {copy.title}
                   </h2>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    Choose from 12 official Indian languages
+                    {copy.subtitle}
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                aria-label="Close language selector"
+                aria-label={copy.close}
                 className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
@@ -123,7 +125,7 @@ export default function LanguagePickerModal({
             {/* Footer Note */}
             <div className="px-5 py-3 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-900/80 text-center shrink-0">
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                🎙️ You can speak or write in any of these languages for automated AI triage and legal complaint drafting.
+                🎙️ {copy.footer}
               </p>
             </div>
           </motion.div>

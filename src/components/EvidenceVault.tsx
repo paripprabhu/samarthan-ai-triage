@@ -35,13 +35,13 @@ export default function EvidenceVault({ hi, language, images, onAdd, onRemove }:
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm relative overflow-hidden">
+    <div className="bg-card rounded-lg border border-border p-4 sm:p-5 shadow-none relative overflow-hidden">
       {/* Subtle decorative background watermark */}
       <Lock className="w-36 h-36 text-zinc-100 dark:text-zinc-800/30 absolute -right-8 -bottom-8 pointer-events-none select-none transition-colors" />
 
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider flex items-center gap-2">
+        <div className="flex items-center justify-between mb-2.5">
+          <h3 className="text-xs sm:text-sm font-semibold text-foreground uppercase tracking-wider flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
             {loc.header}
           </h3>
@@ -50,7 +50,7 @@ export default function EvidenceVault({ hi, language, images, onAdd, onRemove }:
           </span>
         </div>
 
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4 max-w-sm leading-relaxed">
+        <p className="text-xs text-muted-foreground mb-4 max-w-sm leading-relaxed">
           {loc.subtitle}
         </p>
 
@@ -89,7 +89,7 @@ export default function EvidenceVault({ hi, language, images, onAdd, onRemove }:
                   type="button"
                   onClick={() => onRemove(img.id)}
                   className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-label="Remove"
+                  aria-label="Remove image"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -116,7 +116,7 @@ export default function EvidenceVault({ hi, language, images, onAdd, onRemove }:
             type="button"
             onClick={() => setPreview(null)}
             className="absolute top-4 right-4 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-            aria-label="Close"
+            aria-label="Close preview"
           >
             <X className="w-5 h-5" />
           </button>

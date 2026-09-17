@@ -9,10 +9,10 @@ interface TrustStripProps {
 
 const SUB_LABELS: Record<string, { f1: string; f2: string; f3: string; f4: string }> = {
   en: {
-    f1: 'Reported on 1930 in 2024',
-    f2: 'Lost to digital financial fraud',
-    f3: '1-click Aadhaar & PAN verification',
-    f4: 'Immediate freeze dossier generated',
+    f1: 'Reports made through 1930 in 2024',
+    f2: 'Lost to online money fraud',
+    f3: 'Check Aadhaar and PAN with DigiLocker',
+    f4: 'Get a report and next-step guide',
   },
   hi: {
     f1: '2024 NCRP भारत रिपोर्ट',

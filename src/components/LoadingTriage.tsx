@@ -19,18 +19,18 @@ const LOADING_I18N: Record<SupportedLanguage, {
   steps: string[]
 }> = {
   en: {
-    pleaseWait: 'Please wait',
+    pleaseWait: 'One moment',
     breatheIn: 'Breathe in…',
     breatheOut: 'Breathe out…',
-    aiAnalyzing: 'AI is analyzing your report',
-    aiReading: 'AI is reading your report…',
-    takesSeconds: 'This takes just a few seconds',
+    aiAnalyzing: 'AI is reviewing your report',
+    aiReading: 'Reviewing your report…',
+    takesSeconds: 'This takes a few seconds',
     steps: [
-      'Transcribing your account…',
-      'Identifying fraud type…',
-      'Extracting key details…',
-      'Generating freeze instructions…',
-      'Drafting your complaint…',
+      'Turning your voice into text…',
+      'Finding the scam type…',
+      'Finding key details…',
+      'Preparing steps to freeze funds…',
+      'Drafting your report…',
     ],
   },
   hi: {
@@ -222,7 +222,7 @@ export default function LoadingTriage({ language }: LoadingTriageProps) {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 py-12 px-6 min-h-[520px] w-full text-center">
+    <div className="flex min-h-[520px] w-full items-center justify-center bg-background px-4 py-8 text-center sm:px-6 sm:py-12">
       <AnimatePresence mode="wait">
         {breathing ? (
           <motion.div
@@ -231,14 +231,10 @@ export default function LoadingTriage({ language }: LoadingTriageProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col items-center gap-16"
+            className="flex w-full max-w-md flex-col items-center gap-10 rounded-xl border border-border bg-card px-6 py-10 shadow-card sm:gap-12 sm:px-10"
           >
-            {/* Text on top */}
             <div className="text-center">
-              <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2 indic-headline">
-                <span>{t.pleaseWait}</span>
-                <span aria-hidden="true">💙</span>
-              </h2>
+              <h2 className="mb-2 text-xl font-bold text-foreground indic-headline">{t.pleaseWait}</h2>
               <AnimatePresence mode="wait">
                 <motion.p
                   key={phase}
@@ -246,23 +242,21 @@ export default function LoadingTriage({ language }: LoadingTriageProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  className="text-civic-blue text-sm font-medium indic-body"
+                  className="text-primary text-sm font-semibold indic-body"
                 >
                   {phase === 'inhale' ? t.breatheIn : t.breatheOut}
                 </motion.p>
               </AnimatePresence>
-              <p className="text-gray-400 text-xs mt-2 indic-body">
+              <p className="mt-2 text-xs text-muted-foreground indic-body">
                 {t.aiAnalyzing}
               </p>
             </div>
 
-            {/* Large orb below - the centrepiece */}
             <motion.div
               animate={{ scale: phase === 'inhale' ? 1.04 : 0.97 }}
               transition={{ duration: BREATH_DURATION / 2 / 1000, ease: 'easeInOut' }}
-              className="flex items-center justify-center relative"
+              className="flex items-center justify-center"
             >
-              <div className="absolute inset-0 bg-blue-400/20 blur-[60px] animate-pulse rounded-full" />
               <BreathingIcon phase={phase} durationMs={BREATH_DURATION / 2} />
             </motion.div>
           </motion.div>
@@ -272,27 +266,26 @@ export default function LoadingTriage({ language }: LoadingTriageProps) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col items-center gap-8 w-full"
+            className="flex w-full max-w-md flex-col items-center gap-7 rounded-xl border border-border bg-card px-5 py-8 shadow-card sm:px-8"
           >
             <motion.div
               animate={{ scale: [1, 1.08, 1] }}
               transition={{ repeat: Infinity, duration: 2 }}
-              className="w-20 h-20 rounded-full bg-civic-blueLight flex items-center justify-center"
+              className="flex h-16 w-16 items-center justify-center rounded-lg border border-border-strong bg-primary-tint"
             >
-              <span className="text-4xl select-none">🧠</span>
+              <span className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent" aria-hidden="true" />
             </motion.div>
 
             <div className="text-center">
-              <h2 className="text-xl font-bold text-gray-900 mb-1 indic-headline">
+              <h2 className="mb-1 text-xl font-bold text-foreground indic-headline">
                 {t.aiReading}
               </h2>
-              <p className="text-gray-500 text-sm indic-body">
+              <p className="text-sm text-muted-foreground indic-body">
                 {t.takesSeconds}
               </p>
             </div>
 
-            {/* Animated steps */}
-            <div className="w-full max-w-sm space-y-3">
+            <div className="w-full space-y-2.5 border-y border-border py-4 text-start">
               {steps.map((step, i) => (
                 <motion.div
                   key={i}
@@ -305,23 +298,17 @@ export default function LoadingTriage({ language }: LoadingTriageProps) {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: i * 0.5 + 0.2 }}
-                    className="w-5 h-5 rounded-full bg-civic-blue flex-shrink-0 flex items-center justify-center"
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary"
                   >
                     <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </motion.div>
-                  <span className="text-sm text-gray-600">{step}</span>
+                  <span className="text-sm text-foreground">{step}</span>
                 </motion.div>
               ))}
             </div>
 
-            {/* Skeleton shimmer cards */}
-            <div className="w-full max-w-sm space-y-3">
-              {[80, 60, 90].map((w, i) => (
-                <div key={i} className="skeleton h-4 rounded-md" style={{ width: `${w}%` }} />
-              ))}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

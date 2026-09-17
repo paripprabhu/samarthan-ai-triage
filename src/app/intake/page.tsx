@@ -14,6 +14,7 @@ import DigiLockerModal from '@/components/DigiLockerModal'
 import { useAuth, DigiLockerUser } from '@/hooks/useAuth'
 import { getTranslation } from '@/lib/i18n/translations'
 import { LANGUAGE_MAP } from '@/lib/i18n/languages'
+import { SCREEN_COPY, formatScreenCopy } from '@/lib/i18n/screenCopy'
 import {
   extractMultilingualComplainant,
   extractMultilingualOnBehalfOf,
@@ -36,6 +37,8 @@ function IntakeContent() {
 
   const { language, setLanguage, scenarioId, setTriageResult, sharedImage, setSharedImage } = useTriage()
   const t = getTranslation(language)
+  const intakeUi = t.intake.ui
+  const screenCopy = SCREEN_COPY[language]
   const meta = LANGUAGE_MAP[language] || LANGUAGE_MAP.en
   const { getUser, signOut } = useAuth()
   const hi = language === 'hi'
@@ -65,7 +68,7 @@ function IntakeContent() {
     const user = getUser()
     const onBehalfOfTarget = extractMultilingualOnBehalfOf(finalTxt)
     const detectedSelfName = extractMultilingualComplainant(finalTxt)
-    const detectedName = detectedSelfName || user?.name || (hi ? 'अज्ञात नागरिक' : 'Anonymous Complainant')
+    const detectedName = detectedSelfName || user?.name || screenCopy.intake.anonymousCitizen
 
     const rawCat = (categoryParam && categoryParam !== 'auto') ? categoryParam : inferCategoryFromMultilingualText(finalTxt)
     const mappedCat = normalizeCategoryHint(rawCat) || inferCategoryFromMultilingualText(finalTxt)
@@ -95,7 +98,7 @@ function IntakeContent() {
       ifscCode: detectedIfsc || undefined,
       utrNumber: utrRes.utr || undefined,
       timeline: new Date().toLocaleString('en-IN'),
-      summary: finalTxt.length > 20 ? finalTxt.substring(0, 180) + '...' : `Cyber incident reported under ${mappedCat}.`,
+      summary: finalTxt.length > 20 ? finalTxt.substring(0, 180) + '...' : `Reported cyber incident: ${mappedCat}.`,
       summaryHi: `${mappedCat} के तहत साइबर घटना दर्ज की गई।`,
       summaryRegional: language === 'hi'
         ? `${mappedCat} के तहत साइबर घटना दर्ज की गई।`
@@ -117,18 +120,18 @@ function IntakeContent() {
       freezeSteps: [
         {
           step: 1,
-          action: 'Call 1930 Cybercrime Helpline',
+          action: 'Call 1930 cybercrime helpline',
           actionHi: '1930 साइबर हेल्पलाइन पर कॉल करें',
-          detail: 'Report immediately for emergency bank account freezing and golden hour triage.',
+          detail: 'Call now to ask your bank to freeze the account. Time matters.',
           detailHi: 'आपातकालीन बैंक खाता फ्रीज करने के लिए तुरंत रिपोर्ट करें।',
           hotline: '1930',
           url: 'https://cybercrime.gov.in'
         },
         {
           step: 2,
-          action: 'File Official NCRP Complaint',
+          action: 'File a report on NCRP',
           actionHi: 'NCRP पोर्टल पर आधिकारिक शिकायत दर्ज करें',
-          detail: 'Submit this complaint draft to cybercrime.gov.in for police jurisdiction.',
+          detail: 'Use this draft on cybercrime.gov.in to file your report.',
           detailHi: 'पुलिस अधिकार क्षेत्र के लिए cybercrime.gov.in पर यह शिकायत ड्राफ्ट जमा करें।',
           hotline: undefined,
           url: 'https://cybercrime.gov.in'
@@ -153,9 +156,7 @@ function IntakeContent() {
     setIsRateLimited(false)
 
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      setError(hi
-        ? 'आप ऑफ़लाइन हैं। कृपया इंटरनेट कनेक्शन जांचें और फिर से कोशिश करें।'
-        : "You're offline. Check your internet connection and try again.")
+      setError(screenCopy.intake.offline)
       setIsLoading(false)
       return
     }
@@ -192,7 +193,7 @@ function IntakeContent() {
         setIsRateLimited(true)
         setError(hi
           ? 'आज की मुफ़्त ऑनलाइन AI टेस्ट सीमा पूरी हो गई है (प्रति दिन 5 बार)। आप नीचे दिए गए बटन से तुरंत ऑफलाइन AI ट्रायज के साथ टेस्ट जारी रख सकते हैं।'
-          : 'Daily online AI test limit reached (5 per day on this shared demo). You can continue evaluating immediately using the instant offline AI triage below with 0 cost.')
+          : 'This demo has reached its daily online AI limit. You can use the free offline review below now.')
         return
       }
 
@@ -213,7 +214,7 @@ function IntakeContent() {
         setTriageResult(buildClientFallback(finalTxtForFallback))
         router.push('/dashboard')
       } else {
-        setError(err instanceof Error ? err.message : (hi ? 'कुछ गलत हो गया।' : 'Something went wrong.'))
+      setError(err instanceof Error ? err.message : screenCopy.intake.genericError)
       }
     } finally {
       clearTimeout(timeoutId)
@@ -232,11 +233,11 @@ function IntakeContent() {
   }, [textParam, autoStartParam, sharedImage])
 
   if (isLoading) {
-    return <div className="min-h-screen bg-white"><LoadingTriage language={language} /></div>
+    return <div className="min-h-screen bg-background"><LoadingTriage language={language} /></div>
   }
 
   let categoryLabel = categoryParam
-  if (categoryParam === 'auto') categoryLabel = hi ? 'AI ऑटो-डिटेक्ट' : 'AI Auto-Detect'
+  if (categoryParam === 'auto') categoryLabel = screenCopy.intake.autoDetect
 
   return (
     <main className="min-h-screen bg-background font-sans pb-20">
@@ -244,22 +245,22 @@ function IntakeContent() {
       <Navbar language={language} onLanguageToggle={() => setLanguage(language === 'en' ? 'hi' : 'en')} />
 
       {/* ── BACK BAR ── */}
-      <header className="border-b border-border bg-card backdrop-blur sticky top-[58px] sm:top-[72px] z-30">
+      <header className="sticky top-[58px] z-30 border-b border-border bg-card sm:top-[72px]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            aria-label={hi ? 'वापस जाएं' : 'Go back'}
+            aria-label={screenCopy.intake.back}
             className="p-1.5 rounded-md hover:bg-surface text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
           </button>
           <div>
-            <p className="text-sm font-semibold text-foreground">{hi ? 'शिकायत विवरण' : 'Incident Details'}</p>
+            <p className="text-sm font-semibold text-foreground">{t.intake.title}</p>
             {(scenario || categoryLabel) && (
               <p className="text-xs text-muted-foreground">
                 {scenario
-                  ? (hi ? `Sandbox: ${scenario.titleHi}` : `Sandbox: ${scenario.title}`)
-                  : (hi ? `श्रेणी: ${categoryLabel}` : `Category: ${categoryLabel}`)}
+                  ? `${screenCopy.intake.sandbox}: ${language === 'hi' ? scenario.titleHi : scenario.title}`
+                  : `${screenCopy.intake.category}: ${categoryLabel}`}
               </p>
             )}
           </div>
@@ -270,40 +271,32 @@ function IntakeContent() {
 
         {scenario && (
           <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-            className="border border-border bg-surface rounded-lg p-3.5 sm:p-4">
+            className="rounded-lg border border-border bg-surface p-3.5 sm:p-4">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1 flex items-center gap-1.5">
               <ShieldAlert className="w-3.5 h-3.5" />
-              {hi ? 'Sandbox Mode' : 'Sandbox Mode - Synthetic Data'}
+              {screenCopy.intake.sandbox}
             </p>
-            <p className="text-xs sm:text-sm text-foreground">{hi ? scenario.descriptionHi : scenario.description}</p>
+            <p className="text-xs sm:text-sm text-foreground">{language === 'hi' ? scenario.descriptionHi : scenario.description}</p>
           </motion.div>
         )}
 
         {/* ── PAGE TITLE ── */}
-        <section className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5 sm:py-5 shadow-card">
+        <section className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5 sm:py-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-xl">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-warning mb-1.5">
-                {hi ? 'रिपोर्ट तैयार करें' : 'Prepare your report'}
-              </p>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 {t.intake.title}
               </h1>
-              <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                {hi
-                  ? 'अपनी बात बोलें, लिखें या प्रमाण संलग्न करें। आगे की कार्रवाई से पहले आप अपने विवरण की समीक्षा कर सकेंगे।'
-                  : 'Speak, type, or attach evidence. You will review the details before moving to your action plan.'}
-              </p>
             </div>
 
-            <ol className="grid grid-cols-3 gap-2 text-[10px] sm:text-xs sm:min-w-[290px]" aria-label={hi ? 'रिपोर्ट प्रगति' : 'Report progress'}>
+            <ol className="grid grid-cols-3 gap-2 text-[10px] sm:text-xs sm:min-w-[290px]" aria-label={intakeUi.progressLabel}>
               {[
-                hi ? 'घटना बताएं' : 'Describe incident',
-                hi ? 'विवरण देखें' : 'Review details',
-                hi ? 'कार्य योजना' : 'Action plan',
+                intakeUi.describe,
+                intakeUi.review,
+                intakeUi.actionPlan,
               ].map((step, index) => (
-                <li key={step} className="min-w-0">
-                  <div className={`h-1 rounded-full ${index === 0 ? 'bg-primary' : 'bg-border'}`} />
+                <li key={step} className="min-w-0" aria-current={index === 0 ? 'step' : undefined}>
+                  <div aria-hidden="true" className={`h-1 rounded-full ${index === 0 ? 'bg-primary' : 'bg-border'}`} />
                   <p className={`mt-1.5 truncate font-medium ${index === 0 ? 'text-primary' : 'text-muted-foreground'}`}>
                     <span className="font-mono me-1 opacity-70">0{index + 1}</span>{step}
                   </p>
@@ -315,7 +308,7 @@ function IntakeContent() {
 
         {/* ── IDENTITY STATUS / DIGILOCKER SIMULATOR CARD ── */}
         {currentUser ? (
-          <div className="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 sm:p-4 shadow-card">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 sm:p-4">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center flex-shrink-0 text-white shadow-sm">
                 <ShieldCheck className="w-5 h-5" />
@@ -325,10 +318,10 @@ function IntakeContent() {
                   <span className="text-sm font-bold text-foreground">{currentUser.name}</span>
                   <span className="inline-flex items-center gap-1 text-[11px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">
                     <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                    {hi ? 'डिजीलॉकर सत्यापित नागरिक' : 'DigiLocker Verified Citizen'}
+                    {screenCopy.intake.verifiedCitizen}
                   </span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-0.5">Aadhaar: {currentUser.aadhaar} • Verified via MeitY Sandbox</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{formatScreenCopy(screenCopy.intake.verifiedDetail, { aadhaar: currentUser.aadhaar })}</p>
               </div>
             </div>
             <button
@@ -336,23 +329,21 @@ function IntakeContent() {
               onClick={() => { signOut(); setCurrentUser(null) }}
               className="text-xs text-muted-foreground hover:text-destructive font-medium px-2.5 py-1.5 rounded-md hover:bg-surface transition cursor-pointer shrink-0"
             >
-              {hi ? 'लॉग आउट' : 'Sign Out'}
+              {screenCopy.intake.signOut}
             </button>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 bg-surface border border-border rounded-xl p-3.5 sm:p-4 shadow-card">
+          <div className="flex flex-col justify-between gap-3.5 rounded-xl border border-border bg-surface p-3.5 sm:flex-row sm:items-center sm:p-4">
             <div className="flex items-start gap-3">
               <div className="w-9 h-9 rounded-lg bg-amber-100 dark:bg-amber-400/10 flex items-center justify-center flex-shrink-0 text-warning mt-0.5">
                 <Lock className="w-4 h-4" />
               </div>
               <div>
                 <p className="text-xs font-bold text-foreground">
-                  {hi ? 'पहचान सत्यापन (वैकल्पिक)' : 'Identity Verification (Optional)'}
+                  {screenCopy.intake.identityTitle}
                 </p>
                 <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
-                  {hi
-                    ? 'आप बिना लॉगिन किए भी सीधे रिपोर्ट कर सकते हैं (आपके द्वारा बताए गए नाम का उपयोग होगा)। या प्रमाणित शिकायत के लिए डिजीलॉकर सिमुलेशन का उपयोग करें।'
-                    : 'You can file directly without signing in — the AI will use the name you mention in your statement. Or simulate DigiLocker for a verified citizen FIR.'}
+                  {screenCopy.intake.identityDescription}
                 </p>
               </div>
             </div>
@@ -362,44 +353,38 @@ function IntakeContent() {
               className="inline-flex items-center justify-center gap-1.5 bg-primary hover:bg-primary-hover active:scale-[0.99] text-primary-foreground text-xs font-semibold px-3.5 py-2.5 rounded-lg transition shadow-sm cursor-pointer shrink-0"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>{hi ? 'डिजीलॉकर सिमुलेशन' : 'Simulate DigiLocker'}</span>
+              <span>{screenCopy.intake.simulateDigiLocker}</span>
             </button>
           </div>
         )}
 
         {/* ── INCIDENT STATEMENT DESK ── */}
-        <section className="rounded-xl border border-border bg-surface p-3 sm:p-4 shadow-card">
+        <section className="rounded-xl border border-border bg-surface p-3 sm:p-4" aria-labelledby="incident-statement-heading">
           <div className="flex items-start justify-between gap-4 px-1.5 pt-1 pb-3 sm:px-2 sm:pt-2">
             <div>
-              <p className="text-sm font-bold text-foreground">{hi ? 'घटना विवरण' : 'Incident statement'}</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                {hi ? 'जिस तरीके से सहज हों, जानकारी दें।' : 'Add what you know in the way that feels easiest.'}
-              </p>
+              <h2 id="incident-statement-heading" className="text-sm font-bold text-foreground">{intakeUi.statementTitle}</h2>
             </div>
-            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
-              <ShieldCheck className="h-3 w-3 text-success" />
-              {hi ? 'आपकी समीक्षा के लिए' : 'Ready for your review'}
-            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
 
           {/* Voice - hero cell, spans both rows on desktop */}
-          <div className="md:row-span-2 border border-border rounded-lg bg-card shadow-xs p-4 sm:p-5 flex flex-col min-h-[240px] sm:min-h-[280px]">
-            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 sm:mb-3">
+          <div className="flex min-h-[240px] flex-col rounded-lg border border-border bg-card p-4 sm:min-h-[280px] sm:p-5 md:row-span-2" role="group" aria-labelledby="voice-statement-label">
+            <p id="voice-statement-label" className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 sm:mb-3">
               <span className="flex items-center gap-1.5"><Mic className="w-3.5 h-3.5" />{t.intake.voiceCardTitle}</span>
-            </label>
+            </p>
             <div className="flex-1">
               <AudioRecorder language={language} onAudioReady={setAudioBlob} onLiveTranscript={setVoiceTranscript} theme="light" />
             </div>
           </div>
 
           {/* Text */}
-          <div className="border border-border rounded-lg bg-card shadow-xs p-4 sm:p-5">
-            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+          <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
+            <label htmlFor="incident-description" className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
               <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5" />{t.intake.textCardTitle}</span>
             </label>
             <textarea
+              id="incident-description"
               value={textValue}
               onChange={(e) => setTextValue(e.target.value)}
               rows={5}
@@ -415,10 +400,10 @@ function IntakeContent() {
           </div>
 
           {/* Upload */}
-          <div className="border border-border rounded-lg bg-card shadow-xs p-4 sm:p-5">
-            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 sm:mb-3">
+          <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
+            <p id="evidence-upload-label" className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 sm:mb-3">
               <span className="flex items-center gap-1.5"><ImagePlus className="w-3.5 h-3.5" />{t.intake.evidenceCardTitle}</span>
-            </label>
+            </p>
             {imageFile ? (
               <div className="flex items-center gap-3 border border-emerald-300 dark:border-emerald-500/30 rounded-md p-3 bg-emerald-50 dark:bg-emerald-500/10">
                 <div className="w-9 h-9 rounded-md bg-green-100 flex items-center justify-center flex-shrink-0">
@@ -426,7 +411,7 @@ function IntakeContent() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{imageFile.name}</p>
-                  <p className="text-xs text-muted-foreground">Ready for Evidence Vault</p>
+                  <p className="text-xs text-muted-foreground">{intakeUi.evidenceReady}</p>
                 </div>
                 <button
                   onClick={() => { setImageFile(null); setSharedImage(null) }}
@@ -437,6 +422,7 @@ function IntakeContent() {
               </div>
             ) : (
               <button
+                type="button"
                 onClick={() => fileRef.current?.click()}
                 className="w-full h-24 rounded-lg border-2 border-dashed border-border-strong hover:border-primary bg-background hover:bg-primary-tint flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-all cursor-pointer min-h-[44px]"
               >
@@ -444,21 +430,21 @@ function IntakeContent() {
                 <span className="text-xs font-medium">{t.intake.uploadScreenshot}</span>
               </button>
             )}
-            <input ref={fileRef} type="file" accept="image/*,.pdf" className="hidden" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
+            <input id="evidence-upload" ref={fileRef} type="file" accept="image/*,.pdf" className="hidden" aria-label={t.intake.evidenceCardTitle} onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
           </div>
 
           </div>
         </section>
 
-        <aside className="flex gap-3 rounded-lg border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-3.5 py-3 sm:px-4" aria-label={hi ? 'तत्काल सहायता' : 'Immediate support'}>
+        <aside className="flex gap-3 rounded-lg border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-3.5 py-3 sm:px-4" aria-label={intakeUi.immediateSupport}>
           <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-amber-100 dark:bg-amber-400/15 text-warning">
             <AlertCircle className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-xs font-bold text-foreground">{hi ? 'पैसे अभी भेजे गए हैं?' : 'Was money transferred just now?'}</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-              {hi ? 'अपनी रिपोर्ट जारी रखते हुए तुरंत 1930 पर कॉल करें।' : 'Call 1930 immediately while you continue preparing this report.'}
-            </p>
+            <p className="text-xs font-bold text-foreground">{intakeUi.moneyTransferred}</p>
+            <a href="tel:1930" className="mt-0.5 inline-block text-xs leading-relaxed font-medium text-warning underline decoration-warning underline-offset-2 hover:opacity-80">
+              {intakeUi.call1930}
+            </a>
           </div>
         </aside>
 
@@ -479,7 +465,7 @@ function IntakeContent() {
                 }}
                 className="self-start inline-flex items-center gap-1.5 bg-red-700 hover:bg-red-800 text-white font-semibold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer shadow-sm"
               >
-                <span>⚡ {hi ? 'ऑफलाइन AI ट्रायज के साथ जारी रखें (0 API लागत)' : 'Continue with Instant Offline AI (0 API Cost)'}</span>
+                <span>⚡ {hi ? 'ऑफलाइन AI ट्रायज के साथ जारी रखें (0 API लागत)' : 'Continue with offline AI (free)'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
@@ -487,7 +473,7 @@ function IntakeContent() {
         )}
 
         {/* ── SUBMIT ── */}
-        <div className="rounded-xl border border-border bg-card p-2 shadow-card">
+        <div className="rounded-xl border border-border bg-card p-1.5">
           <button
             onClick={() => handleAIAnalyze()}
             disabled={!textValue && !voiceTranscript && !audioBlob && !imageFile && !scenario}
@@ -496,9 +482,6 @@ function IntakeContent() {
             <span>{t.intake.submitForTriage.replace(/[\s→➔\->]+$/, '').trim()}</span>
             <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </button>
-          <p className="px-2.5 pt-2 text-center text-[10px] text-muted-foreground">
-            {hi ? 'अगले चरण में विवरण की समीक्षा और कार्य योजना होगी।' : 'Next: review the details and receive your action plan.'}
-          </p>
         </div>
 
       </div>
@@ -517,7 +500,7 @@ function IntakeContent() {
 
 export default function IntakePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <IntakeContent />
     </Suspense>
   )

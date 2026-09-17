@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Globe, FileText, LogOut, User, ChevronDown, Zap, Sun, Moon, ShieldCheck } from 'lucide-react'
+import { Globe, FileText, LogOut, User, ChevronDown, Zap, ShieldCheck } from 'lucide-react'
 import { useAuth, DigiLockerUser } from '@/hooks/useAuth'
-import { useTheme } from '@/context/ThemeContext'
 import { SupportedLanguage, LANGUAGE_MAP } from '@/lib/i18n/languages'
 import { getTranslation } from '@/lib/i18n/translations'
+import { SCREEN_COPY, formatScreenCopy } from '@/lib/i18n/screenCopy'
 import { useTriage } from '@/context/TriageContext'
 import DigiLockerModal from './DigiLockerModal'
 import LanguagePickerModal from './LanguagePickerModal'
@@ -21,7 +21,6 @@ interface NavbarProps {
 export default function Navbar({ language: propLanguage, onLanguageToggle, onSelectLanguage }: NavbarProps) {
   const router = useRouter()
   const { getUser, signIn, signOut } = useAuth()
-  const { theme, toggleTheme } = useTheme()
   const { language: contextLanguage, setLanguage: setContextLanguage } = useTriage()
   
   const currentLanguage = propLanguage || contextLanguage || 'en'
@@ -35,8 +34,8 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
   const [langPickerOpen, setLangPickerOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const t = getTranslation(currentLanguage)
+  const screenCopy = SCREEN_COPY[currentLanguage]
   const currentLangMeta = LANGUAGE_MAP[currentLanguage] || LANGUAGE_MAP.en
-  const hi = currentLanguage === 'hi'
 
   // Reactively update when auth state changes
   useEffect(() => {
@@ -75,7 +74,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
         <div className="bg-amber-50/80 dark:bg-amber-950/30 border-b border-amber-200/70 dark:border-amber-800/50 text-amber-900 dark:text-amber-200 text-[11px] sm:text-xs py-1 px-3 sm:px-4 text-center font-medium">
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-300">
-              🏆 {hi ? 'तृतीय स्थान विजेता (3rd Place)' : '3rd Place Winner'} — Build What Moves India Hackathon
+              🏆 {screenCopy.award}
             </span>
             <span className="text-amber-600/60 dark:text-amber-400/60 hidden sm:inline">•</span>
             <span className="text-amber-800/90 dark:text-amber-300/90 font-medium">
@@ -133,21 +132,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                 <ChevronDown className="w-3 h-3 text-zinc-400 hidden sm:inline" />
               </button>
 
-              {/* 3. Theme Toggle (Light / Dark Mode) */}
-              <button
-                onClick={toggleTheme}
-                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-                title={theme === 'dark' ? (hi ? 'लाइट मोड' : 'Switch to Light Mode') : (hi ? 'डार्क मोड' : 'Switch to Dark Mode')}
-                className="inline-flex items-center justify-center text-zinc-700 hover:text-primary border border-border hover:bg-primary-tint/70 rounded-md w-9 sm:w-10 h-9 sm:h-10 transition-colors cursor-pointer shrink-0"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-4 h-4 text-amber-400" />
-                ) : (
-                  <Moon className="w-4 h-4 text-zinc-600" />
-                )}
-              </button>
-
-              {/* 4. Auth button / Login */}
+              {/* 3. Auth button / Login */}
               {user ? (
                 <div className="relative">
                   <button
@@ -165,7 +150,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                     <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-1.5 w-56 bg-white border border-border rounded-lg shadow-lg overflow-hidden z-50">
                       <div className="px-4 py-3 border-b border-zinc-100 bg-zinc-50/50">
                         <p className="text-xs font-semibold text-zinc-900">{user.name}</p>
-                        <p className="text-xs text-zinc-400 mt-0.5">Aadhaar: {user.aadhaar}</p>
+                        <p className="text-xs text-zinc-400 mt-0.5">{formatScreenCopy(screenCopy.intake.verifiedDetail, { aadhaar: user.aadhaar })}</p>
                         <div className="flex items-center gap-1.5 mt-1.5">
                           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           <p className="text-xs text-emerald-600 font-medium">{t.nav.digiLockerVerified}</p>

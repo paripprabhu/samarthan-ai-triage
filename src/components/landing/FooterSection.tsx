@@ -29,10 +29,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
   disclaimer: string
 }> = {
   en: {
-    ctaHeadline: 'Every minute matters in the golden hour.',
-    ctaDesc: 'The sooner a fraud is reported, the higher the chance of getting the money back. Start now.',
+    ctaHeadline: 'Every minute matters.',
+    ctaDesc: 'If money was sent, call 1930 now. Then start your report.',
     ctaBtn: 'Start a report',
-    tagline: 'AI cybercrime triage. From panic to FIR.',
+    tagline: 'Help with cybercrime reports.',
     linksTitle: 'Links',
     howItWorks: 'How it works',
     whySamarthan: 'Why Samarthan',
@@ -41,10 +41,10 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     helpline1930: 'Cyber Helpline: 1930',
     police100: 'Police: 100',
     aboutTitle: 'About',
-    portalTag: 'Citizen Cybercrime Triage Initiative',
-    digilockerVerified: 'DigiLocker verified identity',
-    poweredBy: 'Powered by GPT-4o',
-    disclaimer: 'Notice: DigiLocker verification, AI voice triage, legal mapping, and WhatsApp AI assistance are functional live features; police dispatch and bank account freezing are simulated demonstration workflows. Not an official government website (official portal: cybercrime.gov.in). For real emergency assistance, dial 1930.',
+    portalTag: 'Cybercrime report demo',
+    digilockerVerified: 'DigiLocker identity check',
+    poweredBy: 'Uses GPT-4o',
+    disclaimer: 'DigiLocker checks, voice transcription, and report drafting work here. Police dispatch and bank freezing are simulated. This is not an official government website. For official reports, visit cybercrime.gov.in. For urgent help, call 1930.',
   },
   hi: {
     ctaHeadline: 'गोल्डन ऑवर में हर मिनट मायने रखता है।',
@@ -331,7 +331,7 @@ export default function FooterSection({ language }: FooterSectionProps) {
 
           <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 dark:text-zinc-400">
             <p className="max-w-3xl leading-relaxed indic-body">
-              🏛️ <strong>Citizen Portal Simulation Environment</strong> • ⚠️ <em>{t.disclaimer}</em>
+              🏛️ <strong>Demo environment</strong> • ⚠️ <em>{t.disclaimer}</em>
             </p>
             <p className="whitespace-nowrap font-medium text-zinc-400">
               Made with ❤️ for India

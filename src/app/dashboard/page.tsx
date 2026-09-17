@@ -20,7 +20,8 @@ import { useComplaints, EvidenceImage, ComplaintUpdate } from '@/hooks/useCompla
 import { ComplaintStatus } from '@/data/scenarios'
 import { SupportedLanguage, LANGUAGE_MAP } from '@/lib/i18n/languages'
 import { getTranslation } from '@/lib/i18n/translations'
-import { DASHBOARD_EXTRA_I18N, CRIME_CATEGORY_LABELS_12 } from '@/lib/i18n/componentTranslations'
+import { SCREEN_COPY } from '@/lib/i18n/screenCopy'
+import { DASHBOARD_EXTRA_I18N, CRIME_CATEGORY_LABELS_12, EVIDENCE_VAULT_I18N } from '@/lib/i18n/componentTranslations'
 
 function readAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -37,6 +38,7 @@ function DashboardContent() {
   const paramId = searchParams?.get('id')
   const { triageResult, setTriageResult, language, setLanguage, reset, sharedImage } = useTriage()
   const t = getTranslation(language)
+  const screenCopy = SCREEN_COPY[language]
   const dashLoc = DASHBOARD_EXTRA_I18N[language] || DASHBOARD_EXTRA_I18N.en
   const meta = LANGUAGE_MAP[language] || LANGUAGE_MAP.en
   const [activeDraftTab, setActiveDraftTab] = useState<'english' | 'regional'>(language === 'en' ? 'english' : 'regional')
@@ -110,14 +112,14 @@ function DashboardContent() {
           setUpdates(record.updates)
           initialSavedFor.current = record.incidentId
         } else {
-          setToast(hi ? 'शिकायत नहीं मिली' : 'Complaint not found')
+          setToast(screenCopy.dashboard.notFound)
           setTimeout(() => router.replace('/complaints'), 2000)
         }
       })
       .catch(err => {
         console.error('Failed to load complaint by ID:', err)
         if (!isCancelled) {
-          setToast(hi ? 'डेटा लोड करने में त्रुटि' : 'Error loading complaint')
+          setToast(screenCopy.dashboard.loadError)
         }
       })
       .finally(() => {
@@ -257,9 +259,9 @@ function DashboardContent() {
     if (updated) {
       setUpdates(updated)
       const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })
-      const fallbackDraft = (triageResult.complaintDraft || '') + `\n\n[SUPPLEMENTARY STATEMENT - ${timeStr}]\nI further report the following fresh evidence/update: ${note}`
+      const fallbackDraft = (triageResult.complaintDraft || '') + `\n\n[MORE INFORMATION - ${timeStr}]\nI am adding this information: ${note}`
       const fallbackDraftHi = (triageResult.complaintDraftHi || '') + `\n\n[पूरक बयान - ${timeStr}]\nमैं आगे निम्नलिखित नया साक्ष्य/अपडेट रिपोर्ट करता हूँ: ${note}`
-      const fallbackDraftRegional = (triageResult.complaintDraftRegional || triageResult.complaintDraft || '') + `\n\n[SUPPLEMENTARY STATEMENT - ${timeStr}]\nUpdate: ${note}`
+      const fallbackDraftRegional = (triageResult.complaintDraftRegional || triageResult.complaintDraft || '') + `\n\n[MORE INFORMATION - ${timeStr}]\nUpdate: ${note}`
 
       // Handle additional vs replacement amount
       const prevAmt = triageResult.amount || 0
@@ -319,7 +321,7 @@ function DashboardContent() {
         setAutoFillBanner(
           hi
             ? `✨ AI ने आपकी शिकायत में स्वचालित रूप से विवरण भर दिया: ${filledSummary.join(', ')}`
-            : `✨ AI Auto-Filled Details from your update: ${filledSummary.join(', ')}`
+            : `✨ AI added details from your update: ${filledSummary.join(', ')}`
         )
         setTimeout(() => setAutoFillBanner(null), 10000)
       }
@@ -338,8 +340,8 @@ function DashboardContent() {
     if (next) setStatus(next)
     const newUpdates = await addUpdate(
       triageResult.incidentId,
-      'Bank Nodal Officer Notified: Beneficiary account freeze request dispatched to banking nodal desk.',
-      ['Freeze requested for beneficiary account', 'Bank nodal cyber desk tracking initiated'],
+      'Demo: a request to freeze the receiving account was marked as sent to the bank.',
+      ['Freeze request marked as sent', 'Bank case tracking started in this demo'],
       ['लाभार्थी खाते को फ्रीज करने का अनुरोध भेजा गया', 'बैंक नोडल साइबर डेस्क ट्रैकिंग शुरू की गई']
     )
     if (newUpdates) setUpdates(newUpdates)
@@ -351,8 +353,8 @@ function DashboardContent() {
     if (next) setStatus(next)
     const newUpdates = await addUpdate(
       triageResult.incidentId,
-      'Platform / Agency Desk Notified: Takedown and preservation request submitted to Trust & Safety.',
-      ['Platform Trust & Safety alerted', 'Fraudulent profile takedown requested'],
+      'Demo: a request to remove the account and keep records was marked as sent.',
+      ['Platform team marked as alerted', 'Request to remove the fake profile marked as sent'],
       ['प्लेटफ़ॉर्म ट्रस्ट एंड सेफ्टी को सूचित किया गया', 'फर्जी प्रोफाइल हटाने का अनुरोध किया गया']
     )
     if (newUpdates) setUpdates(newUpdates)
@@ -364,8 +366,8 @@ function DashboardContent() {
     if (next) setStatus(next)
     const newUpdates = await addUpdate(
       triageResult.incidentId,
-      'Cyber Police Station Notified: Case dossier and formal FIR complaint routed to local Cyber Crime Cell.',
-      ['Police Station jurisdiction assigned', 'Formal FIR registration initiated'],
+      'Demo: the report was marked as sent to the local cyber police station.',
+      ['Local police station selected', 'FIR process marked as started'],
       ['साइबर पुलिस स्टेशन अधिकार क्षेत्र सौंपा गया', 'औपचारिक प्राथमिकी (FIR) पंजीकरण शुरू किया गया']
     )
     if (newUpdates) setUpdates(newUpdates)
@@ -373,7 +375,7 @@ function DashboardContent() {
 
   if (loadingRecord || (paramId && triageResult?.incidentId !== paramId)) {
     return (
-      <main className="min-h-screen bg-[#FAFAFA] flex flex-col font-sans">
+      <main className="min-h-screen bg-background flex flex-col font-sans">
         <Navbar language={language} onLanguageToggle={() => setLanguage(language === 'en' ? 'hi' : 'en')} />
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
           <div className="w-14 h-14 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center mb-4 animate-pulse">
@@ -394,6 +396,8 @@ function DashboardContent() {
 
   const r = triageResult
   const allFollowUpPoints = updates.flatMap(u => hi ? u.actionPointsHi : u.actionPoints)
+  const evidenceLoc = EVIDENCE_VAULT_I18N[language] || EVIDENCE_VAULT_I18N.en
+  const readinessSignalCount = [Boolean(r.utrNumber), Boolean(r.upiId), evidenceImages.length > 0].filter(Boolean).length
 
   const handleUpdate = (field: keyof typeof r, value: any) => {
     setTriageResult({ ...r, [field]: value })
@@ -403,17 +407,17 @@ function DashboardContent() {
     const amt = Number(r.amount) || 0
     const text = hi
       ? `🚨 साइबर धोखाधड़ी की शिकायत\nघटना ID: ${r.incidentId}\nराशि: ₹${amt.toLocaleString('en-IN')}\nतुरंत 1930 पर कॉल करें।`
-      : `🚨 Cyber Fraud Report\nIncident ID: ${r.incidentId}\nAmount: ₹${amt.toLocaleString('en-IN')}\nCall 1930 immediately.`
+      : `🚨 Cyber fraud report\nReport ID: ${r.incidentId}\nAmount: ₹${amt.toLocaleString('en-IN')}\nCall 1930 now.`
     if (navigator.share) {
-      try { await navigator.share({ title: 'Samarthan Fraud Report', text }) } catch { }
+      try { await navigator.share({ title: 'Cyber fraud report', text }) } catch { }
     } else {
       await navigator.clipboard.writeText(text)
-      showToast('Copied to clipboard!')
+      showToast('Copied.')
     }
   }
 
   return (
-    <main className="min-h-screen bg-white pb-20 font-sans relative">
+    <main className="min-h-screen bg-background pb-20 font-sans relative">
       <AnimatePresence>
         {toast && (
           <motion.div
@@ -445,21 +449,18 @@ function DashboardContent() {
         updates={updates}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 no-print">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-9 no-print">
 
         {/* Page Title */}
-        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="mb-6 sm:mb-8 flex items-start justify-between gap-4">
+        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="mb-6 sm:mb-8 flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-zinc-900 tracking-tight">
+            <h1 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
               {t.dashboard.title}
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-500 mt-1">
-              {dashLoc.subtitle}
-            </p>
           </div>
           <button
             onClick={() => { reset(); router.push('/') }}
-            className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-medium text-zinc-600 border border-zinc-200 hover:bg-zinc-50 rounded-md px-3 py-1.5 transition-colors cursor-pointer min-h-[36px]"
+            className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground border border-border hover:bg-surface rounded-md px-3 py-1.5 transition-colors cursor-pointer min-h-[36px]"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             {dashLoc.newReportBtn}
@@ -514,12 +515,10 @@ function DashboardContent() {
             <AlertTriangle className="w-6 h-6 text-amber-300 flex-shrink-0 mt-0.5 animate-pulse" />
             <div className="space-y-1 text-xs sm:text-sm">
               <p className="font-bold tracking-wide uppercase text-amber-200">
-                {language === 'hi' ? 'महत्वपूर्ण वैधानिक चेतावनी: डिजिटल अरेस्ट फर्जीवाड़ा' : 'Critical Statutory Warning: Digital Arrest Fraud'}
+                {screenCopy.dashboard.digitalArrestTitle}
               </p>
               <p className="leading-relaxed opacity-95">
-                {r.digitalArrestAdvisory || (language === 'hi'
-                  ? 'भारतीय पुलिस, सीबीआई, ईडी या अदालतें कभी भी वीडियो कॉल पर गिरफ्तारी नहीं करती हैं और न ही पैसे ट्रांसफर करने को कहती हैं। तुरंत कॉल काटें और 1930 पर शिकायत करें।'
-                  : 'Indian Law Enforcement (Police, CBI, ED, Customs) and courts NEVER conduct arrests or trials over video calls, nor do they demand money in verification accounts. Disconnect immediately and call 1930.')}
+                {r.digitalArrestAdvisory || screenCopy.dashboard.digitalArrestInfo}
               </p>
             </div>
           </div>
@@ -532,10 +531,10 @@ function DashboardContent() {
 
             {/* Editable Report Details */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-              className="border border-zinc-200 rounded-xl bg-white shadow-sm overflow-hidden">
-              <div className="px-4 sm:px-5 py-3 border-b border-zinc-100 flex items-center gap-2">
-                <Edit3 className="w-3.5 h-3.5 text-zinc-400" />
-                <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              className="border border-border rounded-lg bg-card shadow-none overflow-hidden">
+              <div className="px-4 sm:px-5 py-3 border-b border-border bg-surface flex items-center gap-2">
+                <Edit3 className="w-3.5 h-3.5 text-primary" />
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {dashLoc.complaintDetailsHeader}
                 </p>
               </div>
@@ -575,7 +574,7 @@ function DashboardContent() {
                     type="text"
                     value={r.complainantName || ''}
                     onChange={(e) => handleUpdate('complainantName', e.target.value)}
-                    placeholder={hi ? 'उदा. राजेश कुमार' : 'e.g. Citizen Complainant'}
+                    placeholder={hi ? 'उदा. राजेश कुमार' : 'e.g. Ramesh Sharma'}
                     className="w-full h-[46px] border border-zinc-200 rounded-md px-3 text-sm text-zinc-900 bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
                   />
                 </div>
@@ -630,7 +629,7 @@ function DashboardContent() {
                   <div>
                     <div className="flex items-center h-5 mb-1.5">
                       <label htmlFor="bank-name" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
-                        {hi ? 'डेबिटेड बैंक का नाम (आपका बैंक)' : 'Debited Bank Name (Your Bank)'}
+                        {hi ? 'डेबिटेड बैंक का नाम (आपका बैंक)' : 'Your bank name'}
                       </label>
                     </div>
                     <input
@@ -645,7 +644,7 @@ function DashboardContent() {
                   <div>
                     <div className="flex items-center h-5 mb-1.5">
                       <label htmlFor="account-number" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
-                        {hi ? 'खाता / कार्ड नंबर' : 'Account / Card Number'}
+                        {hi ? 'खाता / कार्ड नंबर' : 'Account or card number'}
                       </label>
                     </div>
                     <input
@@ -664,10 +663,10 @@ function DashboardContent() {
                   <div>
                     <div className="flex items-center justify-between h-5 mb-1.5">
                       <label htmlFor="utr-number" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
-                        {hi ? 'यूटीआर संदर्भ' : 'UTR / Ref ID'}
+                        {hi ? 'यूटीआर संदर्भ' : 'UTR or transaction ID'}
                       </label>
                       <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded font-semibold uppercase tracking-normal shrink-0 ml-1.5">
-                        {hi ? 'अनिवार्य' : 'Mandatory'}
+                        {hi ? 'अनिवार्य' : 'Important'}
                       </span>
                     </div>
                     <input
@@ -683,7 +682,7 @@ function DashboardContent() {
                   <div>
                     <div className="flex items-center h-5 mb-1.5">
                       <label htmlFor="upi-id" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
-                        {hi ? 'लाभार्थी यूपीआई / वीपीए' : 'Beneficiary UPI / VPA'}
+                        {hi ? 'लाभार्थी यूपीआई / वीपीए' : 'Scammer’s UPI ID'}
                       </label>
                     </div>
                     <input
@@ -699,7 +698,7 @@ function DashboardContent() {
                   <div>
                     <div className="flex items-center h-5 mb-1.5">
                       <label htmlFor="ifsc-code" className="text-xs font-medium text-zinc-500 uppercase tracking-wider truncate">
-                        {hi ? 'आईएफएससी कोड' : 'Beneficiary IFSC Code'}
+                        {hi ? 'आईएफएससी कोड' : 'IFSC code'}
                       </label>
                     </div>
                     <input
@@ -791,25 +790,12 @@ function DashboardContent() {
               <ComplaintUpdates hi={hi} language={language} updates={updates} onAdd={handleAddUpdate} />
             </motion.div>
 
-            {/* Action buttons (left column) */}
+            {/* Supporting case actions */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex flex-col gap-3">
-              <button
-                onClick={() => setCallModalHotline('1930')}
-                className="w-full flex flex-col items-center justify-center gap-1 bg-red-600 hover:bg-red-700 text-white rounded-xl py-3.5 sm:py-4 font-semibold text-sm transition-all shadow-sm min-h-[50px] cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <Phone className="w-5 h-5" />
-                  {dashLoc.call1930Btn}
-                </div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider bg-white/20 rounded px-1.5 py-0.5 mt-0.5">
-                  {dashLoc.liveEmergencyBadge}
-                </span>
-              </button>
-              
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={handleShare}
-                  className="flex flex-col items-center justify-center gap-1 border border-zinc-200 hover:bg-zinc-50 text-zinc-900 rounded-xl py-3 font-semibold text-xs transition-all min-h-[44px] cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1 border border-border hover:bg-surface text-foreground rounded-xl py-3 font-semibold text-xs transition-all min-h-[44px] cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5">
                     <Share2 className="w-4 h-4" />
@@ -821,7 +807,7 @@ function DashboardContent() {
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="flex flex-col items-center justify-center gap-1 border border-zinc-200 hover:bg-zinc-50 text-zinc-600 rounded-xl py-3 font-medium text-xs transition-all min-h-[44px] cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-1 border border-border hover:bg-surface text-muted-foreground rounded-xl py-3 font-medium text-xs transition-all min-h-[44px] cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5">
                     <Printer className="w-4 h-4" />
@@ -843,31 +829,44 @@ function DashboardContent() {
           {/* ── RIGHT COLUMN (Order-First on mobile so emergency actions & incident ID appear above the fold) ── */}
           <div className="lg:col-span-5 space-y-4 order-first lg:order-last">
 
-            {/* Incident ID + Urgency */}
+            {/* Compact case rail — stays first on mobile so the urgent next action is immediately visible. */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              className="grid grid-cols-2 gap-3">
-              <div className="border border-zinc-200 rounded-xl bg-white p-3.5 sm:p-4 shadow-sm">
-                <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+              className="overflow-hidden rounded-lg border border-border bg-card shadow-none">
+              <div className="flex items-start justify-between gap-3 border-t-2 border-primary px-4 py-4 sm:px-5">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {t.dashboard.incidentId}
                 </p>
-                <p className="font-bold text-zinc-900 text-sm tracking-tight truncate">{r.incidentId}</p>
+                  <p className="mt-1 font-mono text-sm sm:text-base font-semibold tracking-tight text-foreground truncate">{r.incidentId}</p>
+                </div>
+                <UrgencyBadge level={r.urgencyLevel} language={language} size="sm" />
               </div>
-              <div className="flex items-stretch">
-                <UrgencyBadge level={r.urgencyLevel} language={language} size="lg" />
+              <div className="flex items-center justify-between gap-3 border-t border-border bg-surface px-4 py-3 sm:px-5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="font-mono text-sm font-semibold text-foreground">{readinessSignalCount}/3</span>
+                  <span className="truncate text-[10px] font-medium text-muted-foreground">UTR · UPI · {evidenceLoc.header}</span>
+                </div>
+                <div className="flex gap-1" role="img" aria-label={`${readinessSignalCount}/3`}>
+                  {[Boolean(r.utrNumber), Boolean(r.upiId), evidenceImages.length > 0].map((isReady, index) => (
+                    <span key={index} className={`h-1.5 w-5 rounded-full ${isReady ? 'bg-primary' : 'bg-border-strong'}`} />
+                  ))}
+                </div>
               </div>
             </motion.div>
 
-            {/* Action & Tracking Header */}
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <div className="flex items-center gap-2 mb-1">
-                <ShieldAlert className="w-4 h-4 text-red-500" />
-                <h2 className="text-sm font-semibold text-zinc-900 uppercase tracking-wider">
-                  {dashLoc.actionTrackingHeader}
-                </h2>
-              </div>
-              <p className="text-xs text-zinc-500">
-                {dashLoc.actionTrackingDesc}
-              </p>
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
+              <button
+                onClick={() => setCallModalHotline('1930')}
+                className="w-full flex items-center justify-between gap-3 bg-red-600 hover:bg-red-700 text-white rounded-xl px-4 py-3.5 sm:px-5 sm:py-4 font-semibold text-sm transition-all shadow-sm min-h-[54px] cursor-pointer"
+              >
+                <span className="flex items-center gap-2 text-start">
+                  <Phone className="w-5 h-5 shrink-0" />
+                  {dashLoc.call1930Btn}
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider bg-white/20 rounded px-1.5 py-0.5 shrink-0">
+                  {dashLoc.liveEmergencyBadge}
+                </span>
+              </button>
             </motion.div>
 
             {/* Smart Actions */}
@@ -892,9 +891,9 @@ function DashboardContent() {
 
             {/* Freeze Steps */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-              className="border border-zinc-200 rounded-lg bg-white p-5 shadow-sm">
+              className="border border-border rounded-lg bg-card p-4 sm:p-5 shadow-none">
               <div className="flex items-center justify-between mb-4">
-                <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {dashLoc.recommendedImmediateHeader}
                 </p>
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-green-700 bg-green-50 border border-green-200 rounded px-1.5 py-0.5">
@@ -915,7 +914,7 @@ export default function DashboardPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+        <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="w-8 h-8 rounded-full border-2 border-zinc-300 border-t-zinc-900 animate-spin" />
         </div>
       }

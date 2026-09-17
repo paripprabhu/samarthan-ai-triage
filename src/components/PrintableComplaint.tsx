@@ -34,32 +34,32 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
   const summaryRows: [string, string, string][] = [
     ['Category', 'श्रेणी', result.fraudType],
     ['Urgency', 'प्राथमिकता', result.urgencyLevel],
-    ['Complainant Name', 'शिकायतकर्ता', result.complainantName || 'Citizen Complainant'],
-    ['Amount Involved', 'राशि', Number(result.amount) > 0 ? `₹${Number(result.amount).toLocaleString('en-IN')}` : 'N/A'],
-    ['Reported Against', 'आरोपी', result.fraudsterIdentifier],
-    ['Contact/Handle', 'संपर्क', result.frauderContact],
-    ['Financial Institution', 'बैंक', result.bankName],
-    ['Incident Timeline', 'समयरेखा', result.timeline],
+    ['Your Name', 'शिकायतकर्ता', result.complainantName || 'Citizen'],
+    ['Amount', 'राशि', Number(result.amount) > 0 ? `₹${Number(result.amount).toLocaleString('en-IN')}` : 'Not given'],
+    ['Reported Account', 'आरोपी', result.fraudsterIdentifier],
+    ['Contact', 'संपर्क', result.frauderContact],
+    ['Bank', 'बैंक', result.bankName],
+    ['When It Happened', 'समयरेखा', result.timeline],
   ]
 
   if (result.utrNumber) {
-    summaryRows.push(['Transaction Ref / UTR', 'लेनदेन यूटीआर संदर्भ', result.utrNumber])
+    summaryRows.push(['Transaction ID / UTR', 'लेनदेन यूटीआर संदर्भ', result.utrNumber])
   }
   if (result.upiId) {
-    summaryRows.push(['Beneficiary UPI / VPA', 'लाभार्थी यूपीआई / वीपीए', result.upiId])
+    summaryRows.push(['UPI ID', 'लाभार्थी यूपीआई / वीपीए', result.upiId])
   }
   if (result.ifscCode) {
-    summaryRows.push(['Beneficiary IFSC Code', 'आईएफएससी कोड', result.ifscCode])
+    summaryRows.push(['IFSC Code', 'आईएफएससी कोड', result.ifscCode])
   }
 
   return (
     <div className="print-only bg-white p-10 font-sans text-sm text-black">
       <div className="text-center mb-6">
         <p className="text-[10px] uppercase tracking-widest text-gray-500">
-          {hi ? 'राष्ट्रीय साइबर अपराध रिपोर्टिंग पोर्टल' : 'National Cyber Crime Reporting Portal'}
+          {hi ? 'राष्ट्रीय साइबर अपराध रिपोर्टिंग पोर्टल' : 'Cyber Crime Reporting Portal'}
         </p>
         <h1 className="text-xl font-bold mt-1">
-          {hi ? 'शिकायत पावती रसीद' : 'Complaint Acknowledgement Receipt'}
+          {hi ? 'शिकायत पावती रसीद' : 'Report receipt'}
         </h1>
         {language !== 'en' && language !== 'hi' && (
           <p className="text-xs text-gray-600 mt-0.5 font-medium">
@@ -70,7 +70,7 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
 
       <div className="border-2 border-black rounded-none p-4 mb-6 text-center">
         <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">
-          {hi ? 'पावती संख्या' : 'Acknowledgement Number'}
+          {hi ? 'पावती संख्या' : 'Report number'}
         </p>
         <p className="text-2xl font-bold font-sans tracking-wider">{formatAckNumber(result.incidentId)}</p>
       </div>
@@ -78,7 +78,7 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
       <table className="w-full text-xs border-collapse mb-6">
         <tbody>
           <tr className="border-b border-gray-200">
-            <td className="py-1.5 pr-4 text-gray-500 w-1/3">{hi ? 'दर्ज करने की तिथि' : 'Filed On'}</td>
+            <td className="py-1.5 pr-4 text-gray-500 w-1/3">{hi ? 'दर्ज करने की तिथि' : 'Date filed'}</td>
             <td className="py-1.5 font-medium">
               {now.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
               {' · '}
@@ -96,14 +96,14 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
 
       <div className="mb-6">
         <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2 border-b border-gray-300 pb-1">
-          {hi ? 'शिकायत विवरण' : 'Complaint Details'}
+          {hi ? 'शिकायत विवरण' : 'Report details'}
         </p>
         <pre className="whitespace-pre-wrap leading-relaxed text-xs font-sans">{draft}</pre>
       </div>
 
       <div className="mb-6">
         <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2 border-b border-gray-300 pb-1">
-          {hi ? 'तत्काल सहायता' : 'Immediate Assistance'}
+          {hi ? 'तत्काल सहायता' : 'Get help now'}
         </p>
         <p className="text-xs">
           {hi ? 'राष्ट्रीय साइबर अपराध हेल्पलाइन: ' : 'National Cybercrime Helpline: '}
@@ -118,12 +118,12 @@ export default function PrintableComplaint({ result, language, activeDraft }: Pr
         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-700">
           {hi
             ? '⚠ सिंथेटिक डेमो डेटा • सिमुलेटेड पोर्टल इनटेक। यह वास्तविक सरकारी फाइलिंग नहीं है।'
-            : '⚠ Synthetic Demo Data • Simulated Portal Intake. This is not an official government filing.'}
+            : '⚠ Demo data • This is not a real government filing.'}
         </p>
         <p className="text-[10px] text-gray-500 mt-1">
           {hi
             ? 'यह दस्तावेज़ Samarthan द्वारा AI का उपयोग करके तैयार किया गया है और इसे किसी सरकारी एजेंसी द्वारा सत्यापित या प्रस्तुत नहीं किया गया है। कृपया दाखिल करने से पहले cybercrime.gov.in पर सभी विवरण सत्यापित करें।'
-            : 'This document was generated by Samarthan using AI and has not been verified or submitted by any government agency. Please verify all details on cybercrime.gov.in before filing.'}
+            : 'Samarthan used AI to create this document. It has not been checked or filed by a government agency. Check every detail on cybercrime.gov.in before filing.'}
         </p>
       </div>
     </div>

@@ -40,11 +40,11 @@ const FILE_REPORT_I18N: Record<string, {
     tabWhatsApp: 'WhatsApp',
     tabWeb: 'Use the web',
     callHeading: 'National Cybercrime Helpline',
-    callDesc: 'Talk in the language you are comfortable with. One clear question at a time. This is the fastest route to an emergency account freeze.',
-    waHeading: 'Samarthan WhatsApp Cyber Agent',
-    waDesc: 'Chat directly with our 24x7 WhatsApp AI triage agent. Send a voice note, message, or screenshot to receive instant legal advice, freeze steps, and your live complaint tracking link.',
-    waBtn: 'Chat with WhatsApp AI Agent',
-    waActive: 'WhatsApp AI Agent Active (24x7)',
+    callDesc: 'Speak in the language you prefer. If money was sent, this is the fastest way to ask for help.',
+    waHeading: 'Samarthan WhatsApp demo',
+    waDesc: 'Try a voice note, message, or screenshot in this app.',
+    waBtn: 'Open WhatsApp demo',
+    waActive: 'In-app demo',
   },
   hi: {
     eyebrow: 'शुरू करें',
@@ -291,7 +291,7 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
   ]
 
   return (
-    <section id="file-report" className="py-10 sm:py-14 md:py-16 bg-surface border-t border-zinc-200">
+    <section id="file-report" className="border-t border-border bg-surface py-10 sm:py-14 md:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="mb-6 sm:mb-10">
           <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2 sm:mb-3">
@@ -303,15 +303,15 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
         </div>
 
         {/* Channel tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="mb-6 flex flex-wrap gap-2 border-b border-border pb-4">
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setChannel(t.id)}
               className={`inline-flex items-center gap-2 rounded-md px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors min-h-[40px] sm:min-h-[44px] cursor-pointer ${
                 channel === t.id
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'border border-border bg-card text-muted-foreground hover:border-border-strong hover:text-foreground'
               }`}
             >
               {t.icon}
@@ -322,25 +322,22 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
 
         {/* Channel body */}
         {channel === 'call' && (
-          <div className="rounded-xl border border-zinc-200 bg-white p-6 sm:p-8 text-center">
-            <p className="text-xs sm:text-sm text-zinc-500 mb-2">{loc.callHeading}</p>
+          <div className="rounded-xl border border-border bg-card p-6 text-center sm:p-8">
+            <p className="mb-2 text-xs text-muted-foreground sm:text-sm">{loc.callHeading}</p>
             <a href="tel:1930" className="text-4xl sm:text-5xl font-extrabold text-foreground tracking-tight">1930</a>
-            <p className="mt-3 text-xs sm:text-sm text-zinc-500 max-w-md mx-auto leading-relaxed">
+            <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-muted-foreground sm:text-sm">
               {loc.callDesc}
             </p>
           </div>
         )}
 
         {channel === 'whatsapp' && (
-          <div className="rounded-xl border border-zinc-200 bg-white p-6 sm:p-8 text-center max-w-xl mx-auto shadow-xs">
-            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-100">
+          <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-6 text-center sm:p-8">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md border border-emerald-200 bg-emerald-50 text-emerald-700 sm:h-14 sm:w-14">
               <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-              </span>
             </div>
 
-            <h3 className="text-lg sm:text-xl font-bold text-zinc-900 mb-2">
+            <h3 className="mb-2 text-lg font-bold text-foreground sm:text-xl">
               {loc.waHeading}
             </h3>
 
@@ -348,44 +345,40 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
             <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed text-left flex items-start gap-2.5 max-w-lg mx-auto">
               <span className="text-base shrink-0">⚠️</span>
               <div>
-                <strong>{language === 'hi' ? 'लाइव व्हाट्सएप बॉट ऑफ़लाइन है:' : 'Live Phone Bot Offline:'}</strong>{' '}
+                <strong>{language === 'hi' ? 'लाइव व्हाट्सएप बॉट ऑफ़लाइन है:' : 'Live WhatsApp bot is offline:'}</strong>{' '}
                 {language === 'hi'
                   ? 'लाइव फोन बॉट अभी बंद है। टेस्टिंग के लिए कृपया नीचे दिए गए "इन-ऐप व्हाट्सएप सिम्युलेटर" का उपयोग करें।'
-                  : 'The companion phone daemon is currently offline. Please use the In-App WhatsApp Simulator for testing.'}
+                  : 'Please use the in-app WhatsApp demo instead.'}
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-zinc-600 mb-6 leading-relaxed max-w-lg mx-auto">
+            <p className="mx-auto mb-6 max-w-lg text-xs leading-relaxed text-muted-foreground sm:text-sm">
               {language === 'hi'
                 ? 'इन-ऐप व्हाट्सएप सिम्युलेटर खोलें और वॉइस नोट, मैसेज या स्क्रीनशॉट भेजकर लाइव ट्रायज का अनुभव लें।'
-                : 'Launch our in-browser WhatsApp simulator to test voice notes, screenshot evidence, and legal triage on the exact same GPT-4o engine.'}
+                : 'Try the in-app WhatsApp demo with a voice note, message, or screenshot.'}
             </p>
 
             <div className="flex items-center justify-center">
               <button
                 type="button"
                 onClick={() => setIsSimulatorOpen(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#1fa851] active:scale-[0.99] text-white rounded-xl px-6 sm:px-8 py-3.5 sm:py-4 text-sm font-semibold transition-all shadow-md hover:shadow-lg cursor-pointer min-h-[44px]"
+                className="inline-flex min-h-[44px] w-full items-center justify-center gap-2.5 rounded-lg bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover sm:w-auto sm:px-8 sm:py-4 cursor-pointer"
               >
                 <MessageCircle className="w-5 h-5 fill-white" />
-                <span>{language === 'hi' ? 'इन-ऐप व्हाट्सएप सिम्युलेटर खोलें' : 'Launch In-App WhatsApp Simulator'}</span>
+                <span>{language === 'hi' ? 'इन-ऐप व्हाट्सएप सिम्युलेटर खोलें' : 'Open WhatsApp demo'}</span>
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" />
               </button>
             </div>
 
-            <div className="mt-5 inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-md bg-amber-50 border border-amber-200 text-xs font-medium text-amber-800">
-              <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-              <span>{language === 'hi' ? 'लाइव बॉट ऑफ़लाइन • सिम्युलेटर 100% सक्रिय' : 'Live Bot Offline • In-App Simulator 100% Active'}</span>
-            </div>
           </div>
         )}
 
         {channel === 'web' && (
           <>
             <input type="file" ref={fileRef} onChange={handleFileSelect} className="hidden" accept="image/*,.pdf" />
-            <div className="rounded-xl border border-zinc-300 bg-white shadow-xs overflow-hidden flex flex-col focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
+            <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary">
               <textarea
-                className="w-full p-3.5 sm:p-4 min-h-[110px] sm:min-h-[120px] outline-none resize-none text-zinc-800 placeholder:text-zinc-400 text-sm"
+                className="min-h-[110px] w-full resize-none bg-card p-3.5 text-sm text-foreground outline-none placeholder:text-muted-foreground sm:min-h-[120px] sm:p-4"
                 placeholder={t.fileReport.placeholder}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
@@ -393,14 +386,14 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
                   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAutoAnalyze() }
                 }}
               />
-              <div className="px-3 sm:px-4 py-2.5 sm:py-3 bg-surface border-t border-zinc-200/80 flex items-center justify-between">
+              <div className="flex items-center justify-between border-t border-border bg-surface px-3 py-2.5 sm:px-4 sm:py-3">
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <button
                     type="button"
                     onClick={() => fileRef.current?.click()}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs sm:text-sm font-medium text-zinc-700 hover:text-zinc-900 bg-white border border-zinc-200 hover:border-zinc-300 rounded-md transition-colors shadow-xs min-h-[40px] cursor-pointer"
+                    className="flex min-h-[40px] items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-2 text-xs font-medium text-foreground transition-colors hover:border-border-strong sm:px-3 sm:text-sm cursor-pointer"
                   >
-                    <Plus className="w-4 h-4 text-zinc-500" />
+                    <Plus className="w-4 h-4 text-muted-foreground" />
                     <span>{t.fileReport.addEvidence}</span>
                   </button>
                   <button
@@ -411,7 +404,7 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
                       const q = inputText.trim() ? `&text=${encodeURIComponent(inputText)}` : ''
                       router.push(`/intake?category=auto&mode=voice${q}`)
                     }}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs sm:text-sm font-medium text-zinc-700 hover:text-zinc-900 bg-white border border-zinc-200 hover:border-zinc-300 rounded-md transition-colors shadow-xs min-h-[40px] cursor-pointer"
+                    className="flex min-h-[40px] items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-2 text-xs font-medium text-foreground transition-colors hover:border-border-strong sm:px-3 sm:text-sm cursor-pointer"
                   >
                     <Mic className="w-4 h-4 text-primary" />
                     <span>{t.fileReport.voiceNote}</span>
@@ -421,14 +414,14 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
                   type="button"
                   onClick={handleAutoAnalyze}
                   disabled={!inputText.trim()}
-                  className="flex items-center justify-center p-2.5 rounded-md bg-primary text-white hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm min-h-[40px] min-w-[40px] cursor-pointer"
+                  className="flex min-h-[40px] min-w-[40px] items-center justify-center rounded-md bg-primary p-2.5 text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
                 >
                   <ArrowUp className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            <p className="mt-6 sm:mt-8 text-xs font-medium text-zinc-400 uppercase tracking-wider">
+            <p className="mt-6 text-xs font-medium uppercase tracking-wider text-muted-foreground sm:mt-8">
               {loc.pickCategory}
             </p>
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
@@ -436,12 +429,12 @@ export default function FileReportSection({ language }: FileReportSectionProps) 
                 <button
                   key={cat.rawKey}
                   onClick={() => handleCategory(cat.rawKey)}
-                  className="flex flex-col justify-between items-start p-5 rounded-lg bg-white border border-zinc-200/90 hover:border-primary/50 hover:shadow-xs transition-all text-start cursor-pointer h-full"
+                  className="flex h-full flex-col items-start justify-between rounded-lg border border-border bg-card p-5 text-start transition-colors hover:border-border-strong hover:bg-primary-tint cursor-pointer"
                 >
                   <div className="flex-1 w-full">
                     <div className={`p-2.5 rounded-md mb-3 inline-block ${cat.iconBg}`}>{cat.icon}</div>
                     <h3 className="text-sm font-bold text-foreground mb-1 leading-snug">{cat.title}</h3>
-                    <p className="text-xs text-zinc-500 leading-relaxed">{cat.desc}</p>
+                    <p className="text-xs leading-relaxed text-muted-foreground">{cat.desc}</p>
                   </div>
                 </button>
               ))}

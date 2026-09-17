@@ -40,12 +40,12 @@ export const COMPLAINT_STATUSES = [
 export type ComplaintStatus = typeof COMPLAINT_STATUSES[number]
 
 export const COMPLAINT_STATUS_LABELS: Record<ComplaintStatus, { en: string; hi: string; simulated: boolean }> = {
-  SUBMITTED: { en: 'Complaint Registered', hi: 'शिकायत पंजीकृत', simulated: false },
-  BANK_NOTIFIED: { en: 'Bank Nodal Officer Notified', hi: 'बैंक नोडल अधिकारी को सूचित', simulated: true },
-  PLATFORM_REPORTED: { en: 'Platform / Agency Report Filed', hi: 'प्लेटफ़ॉर्म / एजेंसी को रिपोर्ट दर्ज', simulated: true },
-  FIR_FILED: { en: 'FIR Registered (NCRP)', hi: 'प्राथमिकी दर्ज (NCRP)', simulated: true },
-  UNDER_INVESTIGATION: { en: 'Under Investigation', hi: 'जांच जारी', simulated: true },
-  RESOLVED: { en: 'Disposed / Resolved', hi: 'निपटाया / समाधान हुआ', simulated: true },
+  SUBMITTED: { en: 'Report saved in this demo', hi: 'शिकायत पंजीकृत', simulated: false },
+  BANK_NOTIFIED: { en: 'Demo: bank contact step completed', hi: 'बैंक नोडल अधिकारी को सूचित', simulated: true },
+  PLATFORM_REPORTED: { en: 'Demo: platform or agency step completed', hi: 'प्लेटफ़ॉर्म / एजेंसी को रिपोर्ट दर्ज', simulated: true },
+  FIR_FILED: { en: 'Demo: FIR step completed', hi: 'प्राथमिकी दर्ज (NCRP)', simulated: true },
+  UNDER_INVESTIGATION: { en: 'Demo: review stage', hi: 'जांच जारी', simulated: true },
+  RESOLVED: { en: 'Demo: case closed', hi: 'निपटाया / समाधान हुआ', simulated: true },
 }
 
 export interface ComplaintStatusEvent {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Clock, MessageSquare, Mic, FileImage, ShieldCheck, Scale, Phone, Building2, RefreshCw } from 'lucide-react'
+import { Mic, ShieldCheck, Scale, Phone, Building2 } from 'lucide-react'
 import { SupportedLanguage } from '@/lib/i18n/languages'
 import { getTranslation } from '@/lib/i18n/translations'
 
@@ -9,30 +9,14 @@ interface HowItWorksProps {
 
 interface StepItem {
   n: string
-  duration: string
   title: string
   body: string
   points: { icon: React.ReactNode; text: string }[]
   shot: string
 }
 
-const DURATION_MAP: Record<string, { s1: string; s2: string; s3: string }> = {
-  en: { s1: 'Takes ~15 seconds', s2: 'Takes ~20 seconds', s3: 'Takes ~25 seconds' },
-  hi: { s1: 'लगभग 15 सेकंड', s2: 'लगभग 20 सेकंड', s3: 'लगभग 25 सेकंड' },
-  bn: { s1: 'প্রায় ১৫ সেকেন্ড', s2: 'প্রায় ২০ সেকেন্ড', s3: 'প্রায় ২৫ সেকেন্ড' },
-  mr: { s1: 'सुमारे १५ सेकंद', s2: 'सुमारे २० सेकंद', s3: 'सुमारे २५ सेकंद' },
-  te: { s1: 'సుమారు 15 సెకన్లు', s2: 'సుమారు 20 సెకన్లు', s3: 'సుమారు 25 సెకన్లు' },
-  ta: { s1: 'சுமார் 15 வினாடிகள்', s2: 'சுமார் 20 வினாடிகள்', s3: 'சுமார் 25 வினாடிகள்' },
-  gu: { s1: 'લગભગ 15 સેકન્ડ', s2: 'લગભગ 20 સેકન્ડ', s3: 'લગભગ 25 સેકન્ડ' },
-  ur: { s1: 'تقریباً 15 سیکنڈ', s2: 'تقریباً 20 سیکنڈ', s3: 'تقریباً 25 سیکنڈ' },
-  kn: { s1: 'ಸುಮಾರು 15 ಸೆಕೆಂಡುಗಳು', s2: 'ಸುಮಾರು 20 ಸೆಕೆಂಡುಗಳು', s3: 'ಸುಮಾರು 25 ಸೆಕೆಂಡುಗಳು' },
-  or: { s1: 'ପ୍ରାୟ ୧୫ ସେକେଣ୍ଡ', s2: 'ପ୍ରାୟ ୨୦ ସେକେଣ୍ଡ', s3: 'ପ୍ରାୟ ୨୫ ସେକେଣ୍ଡ' },
-  ml: { s1: 'ഏകദേശം 15 സെക്കൻഡ്', s2: 'ഏകദേശം 20 സെക്കൻഡ്', s3: 'ഏകദേശം 25 സെക്കൻഡ്' },
-  pa: { s1: 'ਲਗਭਗ 15 ਸਕਿੰਟ', s2: 'ਲਗਭਗ 20 ਸਕਿੰਟ', s3: 'ਲਗਭਗ 25 ਸਕਿੰਟ' },
-}
-
 const SUBTITLE_MAP: Record<string, string> = {
-  en: 'File cybercrime complaints, obtain applicable legal sections, and initiate bank freeze steps without navigating complicated bureaucratic questionnaires.',
+  en: 'Tell us what happened. We help you prepare a report and find the next step.',
   hi: 'बिना किसी जटिल कानूनी फॉर्म के साइबर धोखाधड़ी की शिकायत दर्ज करें, सही धाराएं प्राप्त करें और बैंक खाता फ्रीज कराने की प्रक्रिया शुरू करें।',
   bn: 'জটিল ফর্ম পূরণ ছাড়াই সাইবার প্রতারণার অভিযোগ দায়ের করুন, আইনি ধারা জানুন এবং ব্যাংক অ্যাকাউন্ট ফ্রিজ করার প্রক্রিয়া শুরু করুন।',
   mr: 'जटिल फॉर्म न भरता सायबर फसवणुकीची तक्रार नोंदवा, योग्य कायदेशीर कलमे मिळवा आणि बँक खाते गोठवण्याची प्रक्रिया सुरू करा.',
@@ -48,69 +32,52 @@ const SUBTITLE_MAP: Record<string, string> = {
 
 export default function HowItWorks({ language }: HowItWorksProps) {
   const isHi = language === 'hi'
-  const isEn = language === 'en'
   const t = getTranslation(language)
-  const durations = DURATION_MAP[language] || DURATION_MAP.en
   const subtitle = SUBTITLE_MAP[language] || SUBTITLE_MAP.en
 
   const steps: StepItem[] = [
     {
       n: '01',
-      duration: durations.s1,
       title: t.howItWorks.step1Title,
       body: t.howItWorks.step1Desc,
       points: isHi
         ? [
-            { icon: <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'व्हाट्सएप AI एजेंट व सिम्युलेटर' },
             { icon: <Mic className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'बोलकर या लिखकर त्वरित शिकायत' },
-            { icon: <FileImage className="w-3.5 h-3.5 text-amber-600 shrink-0" />, text: 'लेनदेन रसीद व स्क्रीनशॉट ऑटो-रीडिंग' },
             { icon: <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'डिजीलॉकर से सुरक्षित आधार सत्यापन' },
           ]
         : [
-            { icon: <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'WhatsApp AI agent & web simulator' },
-            { icon: <Mic className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Voice & text reporting in 12 languages' },
-            { icon: <FileImage className="w-3.5 h-3.5 text-amber-600 shrink-0" />, text: 'Auto-reads receipts & screenshots' },
-            { icon: <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'DigiLocker verified citizen identity' },
+            { icon: <Mic className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Use voice or text in 12 languages' },
+            { icon: <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Verify your identity with DigiLocker' },
           ],
       shot: '/landing/shot-intake.png',
     },
     {
       n: '02',
-      duration: durations.s2,
       title: t.howItWorks.step2Title,
       body: t.howItWorks.step2Desc,
       points: isHi
         ? [
             { icon: <Scale className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'IT एक्ट और BNS की कानूनी धाराएं' },
-            { icon: <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'धोखेबाज़ का खाता, UPI व UTR नंबर' },
             { icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'तैयार औपचारिक पुलिस शिकायत पत्र' },
-            { icon: <FileImage className="w-3.5 h-3.5 text-zinc-600 shrink-0" />, text: 'सुरक्षित डिजिटल एविडेंस रिकॉर्ड' },
           ]
         : [
-            { icon: <Scale className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Mapped IT Act & BNS legal sections' },
-            { icon: <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Extracted UTR, bank account & UPI' },
-            { icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'Dual-draft formal police complaint' },
-            { icon: <FileImage className="w-3.5 h-3.5 text-zinc-600 shrink-0" />, text: 'Cryptographic evidence vault' },
+            { icon: <Scale className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'See relevant legal sections' },
+            { icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'Check a clear complaint draft' },
           ],
       shot: '/landing/shot-dashboard.png',
     },
     {
       n: '03',
-      duration: durations.s3,
       title: t.howItWorks.step3Title,
       body: t.howItWorks.step3Desc,
       points: isHi
         ? [
             { icon: <Phone className="w-3.5 h-3.5 text-red-600 shrink-0" />, text: '1930 ऑपरेटर को बताने के मुख्य बिंदु' },
             { icon: <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'बैंक नोडल अधिकारी को खाता फ्रीज नोटिस' },
-            { icon: <RefreshCw className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'व्हाट्सएप से स्वतः केस अपडेट' },
-            { icon: <Clock className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'लाइव केस स्टेटस और PDF डाउनलोड' },
           ]
         : [
-            { icon: <Phone className="w-3.5 h-3.5 text-red-600 shrink-0" />, text: '1930 helpline operator briefing points' },
-            { icon: <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Bank nodal officer freeze notice' },
-            { icon: <RefreshCw className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'Automatic WhatsApp case tracking' },
-            { icon: <Clock className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Live tracking portal & printable PDF' },
+            { icon: <Phone className="w-3.5 h-3.5 text-red-600 shrink-0" />, text: 'Know what to say when you call 1930' },
+            { icon: <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Get steps to share with your bank' },
           ],
       shot: '/landing/shot-complaints.png',
     },
@@ -118,7 +85,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
 
   return (
     <section id="how-it-works" className="relative py-12 sm:py-16 md:py-20 bg-surface border-t border-border overflow-hidden">
-      <div aria-hidden="true" className="absolute right-[-12rem] top-24 h-80 w-80 rounded-full border border-primary/10" />
+      <div aria-hidden="true" className="absolute right-[-12rem] top-24 h-80 w-80 rounded-full border border-border" />
       <div aria-hidden="true" className="absolute right-[-7rem] top-36 h-52 w-52 rounded-full border border-amber-500/15" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
@@ -144,20 +111,15 @@ export default function HowItWorks({ language }: HowItWorksProps) {
               {/* Text column (5 cols) */}
               <div className="lg:col-span-5">
                 <div className="flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-3">
-                  <span className="text-sm sm:text-base font-sans font-extrabold text-primary bg-primary-tint border border-primary/20 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md">
+                  <span className="text-sm sm:text-base font-sans font-extrabold text-primary bg-primary-tint border border-primary px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md">
                     {step.n}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300 bg-white/80 dark:bg-zinc-850 border border-border px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md shadow-2xs">
-                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-                    {step.duration}
                   </span>
                 </div>
 
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-[-0.025em] leading-snug">{step.title}</h3>
                 <p className="mt-2.5 sm:mt-3 text-zinc-600 dark:text-zinc-300 leading-relaxed text-sm sm:text-base">{step.body}</p>
 
-                {/* Grounded feature point list */}
-                <div className="mt-4 sm:mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                   {step.points.map((point, ptIdx) => (
                     <div
                       key={ptIdx}
@@ -172,7 +134,7 @@ export default function HowItWorks({ language }: HowItWorksProps) {
 
               {/* Screenshot column: 7 cols */}
               <div className="lg:col-span-7">
-                <div className="how-it-works-preview rounded-xl border border-primary/15 dark:border-primary/30 bg-white dark:bg-zinc-900 shadow-[var(--shadow-panel)] overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_52px_-28px_rgba(17,33,54,0.48)] group">
+                <div className="how-it-works-preview rounded-xl border border-border bg-white dark:bg-zinc-900 shadow-[var(--shadow-panel)] overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_52px_-28px_rgba(17,33,54,0.48)] group">
                   {/* Browser top chrome bar */}
                   <div className="h-8 md:h-9 px-3 sm:px-4 bg-zinc-100/90 dark:bg-zinc-850 border-b border-zinc-200/80 dark:border-zinc-800 flex items-center justify-between">
                     <div className="flex items-center gap-2">

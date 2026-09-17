@@ -70,53 +70,53 @@ export function getCompulsoryFields(r: TriageResult): CompulsoryField[] {
   if (isFinancial) {
     list.push({
       key: 'utr',
-      label: '12-Digit Transaction UTR Number',
+      label: 'Transaction UTR (12 digits)',
       labelHi: '12-अंकों का UPI UTR / लेनदेन संदर्भ संख्या',
       isFilled: hasUtr,
       value: hasUtr ? (detectedUtrVal ? `UTR: ${detectedUtrVal}` : r.frauderContact) : undefined,
-      importance: 'Mandatory for bank & NPCI golden-hour fund freeze',
+      importance: 'Needed to ask your bank and NPCI to freeze funds fast',
       importanceHi: 'बैंक और NPCI द्वारा फंड फ्रीज करने के लिए अनिवार्य',
     })
 
     list.push({
       key: 'bankName',
-      label: 'Debited Bank Name',
+      label: 'Your bank name',
       labelHi: 'बैंक का नाम (जिससे पैसे कटे)',
       isFilled: hasBank,
       value: hasBank ? detectedBankVal : undefined,
-      importance: 'Required to notify source Bank Nodal Officer',
+      importance: 'Needed to contact your bank’s fraud team',
       importanceHi: 'बैंक नोडल अधिकारी को तत्काल सूचित करने के लिए आवश्यक',
     })
   }
 
   list.push({
     key: 'fraudster',
-    label: 'Fraudster / Beneficiary Identifier',
+    label: 'Scammer or receiver ID',
     labelHi: 'धोखेबाज़ का UPI ID / खाता / मोबाइल नंबर',
     isFilled: hasFraudster,
     value: hasFraudster ? (r.upiId || r.fraudsterIdentifier) : undefined,
-    importance: 'Needed to block beneficiary account & register FIR',
+    importance: 'Needed to block the account and file an FIR',
     importanceHi: 'लाभार्थी खाते को ब्लॉक करने और प्राथमिकी दर्ज करने के लिए आवश्यक',
   })
 
   list.push({
     key: 'complainant',
-    label: 'Complainant Full Name',
+    label: 'Your full name',
     labelHi: 'शिकायतकर्ता का पूरा नाम',
     isFilled: hasComplainant,
     value: hasComplainant ? r.complainantName : undefined,
-    importance: 'Required for legal FIR and police statement',
+    importance: 'Needed for an FIR and police statement',
     importanceHi: 'कानूनी FIR और पुलिस बयान के लिए आवश्यक',
   })
 
   if (isFinancial) {
     list.push({
       key: 'amount',
-      label: 'Disputed Fraud Amount',
+      label: 'Amount lost',
       labelHi: 'धोखाधड़ी की राशि (₹)',
       isFilled: hasAmount,
       value: hasAmount ? `₹${r.amount.toLocaleString('en-IN')}` : undefined,
-      importance: 'Specifies exact claim amount for recovery',
+      importance: 'Needed to state the amount to recover',
       importanceHi: 'वसूली के लिए दावा की गई सटीक राशि',
     })
   }
@@ -136,15 +136,15 @@ const REMINDER_I18N: Record<SupportedLanguage, {
   aiHint: string
 }> = {
   en: {
-    completeBadge: '100% Complete',
-    completeText: 'Your complaint is fully complete for emergency fund freezing and police FIR registration.',
+    completeBadge: 'All details added',
+    completeText: 'Your report has the key details to ask your bank to freeze funds and file an FIR.',
     requiredBadge: 'Required',
     completed: 'completed',
-    actionRequired: 'Action required: details needed to freeze funds & file FIR',
-    autoFillBtn: 'Auto-fill via Updates',
+    actionRequired: 'Add details to freeze funds and file an FIR',
+    autoFillBtn: 'Add details in updates',
     done: 'Done',
     pending: 'Pending',
-    aiHint: 'Skip manual entry: type details naturally in Updates below (e.g. "UTR is 482910394821, bank is SBI") and AI auto-fills for you.',
+    aiHint: 'Add details below in Updates. For example: “UTR is 482910394821, bank is SBI.” AI will fill in what it can.',
   },
   hi: {
     completeBadge: '100% पूर्ण',
@@ -271,7 +271,7 @@ const REMINDER_I18N: Record<SupportedLanguage, {
 
 const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; importance: string }>> = {
   utr: {
-    en: { label: '12-Digit Transaction UTR Number', importance: 'Mandatory for bank & NPCI golden-hour fund freeze' },
+    en: { label: 'Transaction UTR (12 digits)', importance: 'Needed to ask your bank and NPCI to freeze funds fast' },
     hi: { label: '12-अंकों का UPI UTR / लेनदेन संदर्भ संख्या', importance: 'बैंक और NPCI द्वारा फंड फ्रीज करने के लिए अनिवार्य' },
     bn: { label: '১২-সংখ্যার লেনদেন UTR নম্বর', importance: 'ব্যাংক ও NPCI দ্বারা অবিলম্বে ফান্ড ফ্রিজ করার জন্য বাধ্যতামূলক' },
     mr: { label: '१२-अंकी व्यवहार UTR क्रमांक', importance: 'बँक आणि NPCI द्वारे फंड फ्रीज करण्यासाठी आवश्यक' },
@@ -285,7 +285,7 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     pa: { label: '12-ਅੰਕਾਂ ਦਾ ਲੈਣ-ਦੇਣ UTR ਨੰਬਰ', importance: 'ਬੈਂਕ ਅਤੇ NPCI ਦੁਆਰਾ ਫੰਡ ਫ੍ਰੀਜ਼ ਕਰਨ ਲਈ ਲਾਜ਼ਮੀ' },
   },
   bankName: {
-    en: { label: 'Debited Bank Name', importance: 'Required to notify source Bank Nodal Officer' },
+    en: { label: 'Your bank name', importance: 'Needed to contact your bank’s fraud team' },
     hi: { label: 'बैंक का नाम (जिससे पैसे कटे)', importance: 'बैंक नोडल अधिकारी को तत्काल सूचित करने के लिए आवश्यक' },
     bn: { label: 'ব্যাংকের নাম (যেখান থেকে টাকা কেটেছে)', importance: 'ব্যাংক নোডাল অফিসারকে অবিলম্বে জানানোর জন্য প্রয়োজন' },
     mr: { label: 'बँकेचे नाव (ज्यातून पैसे कापले)', importance: 'बँक नोडल अधिकाऱ्यास त्वरित सूचित करण्यासाठी आवश्यक' },
@@ -299,7 +299,7 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     pa: { label: 'ਬੈਂਕ ਦਾ ਨਾਮ (ਜਿਸ ਵਿੱਚੋਂ ਪੈਸੇ ਕੱਟੇ)', importance: 'ਬੈਂਕ ਨੋਡਲ ਅਧਿਕਾਰੀ ਨੂੰ ਸੂਚਿਤ ਕਰਨ ਲਈ ਲੋੜੀਂਦਾ' },
   },
   fraudster: {
-    en: { label: 'Fraudster / Beneficiary Identifier', importance: 'Needed to block beneficiary account & register FIR' },
+    en: { label: 'Scammer or receiver ID', importance: 'Needed to block the account and file an FIR' },
     hi: { label: 'धोखेबाज़ का UPI ID / खाता / मोबाइल नंबर', importance: 'लाभार्थी खाते को ब्लॉक करने और प्राथमिकी दर्ज करने के लिए आवश्यक' },
     bn: { label: 'প্রতারকের UPI ID / অ্যাকাউন্ট / নম্বর', importance: 'প্রতারকের অ্যাকাউন্ট ব্লক এবং এফআইআর করার জন্য প্রয়োজনীয়' },
     mr: { label: 'फसवणूक करणाऱ्याचा UPI ID / खाते / फोन', importance: 'खाते ब्लॉक करण्यासाठी आणि एफआयआर नोंदवण्यासाठी आवश्यक' },
@@ -313,7 +313,7 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     pa: { label: 'ਧੋਖੇਬਾਜ਼ ਦਾ UPI ID / ਖਾਤਾ / ਮੋਬਾਈਲ ਨੰਬਰ', importance: 'ਖਾਤਾ ਬਲਾਕ ਕਰਨ ਅਤੇ ਐੱਫ.ਆੀ.ਆਰ. ਦਰਜ ਕਰਨ ਲਈ ਲੋੜੀਂਦਾ' },
   },
   complainant: {
-    en: { label: 'Complainant Full Name', importance: 'Required for legal FIR and police statement' },
+    en: { label: 'Your full name', importance: 'Needed for an FIR and police statement' },
     hi: { label: 'शिकायतकर्ता का पूरा नाम', importance: 'कानूनी FIR और पुलिस बयान के लिए आवश्यक' },
     bn: { label: 'অভিযোগকারীর পুরো নাম', importance: 'আইনি এফআইআর এবং পুলিশের বিবৃতির জন্য প্রয়োজনীয়' },
     mr: { label: 'तक्रारदाराचे पूर्ण नाव', importance: 'कायदेशीर एफआयआर आणि पोलीस जबाबासाठी आवश्यक' },
@@ -327,7 +327,7 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     pa: { label: 'ਸ਼ਿਕਾਇਤਕਰਤਾ ਦਾ ਪੂਰਾ ਨਾਮ', importance: 'ਕਾਨੂੰਨੀ ਐੱਫ.ਆਈ.ਆਰ. ਅਤੇ ਪੁਲਿਸ ਬਿਆਨ ਲਈ ਲੋੜੀਂਦਾ' },
   },
   amount: {
-    en: { label: 'Disputed Fraud Amount', importance: 'Specifies exact claim amount for recovery' },
+    en: { label: 'Amount lost', importance: 'Needed to state the amount to recover' },
     hi: { label: 'धोखाधड़ी की राशि (₹)', importance: 'वसूली के लिए दावा की गई सटीक राशि' },
     bn: { label: 'প্রতারণার আর্থিক পরিমাণ (₹)', importance: 'টাকা উদ্ধারের জন্য নির্দিষ্ট দাবিকৃত পরিমাণ' },
     mr: { label: 'फसवणुकीची रक्कम (₹)', importance: 'वसुलीसाठी दावा केलेली अचूक रक्कम' },

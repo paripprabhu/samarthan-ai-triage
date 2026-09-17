@@ -21,14 +21,14 @@ function quickRead(text: string, lang: SupportedLanguage) {
   const isEn = lang === 'en'
   const meta = LANGUAGE_MAP[lang] || LANGUAGE_MAP.en
   if (/invest|trading|stock|crypto|profit|portfolio|मुनाफ़ा|निवेश|বিনিয়োগ|ಹೂಡಿಕೆ|முதலீடு|పెట్టుబడి|રોકાણ|سرمایہ|ਨਿਵੇਸ਼|നിക്ഷേപം|ନିବେଶ/.test(t))
-    return { type: isEn ? 'Investment Scam' : `${meta.nativeName}: Investment Scam`, law: 'IT Act 66D', action: isEn ? 'Report on RBI Sachet portal' : 'Report on RBI Sachet portal + 1930', Icon: Wallet }
+    return { type: isEn ? 'Investment scam' : `${meta.nativeName}: Investment Scam`, law: 'IT Act 66D', action: isEn ? 'Report it on the RBI Sachet portal' : 'Report on RBI Sachet portal + 1930', Icon: Wallet }
   if (/loan app|sextort|blackmail|threat|nude|morph|ब्लैकमेल|धमकी|হুমকি|ಬ್ಲ್ಯಾಕ್‌ಮೇಲ್|மிரட்டல்|బెదిరింపు|ધમકી|بلیک میل|ਧਮਕੀ|ഭീഷണി|ଧମକ/.test(t))
-    return { type: isEn ? 'Extortion & Blackmail' : `${meta.nativeName}: Extortion & Blackmail`, law: 'IT Act 66E + 384 BNS', action: isEn ? 'Call 1930, preserve screenshots' : 'Call 1930, preserve screenshots', Icon: ShieldCheck }
+    return { type: isEn ? 'Threats or blackmail' : `${meta.nativeName}: Extortion & Blackmail`, law: 'IT Act 66E + 384 BNS', action: isEn ? 'Call 1930. Save screenshots.' : 'Call 1930, preserve screenshots', Icon: ShieldCheck }
   if (/upi|bank|otp|debit|credit card|imps|neft|account|बैंक|खाता|ব্যাঙ্ক|ಬ್ಯಾಂಕ್|வங்கி|బ్యాంకు|બેંક|بینک|ਬੈਂਕ|ബാങ്ക്|ବ୍ୟାଙ୍କ/.test(t))
-    return { type: isEn ? 'Financial Fraud' : `${meta.nativeName}: Financial Fraud`, law: 'IT Act 66C / 66D', action: isEn ? 'Notify bank nodal officer + call 1930' : 'Notify bank nodal officer + call 1930', Icon: Building2 }
+    return { type: isEn ? 'Money fraud' : `${meta.nativeName}: Financial Fraud`, law: 'IT Act 66C / 66D', action: isEn ? 'Call your bank and 1930.' : 'Notify bank nodal officer + call 1930', Icon: Building2 }
   if (/instagram|facebook|whatsapp|fake profile|impersonat|फ़र्ज़ी|पहचान|ভুয়া|ನಕಲಿ|போலி|నకిలీ|નકલી|جعلی|ਨਕਲੀ|വ്യാജ|ନକଲି/.test(t))
-    return { type: isEn ? 'Identity Theft' : `${meta.nativeName}: Identity Theft`, law: 'IT Act 66C / 66D', action: isEn ? 'Report to the platform + NCRP' : 'Report to the platform + NCRP', Icon: Scale }
-  return { type: isEn ? 'Other Cyber Crime' : `${meta.nativeName}: Cyber Crime`, law: 'IT Act 66', action: isEn ? 'Call the 1930 helpline' : 'Call 1930 Helpline', Icon: ShieldCheck }
+    return { type: isEn ? 'Identity misuse' : `${meta.nativeName}: Identity Theft`, law: 'IT Act 66C / 66D', action: isEn ? 'Report the profile and file a report.' : 'Report to the platform + NCRP', Icon: Scale }
+  return { type: isEn ? 'Other cybercrime' : `${meta.nativeName}: Cyber Crime`, law: 'IT Act 66', action: isEn ? 'Call 1930 for help.' : 'Call 1930 Helpline', Icon: ShieldCheck }
 }
 
 export default function HeroSection({ language }: HeroSectionProps) {
@@ -98,7 +98,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
   const cleanCtaLearnMore = trans.hero.ctaLearnMore.replace(/[\s↓▼]+$/, '').trim()
 
   return (
-    <section className="relative w-full pt-8 pb-10 sm:pt-10 sm:pb-14 md:pt-12 md:pb-16 overflow-hidden isolate border-b border-border/70">
+    <section className="relative w-full pt-8 pb-10 sm:pt-10 sm:pb-14 md:pt-12 md:pb-16 overflow-hidden isolate border-b border-border">
       <div aria-hidden="true" className="signal-grid absolute inset-x-0 top-0 h-[34rem] opacity-60 dark:opacity-40" />
       <svg aria-hidden="true" viewBox="0 0 1440 360" preserveAspectRatio="none" className="absolute inset-x-0 top-8 h-[23rem] w-full opacity-90 dark:opacity-60">
         <path className="signal-path" d="M-20 255 C 185 135, 310 314, 500 198 S 780 68, 962 206 S 1225 326, 1465 100" fill="none" />
@@ -131,7 +131,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
             <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
               <button
                 onClick={goToIntake}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white rounded-md px-5 sm:px-6 py-3 text-sm font-semibold transition-colors shadow-sm ring-1 ring-primary/10 min-h-[44px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white rounded-md px-5 sm:px-6 py-3 text-sm font-semibold transition-colors shadow-sm ring-1 ring-primary-active min-h-[44px]"
               >
                 <span>{cleanCtaReport}</span>
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -145,26 +145,8 @@ export default function HeroSection({ language }: HeroSectionProps) {
               </a>
             </div>
 
-            {/* Placed directly in the empty space below buttons */}
-            <div className="mt-6 sm:mt-7 pt-4 sm:pt-5 border-t border-border">
-              {/* Micro trust indicators */}
-              <div className="flex flex-wrap items-center gap-y-2 gap-x-3.5 sm:gap-x-4 text-xs text-zinc-600 dark:text-zinc-300 font-semibold">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  {hi ? 'डिजीलॉकर प्रमाणित पहचान' : 'DigiLocker Verified'}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  {hi ? 'IT एक्ट व BNS वैधानिक मैपिंग' : 'IT Act & BNS Statutory Routing'}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  {hi ? '1930 NCRP गोल्डन ऑवर मानक' : '1930 NCRP Golden Hour Protocol'}
-                </span>
-              </div>
-
-              {/* Explicit simulation disclaimer notice */}
-              <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
+            <div className="mt-5 pt-4 border-t border-border">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
                 {ui.demoNotice}
               </p>
             </div>
@@ -172,8 +154,8 @@ export default function HeroSection({ language }: HeroSectionProps) {
 
           {/* Right: direct audio is intentionally the dominant hero interaction. */}
           <div className="relative w-full lg:col-span-5 xl:col-span-5 max-w-[480px] mx-auto lg:mx-0 lg:ml-auto">
-            <div aria-hidden="true" className="absolute -inset-4 bg-primary/5 blur-3xl rounded-full" />
-            <div className="relative w-full rounded-xl border border-primary/15 dark:border-primary/35 bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md shadow-[var(--shadow-panel)] overflow-hidden">
+            <div aria-hidden="true" className="absolute -inset-4 bg-primary-tint blur-3xl rounded-full" />
+            <div className="relative w-full rounded-xl border border-border bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md shadow-[var(--shadow-panel)] overflow-hidden">
               <div className="h-1 bg-gradient-to-r from-amber-500 via-primary to-emerald-600" />
               {/* Desk header */}
               <div className="flex flex-col items-start gap-2 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-5 py-3 sm:py-3.5 border-b border-border bg-surface shrink-0">
@@ -193,8 +175,8 @@ export default function HeroSection({ language }: HeroSectionProps) {
                 <div className="flex-1 flex flex-col justify-center">
                   <p className="text-xs sm:text-[13px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-3 sm:mb-4 text-center">
                     {committed
-                      ? (isEn ? 'Report captured: review details or see full report' : `${meta.nativeName}: Report captured`)
-                      : (isEn ? 'Try us out: tap the mic and say your report' : `${meta.nativeName}: Speak your report`)}
+                      ? (isEn ? 'Your report is ready to review' : `${meta.nativeName}: Report captured`)
+                      : (isEn ? 'Tap the mic and tell us what happened' : `${meta.nativeName}: Speak your report`)}
                   </p>
 
                   <div className="py-2 sm:py-3">
@@ -208,7 +190,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                   </div>
 
                   {isTranscribing && (
-                    <div className="mt-4 p-4 rounded-lg bg-primary-tint border border-primary/20 flex items-center justify-center gap-2.5 text-xs font-semibold text-primary">
+                    <div className="mt-4 p-4 rounded-lg bg-primary-tint border border-primary flex items-center justify-center gap-2.5 text-xs font-semibold text-primary">
                       <Loader2 className="w-4 h-4 animate-spin text-primary" />
                       <span>{trans.intake.analyzingIncident}</span>
                     </div>
@@ -219,19 +201,19 @@ export default function HeroSection({ language }: HeroSectionProps) {
                 {!committed && !isTranscribing && (
                   <div className="mt-auto pt-4 sm:pt-5 border-t border-zinc-100 dark:border-zinc-800">
                     <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2.5">
-                      {hi ? 'या त्वरित सिमुलेशन चुनें:' : 'Or test with a 1-click simulation:'}
+                      {hi ? 'या त्वरित सिमुलेशन चुनें:' : 'Or try a demo example:'}
                     </p>
                     <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {[
-                        { en: '₹50,000 lost on UPI link', hi: 'UPI लिंक से ₹50,000 कटे' },
-                        { en: 'Loan app blackmail threats', hi: 'लोन ऐप से ब्लैकमेल धमकी' },
-                        { en: 'Fake profile on Instagram', hi: 'इंस्टाग्राम पर फर्जी प्रोफाइल' }
+                        { en: '₹50,000 sent through a UPI link', hi: 'UPI लिंक से ₹50,000 कटे' },
+                        { en: 'Loan app threats', hi: 'लोन ऐप से ब्लैकमेल धमकी' },
+                        { en: 'Fake Instagram profile', hi: 'इंस्टाग्राम पर फर्जी प्रोफाइल' }
                       ].map((sample, idx) => (
                         <button
                           key={idx}
                           type="button"
                           onClick={() => setCommitted(hi ? sample.hi : sample.en)}
-                          className="text-xs sm:text-[13px] bg-zinc-50 dark:bg-zinc-900 hover:bg-primary-tint border border-zinc-200/80 dark:border-zinc-800 hover:border-primary/30 text-zinc-600 dark:text-zinc-300 hover:text-primary px-3 py-1.5 rounded-lg transition-all font-medium cursor-pointer"
+                          className="text-xs sm:text-[13px] bg-zinc-50 dark:bg-zinc-900 hover:bg-primary-tint border border-zinc-200/80 dark:border-zinc-800 hover:border-primary text-zinc-600 dark:text-zinc-300 hover:text-primary px-3 py-1.5 rounded-lg transition-all font-medium cursor-pointer"
                         >
                           &ldquo;{hi ? sample.hi : sample.en}&rdquo;
                         </button>
@@ -251,7 +233,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                       className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 hover:underline transition-colors cursor-pointer py-1"
                     >
                       <MessageCircle className="w-4 h-4 fill-emerald-600 text-emerald-600 dark:fill-emerald-500 dark:text-emerald-500" />
-                      <span>{hi ? 'व्हाट्सएप AI सिम्युलेटर (लाइव बॉट ऑफ़लाइन)' : 'Test WhatsApp AI Flow (In-App Simulator)'}</span>
+                      <span>{hi ? 'व्हाट्सएप AI सिम्युलेटर (लाइव बॉट ऑफ़लाइन)' : 'Try the WhatsApp demo'}</span>
                     </button>
                   </div>
                 )}
@@ -263,7 +245,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                         <div className="flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full bg-emerald-500" />
                           <p className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-                            {isEn ? 'Preliminary Incident Dossier (Form NCRP-1930)' : `${meta.nativeName} Incident Dossier`}
+                            {isEn ? 'Report summary' : `${meta.nativeName} Incident Dossier`}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -276,34 +258,34 @@ export default function HeroSection({ language }: HeroSectionProps) {
                             className="text-xs text-primary hover:underline font-medium flex items-center gap-1"
                           >
                             <RotateCcw className="w-3 h-3" />
-                            <span>{isEn ? 'Say it again' : 'Re-record'}</span>
+                            <span>{isEn ? 'Record again' : 'Re-record'}</span>
                           </button>
                         </div>
                       </div>
 
                       <div className="mb-3.5 p-3 rounded-md bg-white border border-zinc-200/90 text-xs text-zinc-800 leading-relaxed font-medium">
                         <span className="text-[10px] uppercase font-bold text-zinc-400 block mb-1">
-                          {isEn ? 'Citizen Statement:' : 'Statement:'}
+                          {isEn ? 'Your statement:' : 'Statement:'}
                         </span>
                         &ldquo;{committed}&rdquo;
                       </div>
 
                       <div className="space-y-2.5 text-sm">
-                        <Row label={isEn ? 'Fraud Classification' : 'Classification'} value={
+                        <Row label={isEn ? 'Type of report' : 'Classification'} value={
                           <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
                             <result.Icon className="w-3.5 h-3.5 text-primary" />
                             {result.type}
                           </span>
                         } />
-                        <Row label={isEn ? 'Applicable Law' : 'Section'} value={<span className="text-xs font-semibold text-zinc-700">{result.law}</span>} />
-                        <Row label={isEn ? 'Golden Hour Action' : 'Action'} value={<span className="text-zinc-700">{result.action}</span>} />
+                        <Row label={isEn ? 'Possible law' : 'Section'} value={<span className="text-xs font-semibold text-zinc-700">{result.law}</span>} />
+                        <Row label={isEn ? 'Do this now' : 'Action'} value={<span className="text-zinc-700">{result.action}</span>} />
                       </div>
 
                       <button
                         onClick={goToIntake}
                         className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white rounded-lg px-4 py-3 text-xs font-semibold transition-colors shadow-sm"
                       >
-                        <span>{isEn ? 'Proceed to Formal Filing (Form NCRP-1930)' : `${meta.nativeName}: Proceed to Filing`}</span>
+                        <span>{isEn ? 'Review the full report' : `${meta.nativeName}: Proceed to Filing`}</span>
                         <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                       </button>
 
@@ -317,7 +299,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                           className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 hover:underline transition-colors py-1 cursor-pointer"
                         >
                           <MessageCircle className="w-3.5 h-3.5 fill-emerald-600 text-emerald-600 dark:fill-emerald-500 dark:text-emerald-500" />
-                          <span>{hi ? 'व्हाट्सएप AI सिम्युलेटर (लाइव बॉट ऑफ़लाइन)' : 'Test WhatsApp AI Flow (In-App Simulator)'}</span>
+                          <span>{hi ? 'व्हाट्सएप AI सिम्युलेटर (लाइव बॉट ऑफ़लाइन)' : 'Try the WhatsApp demo'}</span>
                         </button>
                       </div>
                     </div>

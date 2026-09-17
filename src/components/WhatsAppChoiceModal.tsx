@@ -79,23 +79,23 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
   close: string
 }> = {
   en: {
-    title: 'Samarthan WhatsApp AI Triage',
-    subtitle: 'Citizen Cybercrime Assistance Portal Simulation',
-    defaultText: 'Hi Samarthan, I want to report a cybercrime incident.',
-    simTitle: 'In-App WhatsApp Simulator',
-    recommended: 'Recommended',
-    simDesc: 'Interactive WhatsApp mockup running inside this app. Zero phone needed: test voice notes, screenshot triage, and live complaint generation on the identical GPT-4o engine.',
-    simLaunch: 'Launch In-App Simulator',
-    realTitle: 'Open Real WhatsApp App',
-    realTag: 'WhatsApp AI Agent',
-    realDesc: 'Chat directly in your WhatsApp mobile or web app with our AI agent.',
-    evalHeadsUp: '💡 Live Gateway vs In-App Simulation:',
-    evalNotice: 'The In-App Simulator provides an immediate browser sandbox of the WhatsApp triage flow. The Real WhatsApp button connects to our live host daemon bridge, which runs on a personal phone and may go offline at any time. Both options run on the identical GPT-4o triage and database engine — the simulator always works.',
-    botOnline: 'Host Bridge: Connected',
-    botStandby: 'Host Bridge: Standby / Sleep',
-    botChecking: 'Checking bridge...',
+    title: 'Samarthan on WhatsApp',
+    subtitle: 'WhatsApp report demo',
+    defaultText: 'Hi Samarthan, I want to report cyber fraud.',
+    simTitle: 'Try the WhatsApp demo',
+    recommended: 'Use this demo',
+    simDesc: 'Try a voice note, message, or screenshot in this app.',
+    simLaunch: 'Open demo',
+    realTitle: 'Open WhatsApp',
+    realTag: 'Live bot',
+    realDesc: 'This option works when the live bot is available.',
+    evalHeadsUp: 'About this demo',
+    evalNotice: 'The in-app option is a demo. The live bot may be offline.',
+    botOnline: 'Live bot: online',
+    botStandby: 'Live bot: offline',
+    botChecking: 'Checking live bot...',
     openWa: 'Open WhatsApp',
-    footerAi: 'Both options use the identical Samarthan AI Engine',
+    footerAi: 'In-app demo',
     close: 'Close',
   },
   hi: {
@@ -329,17 +329,22 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
   const realWhatsAppUrl = `https://wa.me/916303807967?text=${encodeURIComponent(textToForward)}`
 
   return createPortal(
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-xs overflow-y-auto">
-      <div className="w-full max-w-xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden max-h-[92vh] flex flex-col my-auto">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-6">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="whatsapp-choice-title"
+        className="my-auto flex max-h-[92vh] w-full max-w-xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+      >
         {/* Header */}
-        <div className="bg-[#075E54] dark:bg-[#064e46] text-white p-4 sm:p-6 flex items-start justify-between shrink-0">
+        <div className="flex shrink-0 items-start justify-between bg-[#075E54] p-4 text-white sm:p-6">
           <div className="flex items-center gap-3 sm:gap-3.5">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-700/80 border border-emerald-400/40 flex items-center justify-center text-white shadow-sm flex-shrink-0">
               <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-sm sm:text-lg font-bold indic-headline">
+                <h3 id="whatsapp-choice-title" className="text-sm font-bold indic-headline sm:text-lg">
                   {t.title}
                 </h3>
                 <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
@@ -355,7 +360,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
             type="button"
             onClick={onClose}
             className="text-emerald-200 hover:text-white hover:bg-white/10 rounded-lg p-1.5 transition-colors cursor-pointer shrink-0"
-            aria-label="Close"
+            aria-label={t.close}
           >
             <X className="w-5 h-5" />
           </button>
@@ -365,27 +370,28 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
         <div className="p-4 sm:p-6 space-y-3.5 sm:space-y-4 overflow-y-auto">
 
           {/* ⚠️ Bot Offline Warning Callout */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/70 flex items-start gap-3 text-xs leading-relaxed text-red-900 dark:text-red-200 shadow-xs">
-            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs leading-relaxed text-red-900 sm:p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <div>
-              <span className="font-bold text-sm block text-red-950 dark:text-red-100 mb-0.5">
-                {isHi ? '⚠️ लाइव व्हाट्सएप बॉट वर्तमान में बंद / ऑफ़लाइन है' : '⚠️ Live WhatsApp Companion Bot Is Currently Offline'}
+              <span className="mb-0.5 block text-sm font-bold text-red-950">
+                {isHi ? '⚠️ लाइव व्हाट्सएप बॉट वर्तमान में बंद / ऑफ़लाइन है' : '⚠️ Live WhatsApp bot is offline'}
               </span>
-              <span className="text-red-800 dark:text-red-300">
+              <span className="text-red-800">
                 {isHi
                   ? 'फोन से जुड़ा लाइव व्हाट्सएप बॉट (+91 63038 07967) वर्तमान में चालू नहीं है। कृपया टेस्टिंग और मूल्यांकन के लिए नीचे दिए गए "इन-ऐप व्हाट्सएप सिम्युलेटर" का उपयोग करें — यह बिल्कुल समान GPT-4o AI ट्रायज इंजन को सीधे ब्राउज़र में चलाता है।'
-                  : 'The companion phone WhatsApp bot (+91 63038 07967) is currently offline / not running. For hackathon testing and evaluation, please use the In-App WhatsApp Simulator below — it runs the identical GPT-4o triage and conversation engine directly in your browser with zero phone required.'}
+                  : 'The live WhatsApp bot (+91 63038 07967) is offline. Use the in-app demo below.'}
               </span>
             </div>
           </div>
 
           {/* Option 1: In-App WhatsApp Web Simulator */}
-          <div
+          <button
+            type="button"
             onClick={() => {
               onClose()
               onOpenSimulator()
             }}
-            className="group relative p-4 sm:p-5 rounded-xl border-2 border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 transition-all cursor-pointer shadow-xs hover:shadow-md ring-2 ring-emerald-500/20"
+            className="group relative w-full rounded-xl border-2 border-emerald-500 bg-emerald-50/50 p-4 text-start shadow-xs ring-2 ring-emerald-500/20 transition-all hover:bg-emerald-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-700 sm:p-5"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3.5">
@@ -394,27 +400,27 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-sm sm:text-base text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors indic-headline">
+                    <span className="text-sm font-bold text-foreground transition-colors group-hover:text-emerald-700 indic-headline sm:text-base">
                       {t.simTitle}
                     </span>
                     <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
-                      {isHi ? 'टेस्टिंग हेतु अनुशंसित' : '⭐ Active for Testing'}
+                      {isHi ? 'टेस्टिंग हेतु अनुशंसित' : '⭐ Try this demo'}
                     </span>
                   </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1.5 leading-relaxed indic-body">
+                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground indic-body">
                     {t.simDesc}
                   </p>
-                  <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform bg-white dark:bg-zinc-800 px-3 py-1.5 rounded-lg border border-emerald-300 dark:border-emerald-700 shadow-2xs">
+                  <div className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-white px-3 py-1.5 text-xs font-bold text-emerald-700 shadow-2xs transition-transform group-hover:translate-x-0.5">
                     <span className="indic-body">{t.simLaunch}</span>
                     <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </button>
 
           {/* Option 2: Real WhatsApp Bot */}
-          <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-800/40 space-y-3 opacity-75">
+          <div className="space-y-3 rounded-xl border border-border bg-surface p-4 opacity-75 sm:p-5">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3.5">
                 <div className="w-10 h-10 rounded-lg bg-zinc-400 text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
@@ -422,17 +428,17 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-sm sm:text-base text-zinc-700 dark:text-zinc-300 indic-headline">
+                    <span className="text-sm font-bold text-foreground indic-headline sm:text-base">
                       {t.realTitle}
                     </span>
-                    <span className="text-xs font-semibold text-red-700 dark:text-red-400 bg-red-100/80 dark:bg-red-950/60 px-2 py-0.5 rounded-md indic-body">
+                    <span className="rounded-md bg-red-100/80 px-2 py-0.5 text-xs font-semibold text-red-700 indic-body">
                       {isHi ? '🔴 बॉट ऑफ़लाइन' : '🔴 Bot Offline'}
                     </span>
                   </div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed indic-body">
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground indic-body">
                     {isHi
                       ? 'लाइव फोन ब्रिज (+91 63038 07967) वर्तमान में बंद है। वास्तविक रिस्पांस के लिए कृपया ऊपर दिए गए सिम्युलेटर का उपयोग करें।'
-                      : 'The real phone bridge (+91 63038 07967) daemon is not running. Use the In-App Simulator above to test.'}
+                      : 'The live WhatsApp bot is offline. Use the in-app demo above.'}
                   </p>
                 </div>
               </div>
@@ -449,7 +455,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
                       : 'bg-zinc-400'
                   }`}
                 />
-                <span className="text-xs text-zinc-500 dark:text-zinc-400 indic-body">
+                <span className="text-xs text-muted-foreground indic-body">
                   {botOnline === true
                     ? t.botOnline
                     : botOnline === false
@@ -473,7 +479,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
         </div>
 
         {/* Footer info note */}
-        <div className="px-5 sm:px-6 py-3 bg-zinc-50 dark:bg-zinc-800/60 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center justify-between border-t border-border bg-surface px-5 py-3 text-xs text-muted-foreground sm:px-6">
           <span className="flex items-center gap-1 indic-body">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
             {t.footerAi}
@@ -481,7 +487,7 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
           <button
             type="button"
             onClick={onClose}
-            className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 underline font-medium cursor-pointer indic-body"
+            className="cursor-pointer font-medium text-foreground underline underline-offset-2 hover:text-primary indic-body"
           >
             {t.close}
           </button>

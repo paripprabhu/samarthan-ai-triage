@@ -70,7 +70,7 @@ export default function SmartActions({
   const kind = ch.kind
   const bankInfo = resolveBankInfo(bankName)
   const followUpText = followUpPoints.length > 0
-    ? `\n\nAdditional updates since filing:\n${followUpPoints.map(p => `- ${p}`).join('\n')}`
+    ? `\n\nNew details:\n${followUpPoints.map(p => `- ${p}`).join('\n')}`
     : ''
 
   const handlePrimarySimulate = () => {
@@ -85,15 +85,15 @@ export default function SmartActions({
         onBankNotified?.()
       }, 2000)
     } else {
-      const target = recommendedChannelTarget || (kind === 'platform' ? 'Platform Cyber Cell' : 'Agency Desk')
+      const target = recommendedChannelTarget || (kind === 'platform' ? 'Platform team' : 'Agency team')
       const offender = fraudsterIdentifier && fraudsterIdentifier !== 'Not Identified' ? fraudsterIdentifier : 'the reported account'
       const draft = [
-        `Report to: ${target}`,
-        `Incident ID: ${incidentId}`,
-        `Reported account / entity: ${offender}`,
+        `Send to: ${target}`,
+        `Report ID: ${incidentId}`,
+        `Reported account: ${offender}`,
         summary ? `\nWhat happened:\n${summary}` : '',
         followUpText,
-        `\nRequested action: Take down / block the account and preserve records for law enforcement (NCRP).`,
+        `\nRequested action: Block the account and keep records for law enforcement.`,
       ].join('\n')
       navigator.clipboard?.writeText(draft).catch(() => {})
 
@@ -136,15 +136,15 @@ export default function SmartActions({
   if (kind === 'bank') {
     idleDesc = lang === 'hi'
       ? `${bankInfo.name} के नोडल अधिकारी को तत्काल फ्रीज नोटिस भेजें (डेमो)`
-      : (loc.bankActionDesc || `Simulates sending freeze notice to ${bankInfo.name} nodal desk`)
+      : (loc.bankActionDesc || `Demo: send a freeze request to ${bankInfo.name}`)
   } else if (kind === 'platform') {
     idleDesc = lang === 'hi'
       ? `${recommendedChannelTarget || 'प्लेटफ़ॉर्म'} के लिए टेकडाउन रिपोर्ट भेजने का सिमुलेशन (डेमो)`
-      : `Simulates filing takedown report with ${recommendedChannelTarget || 'the platform'}`
+      : `Demo: report this to ${recommendedChannelTarget || 'the platform'}`
   } else {
     idleDesc = lang === 'hi'
       ? `${recommendedChannelTarget || 'एजेंसी'} को विवरण भेजने का सिमुलेशन (डेमो)`
-      : `Simulates escalating dossier to ${recommendedChannelTarget || 'the agency'}`
+      : `Demo: send this report to ${recommendedChannelTarget || 'the agency'}`
   }
 
   // 2) Simulating description
@@ -152,15 +152,15 @@ export default function SmartActions({
   if (kind === 'bank') {
     simulatingDesc = lang === 'hi'
       ? `${bankInfo.name} नोडल साइबर डेस्क से संपर्क किया जा रहा है (डेमो)...`
-      : (loc.bankActionSimulating || `Connecting to ${bankInfo.name} nodal cyber desk (demo)...`)
+      : (loc.bankActionSimulating || `Sending a demo request to ${bankInfo.name}...`)
   } else if (kind === 'platform') {
     simulatingDesc = lang === 'hi'
       ? `${recommendedChannelTarget || 'प्लेटफ़ॉर्म'} को विवरण भेजा जा रहा है (डेमो)...`
-      : `Transmitting incident report to ${recommendedChannelTarget || 'the platform'} (demo)...`
+      : `Sending a demo report to ${recommendedChannelTarget || 'the platform'}...`
   } else {
     simulatingDesc = lang === 'hi'
       ? `${recommendedChannelTarget || 'एजेंसी'} को विवरण भेजा जा रहा है (डेमो)...`
-      : `Transmitting incident dossier to ${recommendedChannelTarget || 'the agency'} (demo)...`
+      : `Sending a demo report to ${recommendedChannelTarget || 'the agency'}...`
   }
 
   // 3) Done description
@@ -168,23 +168,23 @@ export default function SmartActions({
   if (kind === 'bank') {
     doneDesc = lang === 'hi'
       ? `${bankInfo.name} नोडल अधिकारी को सूचित किया गया • खाता फ्रीज दर्ज (डेमो)`
-      : `Notified ${primaryConfirmedTarget || bankInfo.email} • Freeze logged (demo)`
+      : `Demo: a freeze request was marked as sent to ${primaryConfirmedTarget || bankInfo.email}`
   } else if (kind === 'platform') {
     doneDesc = lang === 'hi'
       ? `${primaryConfirmedTarget || 'प्लेटफ़ॉर्म'} को रिपोर्ट दर्ज की गई (डेमो)`
-      : `Report logged with ${primaryConfirmedTarget || 'platform'} Trust & Safety (demo)`
+      : `Demo: report marked as sent to ${primaryConfirmedTarget || 'the platform'}`
   } else {
     doneDesc = lang === 'hi'
       ? `${primaryConfirmedTarget || 'एजेंसी'} को रिपोर्ट दर्ज की गई (डेमो)`
-      : `Dossier submitted to ${primaryConfirmedTarget || 'agency'} (demo)`
+      : `Demo: report marked as sent to ${primaryConfirmedTarget || 'the agency'}`
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 sm:p-6 shadow-sm">
-      <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-1 uppercase tracking-wide">
+    <div className="bg-card rounded-lg border border-border p-4 sm:p-5 shadow-none">
+      <h3 className="text-sm font-semibold text-foreground mb-1 uppercase tracking-wide">
         {loc.header}
       </h3>
-      <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">{lang === 'hi' ? ch.descHi : ch.desc}</p>
+      <p className="text-xs text-muted-foreground mb-4">{lang === 'hi' ? ch.descHi : ch.desc}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Primary channel-driven action - Fully Simulated, Never takes user away */}
@@ -256,7 +256,7 @@ export default function SmartActions({
             {locating ? (
               <p className="text-xs text-zinc-500 dark:text-zinc-400">{loc.routePoliceLocating}</p>
             ) : policeStation ? (
-              <p className="text-xs text-green-700 dark:text-green-400 font-medium">Routed to: {policeStation} (demo)</p>
+              <p className="text-xs text-green-700 dark:text-green-400 font-medium">Demo route: {policeStation}</p>
             ) : (
               <p className="text-xs text-zinc-500 dark:text-zinc-400">{loc.routePoliceDesc}</p>
             )}

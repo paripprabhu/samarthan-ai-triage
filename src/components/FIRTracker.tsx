@@ -28,8 +28,8 @@ export default function FIRTracker({ hi, language, status, onAdvance }: FIRTrack
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 sm:p-6 shadow-sm">
-      <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-6 uppercase tracking-wider">
+    <div className="bg-card rounded-lg border border-border p-4 sm:p-5 shadow-none">
+      <h3 className="text-xs sm:text-sm font-semibold text-foreground mb-5 uppercase tracking-wider">
         {loc.header}
       </h3>
 
