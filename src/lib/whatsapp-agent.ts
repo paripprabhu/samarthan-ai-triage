@@ -152,7 +152,13 @@ export function detectLanguage(text: string): SupportedLanguage {
   }
 
   const bnMatches = trimmed.match(/[\u0980-\u09FF]/g)
-  if (bnMatches) addCount('bn', bnMatches.length)
+  if (bnMatches) {
+    // Assamese shares this block with Bengali. Check its distinctive letters
+    // and vocabulary before the generic Bengali fallback.
+    const assameseMarkers = /[\u09F0\u09F1]|(?:অসম|মই|মোৰ|আছে|হয়|টকা|প্ৰ|চাইবাৰ)/
+    if (assameseMarkers.test(trimmed)) addCount('as', bnMatches.length)
+    else addCount('bn', bnMatches.length)
+  }
 
   const teMatches = trimmed.match(/[\u0C00-\u0C7F]/g)
   if (teMatches) addCount('te', teMatches.length)
@@ -163,16 +169,16 @@ export function detectLanguage(text: string): SupportedLanguage {
   const guMatches = trimmed.match(/[\u0A80-\u0AFF]/g)
   if (guMatches) addCount('gu', guMatches.length)
 
-  // In Indian cybercrime reporting, spoken Hindi/Hindustani audio is frequently transcribed
-  // by Whisper into Perso-Arabic/Urdu script unless constrained. To prevent Hindi reports from
-  // mistakenly being classified as Urdu, treat Perso-Arabic text as Hindi ('hi') unless the user
-  // explicitly chooses Urdu from the menu or sends an explicit Urdu switch command.
+  // Urdu and Sindhi share Perso-Arabic script. Never label that script as Hindi.
+  // We only classify it when distinctive vocabulary is present; ambiguous text stays neutral.
   const urMatches = trimmed.match(/[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF]/g)
   if (urMatches) {
-    if (/^(?:ur|urdu|اردو)$/i.test(trimmed.trim())) {
+    const sindhiMarkers = /(?:آهي|آهيان|آهن|مان|منهنجو|منھنجو|سنڌي|سنڌ|پئسا|فراڊ|شڪايت|طرفان|لاءِ|ڪيو|ٿيو|وڊيو|ڊجيٽل)/
+    const urduMarkers = /(?:اردو|ہے|ہیں|میں|میرا|میری|میرے|نہیں|شکایت|دھوکہ|فراڈ|پیسے|کرنا|ہوا|والد|کی جانب سے)/
+    if (sindhiMarkers.test(trimmed) && !urduMarkers.test(trimmed)) {
+      addCount('sd', urMatches.length)
+    } else if (/^(?:ur|urdu|اردو)$/i.test(trimmed.trim()) || urduMarkers.test(trimmed)) {
       addCount('ur', urMatches.length)
-    } else {
-      addCount('hi', urMatches.length)
     }
   }
 
@@ -192,7 +198,10 @@ export function detectLanguage(text: string): SupportedLanguage {
   if (devMatches) {
     const hindiMarkers = /(?:मेरा|मेरी|मेरे|मुझे|मुझसे|हुआ|हुई|हुए|गया|गई|गए|है|हैं|था|थी|थे|नहीं|नही|शिकायत|धोखा|धोखाधड़ी|ठगी|खाता|खाते|पैसा|पैसे|रुपये|रुपया|निकाले|निकाल|कटा|कटे|कटी|आरोपी|बताओ|कीजिए)/
     const marathiMarkers = /(?:माझे|माझा|माझी|माझ्या|माझं|झाले|झाला|झाली|झालं|गेले|गेला|गेली|गेलं|आहे|आहेत|नाही|नाहीत|तक्रार|फसवणूक|खात्यातून|रुपयांची|नोंदवा|खंडणी|दिसत|करायचे|करायची|केली)/
-    if (marathiMarkers.test(trimmed) && !hindiMarkers.test(trimmed)) {
+    const nepaliMarkers = /(?:मेरो|मलाई|भयो|भएक|छु|छन्|गरे|रुपैयाँ|रकम|ठगी|उजुरी|प्रहरी|तर्फबाट|लागि|पैसा)/
+    if (nepaliMarkers.test(trimmed) && !hindiMarkers.test(trimmed) && !marathiMarkers.test(trimmed)) {
+      addCount('ne', devMatches.length)
+    } else if (marathiMarkers.test(trimmed) && !hindiMarkers.test(trimmed)) {
       addCount('mr', devMatches.length)
     } else {
       addCount('hi', devMatches.length)
@@ -230,9 +239,12 @@ export function detectLanguage(text: string): SupportedLanguage {
   if (/\b(?:na peru|naa peru|dabbulu|poyayi|jarigindi|chudandi|chesaru|cheyinchukunnaru|ichi|pettincharu|chesindi|unnaru|vyakthi|naku|telugu)\b/i.test(trimmed)) return 'te'
   if (/\b(?:en peyar|en peyer|ennoda|panam|pochu|yematram|kaasu|pannala|panniduvaanga|thiruditaanga|solli|vandhuchu|pannitan|pannaanga|tamil)\b/i.test(trimmed)) return 'ta'
   if (/\b(?:mora nama|mora na|mora|tanka|katigala|karichanti|kariba|karuchi|threat dei|odia|oriya)\b/i.test(trimmed)) return 'or'
+  if (/\b(?:moi|mor naam|moiu|ase|asil|korisu|hoise|hoisil|toka|poisa|thog|probonchona|assamese|axomiya)\b/i.test(trimmed)) return 'as'
   if (/\b(?:amar name|amar naam|amar|amader|ekta|kore|korche|hoyechhe|hoyeche|geche|katlo|katse|thokano|niyechhe|bengali|bangla)\b/i.test(trimmed)) return 'bn'
   if (/\b(?:da misuse|ton|kadheya|mang leya|de naa te|ban ke|laaye|pind|gall|ch paise|chite|kiti|punjabi)\b/i.test(trimmed)) return 'pa'
   if (/\b(?:majhe naav|mazhe naav|majhe|mazhe|ahe|aahe|kela|pathvun|maagat|ahet|sathi|chori|jhale|gela|gele|fusavli|takraar|karnyachya|marathi)\b/i.test(trimmed)) return 'mr'
+  if (/\b(?:mero naam|ma|malai|bhayo|bhayeko|chha|chhu|gariyo|rupaiya|thagi|ujuri|prahari|nepali)\b/i.test(trimmed)) return 'ne'
+  if (/\b(?:man|munhjo|munhji|aahe|aahiyan|sindhi|paesa|fraud|shikayat|tarafan|laai|kayo|thiyo)\b/i.test(trimmed)) return 'sd'
   if (/^(?:ur|urdu|اردو)$/i.test(trimmed.trim())) return 'ur'
   // Only trigger Hindi detection on words that are distinctly Hindi/Hindustani and would
   // NOT appear in a purely English sentence (exclude: name, my, fraud, account, bank, etc.)
@@ -244,7 +256,7 @@ export function detectLanguage(text: string): SupportedLanguage {
 export function matchLanguageSwitch(trimmed: string): SupportedLanguage | null {
   const t = trimmed.trim().toLowerCase()
 
-  // 1. Exact numeric picks (1 to 12)
+  // 1. Exact numeric picks (1 to 15)
   if (/^(?:1|1\.|1️⃣)$/.test(t)) return 'en'
   if (/^(?:2|2\.|2️⃣)$/.test(t)) return 'hi'
   if (/^(?:3|3\.|3️⃣)$/.test(t)) return 'bn'
@@ -257,6 +269,9 @@ export function matchLanguageSwitch(trimmed: string): SupportedLanguage | null {
   if (/^(?:10|10\.|🔟|1️⃣0️⃣)$/.test(t)) return 'or'
   if (/^(?:11|11\.|1️⃣1️⃣)$/.test(t)) return 'ml'
   if (/^(?:12|12\.|1️⃣2️⃣)$/.test(t)) return 'pa'
+  if (/^(?:13|13\.|1️⃣3️⃣)$/.test(t)) return 'as'
+  if (/^(?:14|14\.|1️⃣4️⃣)$/.test(t)) return 'ne'
+  if (/^(?:15|15\.|1️⃣5️⃣)$/.test(t)) return 'sd'
 
   // 2. Language name keywords / scripts
   if (/^(?:en|english|angrezi|angreji)(?:\s+(?:please|plz|language))?$/i.test(t) ||
@@ -342,6 +357,18 @@ export function matchLanguageSwitch(trimmed: string): SupportedLanguage | null {
       /(?:change|switch|set)\s*(?:language\s*)?(?:to\s*)?(?:punjabi|ਪੰਜਾਬੀ)/i.test(t)) {
     return 'pa'
   }
+
+  if (/^(?:as|assamese|axomiya|অসমীয়া)(?:\s+(?:please|plz|language))?$/i.test(t) ||
+      /(?:talk|speak|chat)\s*(?:in\s+)?(?:assamese|axomiya|অসমীয়া)/i.test(t) ||
+      /(?:change|switch|set)\s*(?:language\s*)?(?:to\s*)?(?:assamese|axomiya|অসমীয়া)/i.test(t)) return 'as'
+
+  if (/^(?:ne|nepali|नेपाली)(?:\s+(?:please|plz|language))?$/i.test(t) ||
+      /(?:talk|speak|chat)\s*(?:in\s+)?(?:nepali|नेपाली)/i.test(t) ||
+      /(?:change|switch|set)\s*(?:language\s*)?(?:to\s*)?(?:nepali|नेपाली)/i.test(t)) return 'ne'
+
+  if (/^(?:sd|sindhi|سنڌي|सिन्धी)(?:\s+(?:please|plz|language))?$/i.test(t) ||
+      /(?:talk|speak|chat)\s*(?:in\s+)?(?:sindhi|سنڌي|सिन्धी)/i.test(t) ||
+      /(?:change|switch|set)\s*(?:language\s*)?(?:to\s*)?(?:sindhi|سنڌي|सिन्धी)/i.test(t)) return 'sd'
 
   return null
 }
@@ -452,8 +479,8 @@ export function isDetailedIncidentPrompt(text: string, voiceTranscript?: string)
   const full = (voiceTranscript || text).trim()
   if (!full) return false
 
-  // Disqualify short navigation keywords, greetings, and system numbers across all 12 languages
-  if (MULTILINGUAL_GREETINGS_OR_NAV_REGEX.test(full) || /^(status|track|reset|\/reset|restart|clear|hi|hello|hey|namaste|help|madad|pranam|hlo|hii|yes|no|[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣)$/i.test(full)) {
+  // Disqualify short navigation keywords, greetings, and system numbers across all 15 languages
+  if (MULTILINGUAL_GREETINGS_OR_NAV_REGEX.test(full) || /^(status|track|reset|\/reset|restart|clear|hi|hello|hey|namaste|help|madad|pranam|hlo|hii|yes|no|[1-9]|1[0-5]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|1️⃣3️⃣|1️⃣4️⃣|1️⃣5️⃣)$/i.test(full)) {
     return false
   }
 
@@ -920,7 +947,7 @@ export async function processWhatsAppTurn(
     return sendLanguageGreeting()
   }
 
-  // 12-Language Switch Intent - only enabled for web simulator, WhatsApp is strictly English
+  // Language switch intent is only enabled for the web simulator; WhatsApp is English-only.
   const switchedLang = (session as any).isSimulator ? matchLanguageSwitch(trimmed) : null
   if (switchedLang) {
     session.language = switchedLang
@@ -929,7 +956,7 @@ export async function processWhatsAppTurn(
     }
 
     const ext = quickExtract(trimmed)
-    const isBareLangPick = /^(?:[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|en|english|angrezi|angreji|hindi|हिंदी|हिन्दी|bn|bengali|bangla|বাংলা|mr|marathi|मराठी|te|telugu|తెలుగు|ta|tamil|தமிழ்|gu|gujarati|ગુજરાતી|ur|urdu|اردو|kn|kannada|ಕನ್ನಡ|or|odia|oriya|ଓଡ଼ିଆ|ml|malayalam|മലയാളം|pa|punjabi|ਪੰਜਾਬੀ|hinglish)$/i.test(trimmed)
+    const isBareLangPick = /^(?:[1-9]|1[0-5]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|1️⃣3️⃣|1️⃣4️⃣|1️⃣5️⃣|en|english|angrezi|angreji|hindi|हिंदी|हिन्दी|bn|bengali|bangla|বাংলা|mr|marathi|मराठी|te|telugu|తెలుగు|ta|tamil|தமிழ்|gu|gujarati|ગુજરાતી|ur|urdu|اردو|kn|kannada|ಕನ್ನಡ|or|odia|oriya|ଓଡ଼ିଆ|ml|malayalam|മലയാളം|pa|punjabi|ਪੰਜਾਬੀ|as|assamese|axomiya|অসমীয়া|ne|nepali|नेपाली|sd|sindhi|سنڌي|सिन्धी|hinglish)$/i.test(trimmed)
     const hasRealAmount = Boolean(ext.amount && (ext.amount >= 100 || /(?:rs\.?|inr|₹|rupees|rupaye|taka|paisa|paise|dabbulu|panam)/i.test(trimmed)))
     const hasIncidentDetails = !isBareLangPick && Boolean(
       voiceTranscript || hasRealAmount || ext.upi || ext.phone || ext.utr || trimmed.length > 55
@@ -1001,7 +1028,7 @@ export async function processWhatsAppTurn(
   if (session.forceNewComplaint) {
     const newText = (voiceTranscript || trimmed).trim()
     const isJustNewCommand = /^(new|start new|file new|new complaint|fresh|naya|nai|नई|नया|नई शिकायत|নতুন|नवीन|కొత్త|புதிய|ਨਵੀ|نیا|ಹೊಸ|ନୂତନ|പുതിയ|ਨਵੀਂ)$/i.test(newText)
-    const isNavToken = /^(?:[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|en|english|hi|hindi|bn|bengali|mr|marathi|te|telugu|ta|tamil|gu|gujarati|ur|urdu|kn|kannada|or|odia|ml|malayalam|pa|punjabi|yes|no|ok|okay|start|menu|hello|hey|namaste)$/i.test(newText)
+    const isNavToken = /^(?:[1-9]|1[0-5]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|1️⃣3️⃣|1️⃣4️⃣|1️⃣5️⃣|en|english|hi|hindi|bn|bengali|mr|marathi|te|telugu|ta|tamil|gu|gujarati|ur|urdu|kn|kannada|or|odia|ml|malayalam|pa|punjabi|as|assamese|ne|nepali|sd|sindhi|yes|no|ok|okay|start|menu|hello|hey|namaste)$/i.test(newText)
     const ext = quickExtract(newText)
     const hasRealAmount = Boolean(ext.amount && (ext.amount >= 100 || /(?:rs\.?|inr|₹|rupees|rupaye|taka|paisa|paise)/i.test(newText)))
     const looksSubstantive = !isNavToken && Boolean(

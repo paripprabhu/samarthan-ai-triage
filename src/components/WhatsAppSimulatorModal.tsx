@@ -54,6 +54,9 @@ const BCP47_MAP: Record<SupportedLanguage, string> = {
   or: 'or-IN',
   ml: 'ml-IN',
   pa: 'pa-IN',
+  "as": 'as-IN',
+  ne: 'ne-IN',
+  sd: 'sd-Arab-IN',
 }
 
 const PRESETS: Array<{ label: string; [k: string]: string }> = [
@@ -71,7 +74,10 @@ const PRESETS: Array<{ label: string; [k: string]: string }> = [
     or: 'ଜାଲ୍ ବିଦ୍ୟୁତ୍ ବିଲ୍ APK କଲ୍ ମାଧ୍ୟମରେ ମୋ ବାପାଙ୍କଠାରୁ ₹୪୫,୦୦୦ ଠକେଇ ହୋଇଛି। ହିତାଧିକାରୀ UPI: electricitybill@ybl, UTR: 429104829102।',
     ml: 'വ്യാജ വൈദ്യുതി ബിൽ APK കോൾ വഴി എന്റെ പിതാവിൽ നിന്ന് ₹45,000 തട്ടിയെടുത്തു. ഗുണഭോക്താവിന്റെ UPI: electricitybill@ybl, UTR: 429104829102.',
     pa: 'ਨਕਲੀ ਬਿਜਲੀ ਬਿੱਲ APK ਕਾਲ ਰਾਹੀਂ ਮੇਰੇ ਪਿਤਾ ਨਾਲ ₹45,000 ਦੀ ਧੋਖਾਧੜੀ ਹੋਈ ਹੈ। ਲਾਭਪਾਤਰੀ UPI: electricitybill@ybl, UTR: 429104829102 ਹੈ।',
-  },
+    "as": 'ভুৱা বিদ্যুৎ বিল APK কলৰ জৰিয়তে মোৰ দেউতাৰ পৰা ₹45,000 ঠগি লোৱা হৈছে। লাভগ্ৰাহীৰ UPI electricitybill@ybl, UTR: 429104829102।',
+    ne: 'नक्कली बिजुली बिल APK कलबाट मेरो बुबासँग ₹45,000 ठगी भयो। प्राप्तकर्ताको UPI electricitybill@ybl, UTR: 429104829102 हो।',
+    sd: 'جعلي بجلي بل APK ڪال وسيلي منهنجي پيءُ کان ₹45,000 جي ٺڳي ٿي آهي۔ وصول ڪندڙ UPI electricitybill@ybl، UTR: 429104829102 آهي۔',
+},
   {
     label: '📈 Trading Fraud',
     en: 'I joined a WhatsApp stock trading group by Vinod Agarwal. Deposited ₹1,20,000 in StockPro app and now they are refusing withdrawal.',
@@ -86,7 +92,10 @@ const PRESETS: Array<{ label: string; [k: string]: string }> = [
     or: 'ମୁଁ ବିନୋଦ ଅଗ୍ରୱାଲଙ୍କ ଏକ ହ୍ୱାଟସ୍‌ଆପ୍ ଷ୍ଟକ୍ ଟ୍ରେଡିଂ ଗ୍ରୁପ୍‌ରେ ଯୋଗ ଦେଇଥିଲି। StockPro ଆପ୍‌ରେ ₹୧,୨୦,୦୦୦ ଜମା କରିଥିଲି ଏବଂ ଏବେ ସେମାନେ ଉଠାଣ ପାଇଁ ମନା କରୁଛନ୍ତି।',
     ml: 'വിനോദ് അഗർവാളിന്റെ വാട്ട്‌സ്ആപ്പ് സ്റ്റോക്ക് ട്രേഡിംഗ് ഗ്രൂപ്പിൽ ഞാൻ ചേർന്നു. StockPro ആപ്പിൽ ₹1,20,000 നിക്ഷേപിച്ചു, ഇപ്പോൾ പണം പിൻവലിക്കാൻ അനുവദിക്കുന്നില്ല.',
     pa: 'ਮੈਂ ਵਿਨੋਦ ਅਗਰਵਾਲ ਦੇ ਵਟਸਐਪ ਸਟਾਕ ਟ੍ਰੇਡਿੰਗ ਗਰੁੱਪ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਇਆ ਸੀ। StockPro ਐਪ ਵਿੱਚ ₹1,20,000 ਜਮ੍ਹਾ ਕਰਵਾਏ ਅਤੇ ਹੁਣ ਉਹ ਪੈਸੇ ਕਢਵਾਉਣ ਤੋਂ ਇਨਕਾਰ ਕਰ ਰਹੇ ਹਨ।',
-  },
+    "as": 'মই বিনোদ আগৰৱালৰ WhatsApp ষ্টক ট্ৰেডিং গোটত যোগ দিছিলোঁ। StockPro এপত ₹1,20,000 জমা দিছোঁ, এতিয়া উলিয়াবলৈ নিদিয়ে।',
+    ne: 'म विनोद अग्रवालको WhatsApp स्टक ट्रेडिङ समूहमा जोडिएँ। StockPro एपमा ₹1,20,000 जम्मा गरेँ, अहिले निकाल्न दिँदैनन्।',
+    sd: 'مان ونود اگروال جي WhatsApp اسٽاڪ ٽريڊنگ گروپ ۾ شامل ٿيس۔ StockPro ايپ ۾ ₹1,20,000 جمع ڪرايا، هاڻي ڪڍڻ نٿا ڏين۔',
+},
   {
     label: '🚨 Extortion Call',
     en: 'Received threat on Instagram from @cyber_hacker demanding ₹25,000 or they will leak my morphed photos.',
@@ -101,7 +110,10 @@ const PRESETS: Array<{ label: string; [k: string]: string }> = [
     or: 'ଇନଷ୍ଟାଗ୍ରାମରେ @cyber_hacker ଠାରୁ ₹୨୫,୦୦୦ ଦାବି କରି ଧମକ ମିଳିଛି, ନଚେତ୍ ମୋର ମର୍ଫ୍ ହୋଇଥିବା ଫଟୋ ଲିକ୍ କରିଦେବେ।',
     ml: 'ഇൻസ്റ്റാഗ്രാമിൽ @cyber_hacker-ൽ നിന്ന് ₹25,000 ആവശ്യപ്പെട്ട് ഭീഷണി സന്ദേശം ലഭിച്ചു, അല്ലെങ്കിൽ മോർഫ് ചെയ്ത ഫോട്ടോകൾ പ്രചരിപ്പിക്കുമെന്ന് ഭീഷണിപ്പെടുത്തുന്നു.',
     pa: 'ਇੰਸਟਾਗ੍ਰਾਮ \'ਤੇ @cyber_hacker ਤੋਂ ₹25,000 ਦੀ ਮੰਗ ਕਰਨ ਵਾਲੀ ਧਮਕੀ ਮਿਲੀ ਹੈ, ਨਹੀਂ ਤਾਂ ਮੇਰੀਆਂ ਮੋਰਫ ਕੀਤੀਆਂ ਫੋਟੋਆਂ ਲੀਕ ਕਰਨ ਦੀ ਧਮਕੀ ਦੇ ਰਹੇ ਹਨ।',
-  },
+    "as": 'Instagramত @cyber_hacker এ ₹25,000 দাবী কৰি মোৰ মৰ্ফ কৰা ফটো ফাঁস কৰাৰ ভাবুকি দিছে।',
+    ne: 'Instagram मा @cyber_hacker ले ₹25,000 माग्दै मेरा मोर्फ गरिएका फोटो सार्वजनिक गर्ने धम्की दिएको छ।',
+    sd: 'Instagram تي @cyber_hacker ₹25,000 گهري منهنجون مورف ڪيل تصويرون ليڪ ڪرڻ جي ڌمڪي ڏني آهي۔',
+},
 ]
 
 // Canvas helper to compress & resize images under 200KB to stay well under Vercel payload limit

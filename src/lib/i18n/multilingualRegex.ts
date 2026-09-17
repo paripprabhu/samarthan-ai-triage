@@ -1,6 +1,6 @@
 // src/lib/i18n/multilingualRegex.ts
 // Universal Multilingual NLP & Extraction Engine for Samarthan AI
-// Supports 12 Indian Languages: en, hi, bn, mr, te, ta, gu, ur, kn, or, ml, pa
+// Supports 15 Indian Languages: en, hi, bn, mr, te, ta, gu, ur, kn, or, ml, pa, as, ne, sd
 
 import { SupportedLanguage } from './languages'
 import { FraudType, ApplicableLaw } from '@/data/scenarios'
@@ -47,7 +47,7 @@ export function extractMultilingualAmount(text: string): number {
   if (!text) return 0
   const normalized = normalizeIndicNumerals(text)
 
-  // Priority 0a: Vernacular Fractional Multipliers (डेढ़, ढाई, सवा, पौने दो) across all 12 languages
+  // Priority 0a: Vernacular Fractional Multipliers (डेढ़, ढाई, सवा, पौने दो) across all 15 languages
   const fractionalMultipliers = [
     // 1.5 Lakhs (1,50,000)
     {
@@ -85,7 +85,7 @@ export function extractMultilingualAmount(text: string): number {
   }
 
   // Priority 0c: Digit + Vernacular Thousand Word (e.g. "50 हजार", "20 হাজার", "75 వేలు", "30 ஆயிரம்", "15 ಸಾವಿರ")
-  const digitThousandRegex = /(?:(?:₹|rs\.?|inr)?\s*)?([0-9]{1,4})\s*(?:हजार|हज़ार|হাজার|వేలు|ஆயிரம்|હજાર|ہزار|ಸಾವಿರ|ହଜାର|ആയിരം|ਹਜ਼ਾਰ|hazar|hazaron)\b/i
+  const digitThousandRegex = /(?:(?:₹|rs\.?|inr)?\s*)?([0-9]{1,4})\s*(?:हजार|हज़ार|हजारौं|হাজার|হাজাৰ|वजार|वजे|वेलु|वेला|वेल|వేలు|ஆயிரம்|હજાર|ہزار|هزار|سؤ|هزار|साविर|ಸಾವಿರ|ହଜାର|ആയിരം|ਹਜ਼ਾਰ|hazar|hazaron)\b/i
   const mDigitThousand = normalized.match(digitThousandRegex)
   if (mDigitThousand && mDigitThousand[1]) {
     const val = parseInt(mDigitThousand[1], 10) * 1000
@@ -155,7 +155,7 @@ export function extractMultilingualAmount(text: string): number {
   }
 
   // Priority 0: Total / Cumulative loss indicator ("total X debited", "মোট ১৫,০০০", "કુલ ₹૧૫,૦૦૦", "एकूण")
-  const totalRegex = /(?:\b(?:total|mot|motto|kull|kul|ekun|mottam|moththam|ottu|motam)\b|মোট|કુલ|एकूण|మొత్తం|மொத்தம்|ಒಟ್ಟು|ମୋଟ|ആകെ|ਕੁੱਲ)\s*(?:of\s*)?(?:₹|rs\.?|inr)?\s*([\d,]+(?:\.\d+)?)/i
+  const totalRegex = /(?:\b(?:total|mot|motto|kull|kul|ekun|mottam|moththam|ottu|motam|jamma|kul)\b|মোট|মুঠ|মুঠতে|কুল|কুলে|कुल|कुलै|जम्मा|एकूण|మొత్తం|மொத்தம்|ಒಟ್ಟು|ମୋଟ|ଆৰু|آهي|ڪل|کُل|آهي|آهي|ആകെ|ਕੁੱਲ)\s*(?:of\s*)?(?:₹|rs\.?|inr)?\s*([\d,]+(?:\.\d+)?)/i
   const mTotal = normalized.match(totalRegex)
   if (mTotal && mTotal[1]) {
     const val = parseInt(mTotal[1].replace(/,/g, ''), 10)
@@ -200,8 +200,8 @@ export function extractMultilingualAmount(text: string): number {
 
   const candidates: number[] = []
 
-  // 1. Currency Suffix across all 12 languages
-  const suffixRx = /([\d,]+)\s*(?:₹|rs\.?|inr|rupees|rupaye|रुपये|रुपया|रूपये|টাকা|રૂપિયા|રૂપિયો|రూపాయలు|రూపాయల|రూపాయి|ரூபாய்|ರೂಪಾಯಿ|ರೂಪಾಯಿಗಳು|ଟଙ୍କା|രൂപ|ਰੁਪਏ|ਰੁਪਈਆ|روپے|روپیہ)/gi
+  // 1. Currency Suffix across all 15 languages
+  const suffixRx = /([\d,]+)\s*(?:₹|rs\.?|inr|rupees|rupaye|रुपये|रुपया|रूपये|रुपैयाँ|रुपैया|टाका|টাকা|টকা|টকা|ৰূপ|রূপি|રૂપિયા|રૂપિયો|రూపాయలు|రూపాయల|రూపాయి|ரூபாய்|ರೂಪಾಯಿ|ರೂಪಾಯಿಗಳು|ଟଙ୍କା|രൂപ|ਰੁਪਏ|ਰੁਪਈਆ|روپے|روپیہ|روپيا|روپیو|رپيا)/gi
   let mSuffixMatch: RegExpExecArray | null = null
   while ((mSuffixMatch = suffixRx.exec(normalized)) !== null) {
     const clean = parseInt(mSuffixMatch[1].replace(/,/g, ''), 10)
@@ -354,7 +354,8 @@ export function inferCategoryFromMultilingualText(text: string): FraudType {
 
   // 4. Extortion & Blackmail: Digital arrest, CBI, police arrest, courier narcotics/drugs parcel police fear, loan app blackmail, voice clone, nude video blackmail
   const extortionRegex = /(?:digital arrest|ডিজিটাল অ্যারেস্ট|डिजिटल अरेस्ट|డిజిటల్ అరెస్ట్|டிஜிட்டல் அரெஸ்ட்|ડિજિટલ અરેસ્ટ|ڈیجیٹل گرفتاری|ಡಿಜಿಟಲ್ ಅರೆஸ்ட்|ଡିଜିଟାଲ ଆରେଷ୍ଟ|ഡിജിറ്റൽ അറസ്റ്റ്|ਡਿਜੀਟਲ ਅਰੈਸਟ|voice clone|ভয়েস ক্লোন|व्हॉइस क्लोन|వాయిస్ క్లోన్|குரல் குளோனிங்|વોઈસ ક્લોન|وائس کلون|ಧ್ವನಿ ಕ್ಲೋನ್|ଭଏସ କ୍ଲୋନ|വോയ്സ് ക്ലോൺ|ਵੌਇਸ ਕਲੋਨ|आवाजाची नक्कल|নকল গলা|ವಾಯ್ಸ್|narcotics|drugs|ড্রাগস|ड्रग्ज|డ్రగ్స్|டிரக்ஸ்|ડ્રગ્સ|ڈرگز|ಡ್ರಗ್ಸ್|ଡ୍ରଗ୍ସ|ഡ്രഗ്സ്|ਡਰੱਗਜ਼|নারকোটিক্স|अमली पदार्थ|నార్కోటిక్స్|போதைப்பொருள்|માદક દ્રવ્યો|منشیات|ಮಾದಕ ವಸ್ತು|ନାର୍କୋଟିକ୍ସ|മയക്കുമരുന്ന്|ਨਸ਼ੀਲੇ ਪਦਾਰਥ|loan app|speedrupee|dhani|লোন অ্যাপ|লোন ॲप|লোন ऐप|లోన్ యాప్|கடன் செயலி|ક્રેડિટ એપ|لون ایپ|ಲೋನ್ ಆಪ್|ଲୋନ ଆପ|ലോൺ ആപ്പ്|ਲੋਨ ਐਪ|వీడియో కాల్|ভিডিও কল|व्हिडिओ कॉल|વિડીયો કૉલ|ویڈیو کال|ವೀಡಿಯೋ ಕಾಲ್|ଭିଡିଓ କଲ|വീഡിയോ കോൾ|ਵੀਡੀਓ ਕਾਲ)/i
-  if (extortionRegex.test(t)) {
+  const newerRegionalExtortionRegex = /(?:ডিজিটেল\s*এৰেষ্ট|ডিজিটাল\s*গ্রেপ্তার|डिजिटल\s*पक्राउ|डिजिटल\s*गिरफ्तारी|ڊجيٽل\s*(?:گرفتاري|اريسٽ)|ভইচ\s*ক্লোন|आवाजको\s*नक्कल|آواز\s*ڪلون|ড্ৰাগছ|लागू\s*औषध|منشيات|ڊرگس|লোণ\s*এপ|लोन\s*एप|ऋण\s*एप|وڊيو\s*ڪال|भिडियो\s*कल)/i
+  if (extortionRegex.test(t) || newerRegionalExtortionRegex.test(t)) {
     return 'Extortion & Blackmail'
   }
 
@@ -380,11 +381,14 @@ const EXPLICIT_NAME_REGEXES = [
   new RegExp(`(?:^|[\\s,।.\n])(?:mera naam|mera name|amar naam|amar name|majhe naav|mazhe naav|naa peru|na peru|en peyar|en peyer|maru naam|maru name|nanna hesaru|nanna name|mora nama|mora na|ente peru|ente name|mera na)\\s*(?:hai|is|ahe|undi|haye|chhe)?\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:मेरा नाम है|मेरा नाम)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+है)?`, 'i'),
   new RegExp(`(?:আমার নাম হচ্ছে|আমার নাম)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
+  new RegExp(`(?:মোৰ নাম)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:माझे नाव आहे|माझे नाव)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+आहे)?`, 'i'),
+  new RegExp(`(?:मेरो नाम)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+हो)?`, 'i'),
   new RegExp(`(?:నా పేరు వచ్చేసి|నా పేరు)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:என் பெயர்)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:મારું નામ)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+છે)?`, 'i'),
   new RegExp(`(?:میرا نام)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+ہے)?`, 'i'),
+  new RegExp(`(?:منهنجو نالو|منھنجو نالو)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+آهي)?`, 'i'),
   new RegExp(`(?:ನನ್ನ ಹೆಸರು)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:ମୋର ନାମ|ମୋ ନାଁ)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:എന്റെ പേര് ആണ്|എന്റെ പേര്)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
@@ -395,12 +399,15 @@ const EXPLICIT_NAME_REGEXES = [
 const I_AM_REGEXES = [
   new RegExp(`(?:^|[\\s,।.\n])(?:I am|I'm)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:मैं हूँ|मैं हूं|मैं|मै|main|mai)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+हूँ|\\s+हुँ|\\s+hoon)?`, 'i'),
+  new RegExp(`(?:^|[\\s,।.\n])(?:म|मै)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+हुँ|छु)?`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:আমি|ami)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
+  new RegExp(`(?:^|[\\s,।.\n])(?:মই|moi)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:मी|mee)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:నేను|nenu)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:நான்|naan)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:હું|હુ|hoon)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+છું)?`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:میں)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+ہوں)?`, 'i'),
+  new RegExp(`(?:^|[\\s,۔.\n])(?:مان)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:\\s+آهيان)?`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:ನಾನು|naanu)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:ମୁଁ|mun)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
   new RegExp(`(?:^|[\\s,।.\n])(?:ഞാൻ|njan)\\s+(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)`, 'i'),
@@ -568,6 +575,18 @@ export function extractMultilingualOnBehalfOf(text: string): string | null {
     if (clean && !/^(ਉਹਨਾਂ|ਮੇਰੇ|ਕਿਸੇ|ਪਿਤਾ|ਮਾਤਾ|ਭਰਾ|ਪਤਨੀ|ਦੋਸਤ)$/.test(clean)) return clean
   }
 
+  // Assamese "...ৰ হৈ / ...ৰ পক্ষৰ পৰা"
+  const asMatch = text.match(new RegExp(`(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:ৰ)?\\s+(?:হৈ|পক্ষৰ পৰা)`, 'i'))
+  if (asMatch && asMatch[1] && !/^(মোৰ|তেওঁৰ|কাৰোবাৰ)$/.test(asMatch[1])) return asMatch[1].trim()
+
+  // Nepali "...को तर्फबाट / ...का लागि"
+  const neMatch = text.match(new RegExp(`(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:को)?\\s+(?:तर्फबाट|लागि)`, 'i'))
+  if (neMatch && neMatch[1] && !/^(मेरो|उनको|कसैको)$/.test(neMatch[1])) return neMatch[1].trim()
+
+  // Sindhi "...جي طرفان / ...لاءِ"
+  const sdMatch = text.match(new RegExp(`(${ALL_INDIC_SCRIPTS_PATTERN}+(?:\\s+${ALL_INDIC_SCRIPTS_PATTERN}+)?)(?:جي)?\\s+(?:طرفان|لاءِ|لاۓ)`, 'i'))
+  if (sdMatch && sdMatch[1] && !/^(منهنجي|سندس|ڪنهن)$/.test(sdMatch[1])) return sdMatch[1].trim()
+
   return null
 }
 
@@ -591,6 +610,14 @@ export const MULTILINGUAL_CATEGORY_MAP: Record<string, FraudType> = {
   'निवेश धोखाधड़ी': 'Investment Scam',
   'अन्य साइबर अपराध': 'Other Cyber Crime',
 
+  // Nepali
+  'आर्थिक ठगी': 'Financial Fraud',
+  'महिला/बालबालिका सम्बन्धी अपराध': 'Women/Children Related Crime',
+  'धम्की र ब्ल्याकमेल': 'Extortion & Blackmail',
+  'पहिचान चोरी': 'Identity Theft',
+  'ई-कमर्स ठगी': 'E-Commerce Scams',
+  'लगानी ठगी': 'Investment Scam',
+
   // Bengali
   'আর্থিক প্রতারণা': 'Financial Fraud',
   'আর্থিক জালিয়াতি': 'Financial Fraud',
@@ -600,6 +627,15 @@ export const MULTILINGUAL_CATEGORY_MAP: Record<string, FraudType> = {
   'ই-কমার্স স্ক্যাম': 'E-Commerce Scams',
   'বিনিয়োগ কেলেঙ্কারি': 'Investment Scam',
   'অন্যান্য সাইবার অপরাধ': 'Other Cyber Crime',
+
+  // Assamese
+  'আৰ্থিক প্ৰৱঞ্চনা': 'Financial Fraud',
+  'মহিলা/শিশু সম্পৰ্কীয় অপৰাধ': 'Women/Children Related Crime',
+  'চাঁদাবাজি আৰু ব্লেকমেইল': 'Extortion & Blackmail',
+  'পৰিচয় চুৰি': 'Identity Theft',
+  'ই-কমাৰ্চ কেলেংকাৰী': 'E-Commerce Scams',
+  'বিনিয়োগ কেলেংকাৰী': 'Investment Scam',
+  'অন্যান্য চাইবাৰ অপৰাধ': 'Other Cyber Crime',
 
   // Marathi
   'आर्थिक फसवणूक': 'Financial Fraud',
@@ -646,6 +682,15 @@ export const MULTILINGUAL_CATEGORY_MAP: Record<string, FraudType> = {
   'سرمایہ کاری کا فراڈ': 'Investment Scam',
   'دیگر سائبر جرائم': 'Other Cyber Crime',
 
+  // Sindhi
+  'مالي فراڊ': 'Financial Fraud',
+  'عورتن/ٻارن سان لاڳاپيل جرم': 'Women/Children Related Crime',
+  'ڀتو خوري ۽ بليڪ ميل': 'Extortion & Blackmail',
+  'سڃاڻپ جي چوري': 'Identity Theft',
+  'اي ڪامرس فراڊ': 'E-Commerce Scams',
+  'سيڙپڪاري فراڊ': 'Investment Scam',
+  'ٻيا سائبر جرم': 'Other Cyber Crime',
+
   // Kannada
   'ಹಣಕಾಸು ವಂಚನೆ': 'Financial Fraud',
   'ಮಹಿಳೆಯರು/ಮಕ್ಕಳ ಸಂಬಂಧಿತ ಅಪರಾಧ': 'Women/Children Related Crime',
@@ -691,7 +736,7 @@ export function normalizeCategoryHint(hint: string | null | undefined): FraudTyp
 
 // 7. Multilingual Single-Word Greetings & Navigation Detector for WhatsApp
 export const MULTILINGUAL_GREETINGS_OR_NAV_REGEX =
-  /^(?:status|track|reset|\/reset|restart|clear|hi|hello|hey|hlo|hii|yes|no|[1-9]|1[0-2]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|help|madad|namaste|pranam|সাহায্য|নমস্কার|मदत|नमस्कार|సహాయం|నమస్కారం|உதவி|வணக்கம்|મદદ|નમસ્તે|مدد|سلام|سلام علیکم|ಆದರ್ಶ|ಸಹಾಯ|ನಮಸ್ಕಾರ|ସାହାଯ୍ୟ|ନମସ୍କାର|സഹായം|നമസ്കാരം|ਮਦਦ|ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ)$/i
+  /^(?:status|track|reset|\/reset|restart|clear|hi|hello|hey|hlo|hii|yes|no|[1-9]|1[0-5]|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|1️⃣0️⃣|1️⃣1️⃣|1️⃣2️⃣|1️⃣3️⃣|1️⃣4️⃣|1️⃣5️⃣|help|madad|namaste|pranam|সাহায্য|নমস্কার|নমস্কাৰ|मदत|नमस्कार|नमस्ते|سلام|सहायता|सहयोग|સહાય|சहाय|সহায়|مدد|سلام علیکم|آداب|ادب|سहाय|सहाय|आदर्श|सहाय|سوال|سندھی|سنڌي|আসামিয়া|অসমীয়া|नेपाली|सिन्धी|सिन्धी|ಸಹಾಯ|ನಮಸ್ಕಾರ|ସାହାଯ୍ୟ|ନମସ୍କାର|സഹായം|നമസ്കാരം|ਮਦਦ|ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ)$/i
 
 // 8. Official Regional State Police Complaint FIR Templates (for Fallback)
 // 8. Official Regional State Police Complaint FIR Templates (for Fallback & Direct Drafts)
@@ -714,6 +759,15 @@ export function getRegionalComplaintDraft(
   const trailText = trailParts.length > 0 ? `(${trailParts.join(', ')})` : ''
 
   switch (lang) {
+    case 'as':
+      return `প্ৰতি,\nভাৰপ্ৰাপ্ত বিষয়া,\nচাইবাৰ ক্ৰাইম আৰক্ষী থানা।\n\nবিষয়: ${fraudType} সম্পৰ্কে আনুষ্ঠানিক চাইবাৰ অপৰাধৰ অভিযোগ (FIR)।\n\nমাননীয় মহোদয়/মহোদয়া,\nমই, ${complainantName}${onBehalfOf ? ` (${onBehalfOf}ৰ হৈ)` : ''}, এই চাইবাৰ প্ৰৱঞ্চনাৰ বিষয়ে আনুষ্ঠানিক অভিযোগ দাখিল কৰিছোঁ। ${lossText ? `আৰ্থিক ক্ষতি: ${lossText} ${trailText}।` : ''}\n\nঘটনাৰ বিৱৰণ:\n${incidentDetails}\n\nঅনুগ্ৰহ কৰি IT Act 2000ৰ ধাৰা 66D আৰু BNS 2023ৰ ধাৰা 318(4)/319(2) অনুসৰি FIR পঞ্জীয়ন কৰি আইনগত ব্যৱস্থা লওক।\n\nবিনীত,\n${complainantName}`
+
+    case 'ne':
+      return `प्रति,\nस्टेशन हाउस अफिसर,\nसाइबर अपराध प्रहरी कार्यालय।\n\nविषय: ${fraudType} सम्बन्धी औपचारिक साइबर अपराध उजुरी (FIR)।\n\nमहोदय/महोदया,\nम, ${complainantName}${onBehalfOf ? ` (${onBehalfOf}को तर्फबाट)` : ''}, यस साइबर ठगी सम्बन्धमा औपचारिक उजुरी दर्ता गराउँछु। ${lossText ? `आर्थिक क्षति: ${lossText} ${trailText}।` : ''}\n\nघटनाको विवरण:\n${incidentDetails}\n\nकृपया IT Act 2000 को धारा 66D र BNS 2023 को धारा 318(4)/319(2) अनुसार FIR दर्ता गरी आवश्यक कानुनी कारबाही गर्नुहोस्।\n\nभवदीय,\n${complainantName}`
+
+    case 'sd':
+      return `بخدمت جناب،\nاسٽيشن هائوس آفيسر،\nسائبر ڪرائم پوليس اسٽيشن۔\n\nموضوع: ${fraudType} بابت رسمي سائبر ڪرائم شڪايت (FIR)۔\n\nمحترم جناب/محترمه،\nمان، ${complainantName}${onBehalfOf ? ` (${onBehalfOf} جي طرفان)` : ''}، هن سائبر فراڊ بابت رسمي شڪايت داخل ڪريان ٿو۔ ${lossText ? `مالي نقصان: ${lossText} ${trailText}۔` : ''}\n\nواقعي جا تفصيل:\n${incidentDetails}\n\nمهرباني ڪري IT Act 2000 جي دفعه 66D ۽ BNS 2023 جي دفعه 318(4)/319(2) تحت FIR داخل ڪري قانوني ڪارروائي ڪريو۔\n\nمخلص،\n${complainantName}`
+
     case 'bn':
       return `প্রতি,\nঅধ্যক্ষ মহাশয় / অফিসার-ইন-চার্জ,\nসাইবার ক্রাইম পুলিশ স্টেশন।\n\nবিষয়: ${fraudType} সংক্রান্ত আনুষ্ঠানিক সাইবার অপরাধ অভিযোগ (FIR)।\n\nমাননীয় মহাশয়,\nআমি, ${complainantName}${onBehalfOf ? ` (${onBehalfOf}-এর পক্ষ থেকে)` : ''}, বিনীতভাবে জানাচ্ছি যে একটি সাইবার প্রতারণার ঘটনা ঘটেছে। ${lossText ? `এতে আর্থিক ক্ষতি হয়েছে: ${lossText} ${trailText}।` : ''}\n\nঘটনার বিবরণ:\n${incidentDetails}\n\nতথ্যপ্রযুক্তি আইন (IT Act 2000) ধারা ৬৬ডি ও ভারতীয় ন্যায় সংহিতা (BNS 2023) ধারা ৩১৮(৪)/৩১৯(২) অনুযায়ী এফআইআর নথিভুক্ত করে অবিলম্বে অর্থ পুনরুদ্ধার ও আইনি পদক্ষেপ গ্রহণের বিনীত অনুরোধ জানাচ্ছি।\n\nবিনীত,\n${complainantName}`
 
@@ -781,7 +835,7 @@ export function extractMultilingualUTR(text: string): { utr: string | null; allU
 
   const utrs = new Set<string>()
 
-  // Regional prefixes across all 12 languages
+  // Regional prefixes across all 15 languages
   const prefixRegex =
     /(?:utr|txn|txnid|transaction(?:\s*(?:id|no|number))?|ref|reference|imps|neft|upi\s*(?:ref|reference)?|आईएमपीएस|रेफरेंस|नेफ्ट|আইএমপিএস|রেফারেন্স|নেফ্ট|ఐఎంపిఎస్|ஐஎம்பிஎஸ்|આઈએમપીએસ|ಐಎಂಪಿಎಸ್|ଆଇଏମପିଏସ|ഐഎംപിഎസ്|ਆਈਐਮਪੀਐਸ|ریفرنس|ইউটিআর|লেনদেন\s*(?:আইডি|নম্বর)|ইউটিআর\s*নং|ইউপিআই\s*রেফ|यूटीआर|व्यवहार\s*(?:क्रमांक|आयडी)|ट्रान्झॅक्शन\s*आयडी|संबोध\s*क्रमांक|ಯುಟಿಆರ್|ವಹಿವಾಟು\s*(?:ಐಡಿ|ಸಂಖ್ಯೆ)|యుటిఆర్|లావాదేవీ\s*(?:సంఖ్య|ఐడి)|யுடிஆர்|பரிவர்த்தனை\s*(?:ஐடி|எண்)|குறிப்பு\s*எண்|યુટીઆર|ટ્રાન્ઝેક્શન\s*આઈડી|વ્યવહાર\s*નંબર|સંદર્ભ\s*નંબર|یو\s*ٹی\s*آر|ٹرانزیکشن\s*(?:آئی\s*ڈی|نمबर)|حوالہ\s*نمبر|ୟୁଟିଆର୍|ଟ୍ରାଞ୍ଜାକସନ\s*ଆଇଡି|କାରବାର\s*ନମ୍ବର|യുടിആർ|ഇടപാട്\s*നമ്പർ|ട്രാൻസാക്ഷൻ\s*ഐഡി|ਯੂਟੀआर|ਲੈਣ-ਦੇਣ\s*ਨੰਬਰ|ਟ੍ਰਾਂਜੈਕਸ਼ਨ\s*ਆਈਡੀ|ਹਵਾਲਾ\s*ਨੰਬਰ)\s*(?:no\.?|number|संख्या|क्रमांक|નંબર|नंबर|ਨੰਬਰ|నంబర్|எண்|നമ്പർ|ਨੰਬਰ)?\s*[:#-]?\s*([A-Za-z0-9/_-]{8,24})/gi
 
@@ -858,7 +912,7 @@ export function extractMultilingualUPI(text: string): string | null {
   if (!text) return null
   const normalized = normalizeIndicNumerals(text)
 
-  // 1. Explicit UPI marker across 12 languages
+  // 1. Explicit UPI marker across 15 languages
   const explicitMarkerRx = /(?:upi\s*(?:id|handle|address|vpa)?|यूपीआई\s*(?:आईडी)?|ইউপিআই\s*(?:আইডি)?|యుపిఐ\s*(?:ఐడి)?|யூபிஐ\s*(?:ஐடி)?|યુપીઆઈ\s*(?:આઈડી)?|یو\s*پی\s*آئی\s*(?:آئی\s*ڈی)?|ಯುಪಿಐ\s*(?:ಐಡಿ)?|ୟୁପିଆଇ\s*(?:ଆଇଡି)?|യുപിഐ\s*(?:ഐഡി)?|ਯੂਪੀਆਈ\s*(?:ਆਈਡੀ)?)\s*[:#-]?\s*([a-zA-Z0-9.\-_]{2,64}@[a-zA-Z]{2,32})/i
   const mExp = normalized.match(explicitMarkerRx)
   if (mExp && mExp[1]) {
@@ -894,7 +948,7 @@ export function extractMultilingualIFSC(text: string): string | null {
   if (!text) return null
   const normalized = normalizeIndicNumerals(text)
 
-  // Explicit IFSC marker across 12 languages
+  // Explicit IFSC marker across 15 languages
   const explicitRx = /(?:ifsc(?:\s*code)?|आईएफएससी(?:\s*कोड)?|আইএফএসসি|ఐఎఫ్‌ఎస్‌సి|ஐஎப்எஸ்சி|આઈએફએસસી|آئی\s*ایف\s*ایس\s*سی|ಐಎಫ್‌ಎಸ್‌ಸಿ|ଆଇଏଫଏସସି|ഐഎഫ്എസ്സി|ਆਈਐਫਐਸਸੀ)\s*[:#-]?\s*([A-Za-z]{4}0[A-Za-z0-9]{6})/i
   const mExp = normalized.match(explicitRx)
   if (mExp && mExp[1]) {
@@ -923,11 +977,12 @@ export function detectDigitalArrest(text: string): boolean {
   // 1. Direct "digital arrest" keywords across 12 scripts
   const directKeywordRx = /(?:digital\s*arrest|ডিজিটাল\s*অ্যারেস্ট|डिजिटल\s*अरेस्ट|డిజిటల్\s*అరెస్ట్|டிஜிட்டல்\s*அரெஸ்ட்|ડિજિટલ\s*અરેસ્ટ|ڈیجیٹل\s*گرفتاری|ಡಿಜಿಟಲ್\s*ಅರೆಸ್ಟ್|ಡಿಜಾಟಲ್|ଡିଜିଟାଲ\s*ଆରେଷ୍ଟ|ഡിജിറ്റൽ\s*അറസ്|ਡਿਜੀਟਲ\s*ਅਰੈਸਟ)/i
   if (directKeywordRx.test(t)) return true
+  if (/(?:ডিজিটেল\s*এৰেষ্ট|ডিজিটাল\s*গ্রেপ্তার|डिजिटल\s*पक्राउ|डिजिटल\s*गिरफ्तारी|ڊجيٽل\s*(?:گرفتاري|اريسٽ))/i.test(t)) return true
 
   // 2. Video Call markers across 12 scripts
   const videoCallMarkers = /(?:skype|video\s*call|वीडियो\s*कॉल|वीडियो|व्हिडिओ\s*कॉल|व्हिडिओ|ভিডিও\s*কল|ভিডিও|వీడియో\s*కాల్|వీడియో|வீடியோ\s*கால்|வீடியோ|விடியோ\s*કોલ|વિડીયો\s*કૉલ|વિડીયો\s*કોલ|વિડીયો|ویڈیو\s*کال|ویڈیو|ವೀಡಿಯೊ\s*ಕರೆ|ವೀಡಿಯೋ\s*ಕಾಲ್|ವೀಡಿಯೊ|ವೀಡಿಯೋ|ଭିଡିଓ\s*କଲ|ଭିଡିଓ|വീഡിയോ\s*കോൾ|വീഡിയോ\s*കോളിൽ|വീഡിയോ|ਵੀਡੀਓ\s*ਕਾਲ|ਵੀਡੀਓ)/i
 
-  // Authority & Agency markers across all 12 languages
+  // Authority & Agency markers across all 15 languages
   const authorityMarkers = /(?:cbi|police|customs?|cyber\s*cell|supreme\s*court|narcotics|सीबीआई|सीबीआय|সিবিআই|సిబిఐ|சிபிஐ|સીબીઆઈ|سی\s*بی\s*آئی|ಸಿಬಿಐ|ସିବିଆଇ|സിബിഐ|ਸੀਬੀਆਈ|\bed\b|ईडी|ইডি|ఈడీ|ஈடி|ઈડી|ای\s*ڈی|ಇಡಿ|ଇଡି|ഇഡി|ਈਡੀ|அமலாக்கத்துறை|पुलिस|पोलीस|পুলিশ|పోలీస్|పోలీసులు|காவல்துறை|போலீஸ்|પોલીસ|پولیس|ಪೊಲೀಸ್|ପୋଲିସ|പോലീസ്|ਪੁਲਿਸ|कस्टम|कस्टम्स|কাস্টমস|కస్టమ్స్|சுங்கத்துறை|சுங்க|કસ્ટમ|કસ્ટમ્સ|کسٹمز|ಕಸ್ಟಮ್ಸ್|କଷ୍ଟମ|കസ്റ്റംസ്|ਕਸਟਮ|ड्रग्स|নশীলা|মাদক|డ్రగ్స్|మత్తు|போதைப்பொருள்|મનશીયાત|منشیات|ಅಮಲು|ନିଶାଦ୍ରବ୍ୟ|മയക്കുമരുന്ന്|ਨਸ਼ੇ|ਨਸ਼ੀਲੇ|आरबीआई|আরবিআই|ఆర్బీఐ|ஆர்பிஐ|આરબીઆઈ|ಆರ್‌ಬಿಐ|ଆରବିଆଇ|ആർബിഐ|ਆਰਬੀਆਈ|آر\s*بی\s*آئی|वारंट|ওয়ারেন্ট|వారంట్|வாரண்ட்|વોરંટ|وارنٹ|ವಾರಂಟ್|ୱାରେଣ୍ଟ|വാറണ്ട്|ਵਾਰੰਟ|arrest|jail|गिरफ्तारी|ধৰপકડ|கைது|ಬಂಧನ|ଗିରଫ|അറസ്റ്റ്|ਗ੍ਰਿਫਤਾਰ)/i
 
   if (videoCallMarkers.test(t) && authorityMarkers.test(t)) {
@@ -955,6 +1010,12 @@ export function detectDigitalArrest(text: string): boolean {
 
 export function getDigitalArrestWarning(lang: SupportedLanguage): string {
   switch (lang) {
+    case 'as':
+      return '⚠️ গুৰুত্বপূৰ্ণ সতৰ্কবাণী: ডিজিটেল এৰেষ্ট এক প্ৰৱঞ্চনা। ভাৰতীয় আৰক্ষী, CBI, ED, কাষ্টমছ বা আদালতে কেতিয়াও WhatsApp বা ভিডিঅ’ কলত গ্ৰেপ্তাৰ নকৰে আৰু “RBI ভেৰিফিকেশ্যন” একাউণ্টলৈ ধন পঠাবলৈ নকয়। কল কাটি তৎক্ষণাৎ 1930-ত ফোন কৰক।'
+    case 'ne':
+      return '⚠️ महत्त्वपूर्ण चेतावनी: डिजिटल पक्राउ ठगी हो। भारतीय प्रहरी, CBI, ED, भन्सार वा अदालतले कहिल्यै WhatsApp वा भिडियो कलमा पक्राउ गर्दैनन् र “RBI verification” खातामा पैसा पठाउन भन्दैनन्। तुरुन्त कल काटेर 1930 मा फोन गर्नुहोस्।'
+    case 'sd':
+      return '⚠️ اهم خبرداري: ڊجيٽل گرفتاري فراڊ آهي۔ ڀارتي پوليس، CBI، ED، ڪسٽمز يا عدالت ڪڏهن به WhatsApp يا وڊيو ڪال تي گرفتاري نٿي ڪري ۽ “RBI verification” اڪائونٽ ۾ پئسا موڪلڻ نٿي چوي۔ فوري ڪال بند ڪري 1930 تي رابطو ڪريو۔'
     case 'hi':
       return '⚠️ महत्वपूर्ण वैधानिक चेतावनी: डिजिटल अरेस्ट एक 100% फर्जीवाड़ा है! भारतीय पुलिस, सीबीआई, ईडी, कस्टम या अदालतें कभी भी स्काइप या व्हाट्सएप वीडियो कॉल पर गिरफ्तारी या सुनवाई नहीं करती हैं, और न ही "आरबीआई सुरक्षा/सत्यापन" खातों में पैसे भेजने को कहती हैं। तुरंत कॉल काटें और 1930 पर शिकायत करें।'
     case 'bn':

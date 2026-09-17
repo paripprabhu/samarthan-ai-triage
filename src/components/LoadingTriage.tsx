@@ -198,6 +198,51 @@ const LOADING_I18N: Record<SupportedLanguage, {
       'ਸ਼ਿਕਾਇਤ ਦਾ ਖਰੜਾ ਤਿਆਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…',
     ],
   },
+  "as": {
+    pleaseWait: 'One moment',
+    breatheIn: 'Breathe in…',
+    breatheOut: 'Breathe out…',
+    aiAnalyzing: 'AI is reviewing your report',
+    aiReading: 'Reviewing your report…',
+    takesSeconds: 'This takes a few seconds',
+    steps: [
+      'Turning your voice into text…',
+      'Finding the scam type…',
+      'Finding key details…',
+      'Preparing steps to freeze funds…',
+      'Drafting your report…',
+    ],
+  },
+  ne: {
+    pleaseWait: 'One moment',
+    breatheIn: 'Breathe in…',
+    breatheOut: 'Breathe out…',
+    aiAnalyzing: 'AI is reviewing your report',
+    aiReading: 'Reviewing your report…',
+    takesSeconds: 'This takes a few seconds',
+    steps: [
+      'Turning your voice into text…',
+      'Finding the scam type…',
+      'Finding key details…',
+      'Preparing steps to freeze funds…',
+      'Drafting your report…',
+    ],
+  },
+  sd: {
+    pleaseWait: 'One moment',
+    breatheIn: 'Breathe in…',
+    breatheOut: 'Breathe out…',
+    aiAnalyzing: 'AI is reviewing your report',
+    aiReading: 'Reviewing your report…',
+    takesSeconds: 'This takes a few seconds',
+    steps: [
+      'Turning your voice into text…',
+      'Finding the scam type…',
+      'Finding key details…',
+      'Preparing steps to freeze funds…',
+      'Drafting your report…',
+    ],
+  },
 }
 
 const BREATH_DURATION = 3800 // one full inhale+exhale cycle, ms

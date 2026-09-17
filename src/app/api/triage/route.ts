@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { SCENARIOS, TriageResult, generateId, IT_ACT_SECTIONS } from '@/data/scenarios'
+import { SCENARIOS, TriageResult, generateId, IT_ACT_SECTIONS, getScenarioPresentation } from '@/data/scenarios'
 import { inferChannelFromFraudType } from '@/data/escalationChannels'
-import { SupportedLanguage, LANGUAGE_MAP } from '@/lib/i18n/languages'
+import { SupportedLanguage, LANGUAGE_MAP, isSupportedLanguage } from '@/lib/i18n/languages'
 import {
   extractMultilingualComplainant,
   extractMultilingualOnBehalfOf,
@@ -21,7 +21,7 @@ import {
 } from '@/lib/i18n/multilingualRegex'
 import OpenAI from 'openai'
 import { Buffer } from 'node:buffer'
-import { NEUTRAL_WHISPER_PROMPT, normalizeSpeechTranscript } from '@/lib/speech-normalizer'
+import { getSafeWhisperLanguageHint, NEUTRAL_WHISPER_PROMPT, normalizeSpeechTranscript } from '@/lib/speech-normalizer'
 import { checkDailyLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
@@ -113,7 +113,7 @@ CRITICAL INSTRUCTIONS:
   "timeline": "date/time string if mentioned/visible, else 'Not Provided'",
   "summary": "2-sentence English summary of the facts including any specific platforms/details",
   "summaryHi": "2-sentence Hindi summary of the facts",
-  "summaryRegional": "2-sentence summary in the requested regional language (if target language is Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam, or Punjabi)",
+  "summaryRegional": "2-sentence summary in the requested regional language (if target language is Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam, Punjabi, Assamese, Nepali, or Sindhi)",
   "complaintDraft": "Concise formal English police complaint (1-2 paragraphs) stating facts, timestamps, fraudulent accounts, and requested action.",
   "complaintDraftHi": "Concise Hindi translation of the complaint (1-2 paragraphs).",
   "complaintDraftRegional": "Concise formal police FIR complaint in the requested regional language matching Indian State Police Cyber Crime Cell format.",
@@ -185,6 +185,12 @@ function getOnBehalfOfOpener(lang: string, complainant: string, victim: string):
       return `ഞാൻ, ${complainant}, ${victim}-ന് വേണ്ടി ഈ ഔദ്യോഗിക സൈബർ കുറ്റകൃത്യ പരാതി ഫയൽ ചെയ്യുന്നു`
     case 'pa':
       return `ਮੈਂ, ${complainant}, ${victim} ਵੱਲੋਂ ਇਹ ਰਸਮੀ ਸਾਈਬਰ ਅਪਰਾਧ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰਵਾ ਰਿਹਾ ਹਾਂ`
+    case 'as':
+      return `মই, ${complainant}, ${victim}ৰ হৈ এই আনুষ্ঠানিক চাইবাৰ অপৰাধৰ অভিযোগ দাখিল কৰিছোঁ`
+    case 'ne':
+      return `म, ${complainant}, ${victim} को तर्फबाट यो औपचारिक साइबर अपराध उजुरी दर्ता गर्दैछु`
+    case 'sd':
+      return `مان، ${complainant}، ${victim} جي طرفان هي باضابطه سائبر ڏوھ جي شڪايت داخل ڪري رهيو آهيان`
     default:
       return `I, ${complainant}, am filing this formal cybercrime complaint on behalf of ${victim} regarding`
   }
@@ -202,6 +208,7 @@ export async function POST(req: NextRequest) {
   let categoryHint: string | null = null
   let userText = ''
   let targetLanguage = 'en'
+  let languageMode: 'auto' | 'manual' = 'manual'
 
   const getDynamicMock = async (): Promise<TriageResult> => {
     const normalizedHint = normalizeCategoryHint(categoryHint)
@@ -287,7 +294,9 @@ export async function POST(req: NextRequest) {
         userText = (json.text || '').trim()
         categoryHint = json.fraudType || null
         complainantName = json.complainantName || null
-        targetLanguage = (json.language || 'en').toLowerCase()
+        const requestedLanguage = String(json.language || 'en').toLowerCase()
+        targetLanguage = isSupportedLanguage(requestedLanguage) ? requestedLanguage : 'en'
+        languageMode = json.languageMode === 'auto' ? 'auto' : 'manual'
       } catch { /* ignore parse error */ }
     } else {
       try {
@@ -298,7 +307,9 @@ export async function POST(req: NextRequest) {
         imageFile = formData.get('image') as File | null
         categoryHint = formData.get('fraudType') as string | null
         complainantName = (formData.get('complainantName') as string | null)?.trim() || null
-        targetLanguage = ((formData.get('language') as string | null)?.trim() || 'en').toLowerCase()
+        const requestedLanguage = ((formData.get('language') as string | null)?.trim() || 'en').toLowerCase()
+        targetLanguage = isSupportedLanguage(requestedLanguage) ? requestedLanguage : 'en'
+        languageMode = formData.get('languageMode') === 'auto' ? 'auto' : 'manual'
       } catch { /* ignore parse error */ }
     }
 
@@ -306,7 +317,29 @@ export async function POST(req: NextRequest) {
       const scenario = SCENARIOS.find((s) => s.id === scenarioId)
       if (scenario) {
         if (!userText && (!audioFile || audioFile.size === 0) && (!imageFile || imageFile.size === 0)) {
-          return NextResponse.json(scenario.mockResponse)
+          // Stored scenarios were originally authored in English and Hindi.
+          // Give the new language paths a native presentation and regional
+          // report rather than quietly falling back to either source language.
+          if (targetLanguage === 'as' || targetLanguage === 'ne' || targetLanguage === 'sd') {
+            const presentation = getScenarioPresentation(scenario, targetLanguage)
+            return NextResponse.json({
+              ...scenario.mockResponse,
+              language: targetLanguage,
+              summaryRegional: presentation.description,
+              complaintDraftRegional: getRegionalComplaintDraft(
+                targetLanguage,
+                scenario.mockResponse.complainantName,
+                null,
+                presentation.title,
+                presentation.description,
+                scenario.mockResponse.amount,
+                scenario.mockResponse.utrNumber,
+                scenario.mockResponse.upiId,
+                scenario.mockResponse.ifscCode,
+              ),
+            })
+          }
+          return NextResponse.json({ ...scenario.mockResponse, language: targetLanguage })
         }
         userText = `--- ORIGINAL INCIDENT CONTEXT ---\n${scenario.rawInput}\n\n--- ADDITIONAL CORRECTIONS / UPDATES ---\n${userText}`
       }
@@ -323,40 +356,56 @@ export async function POST(req: NextRequest) {
     const openai = new OpenAI({ apiKey })
 
     // 1. Run Audio Transcription & Image Vision concurrently in parallel
-    const [audioTranscriptionText, imageAnalysisText] = await Promise.all([
+    const [audioTranscription, imageAnalysisText] = await Promise.all([
       // Task A: Transcribe audio
-      (async () => {
-        if (!audioFile || audioFile.size === 0) return ''
+      (async (): Promise<{ text: string; languageDetection?: NonNullable<TriageResult['languageDetection']> }> => {
+        if (
+          !audioFile ||
+          audioFile.size === 0 ||
+          audioFile.size > 25 * 1024 * 1024 ||
+          (audioFile.type && !audioFile.type.startsWith('audio/'))
+        ) return { text: '' }
         try {
           const audioBuffer = Buffer.from(await audioFile.arrayBuffer())
           const audioName = audioFile.name || 'recording.webm'
           const fileObj = new File([audioBuffer], audioName, { type: audioFile.type || 'audio/webm' })
 
-          // OpenAI Whisper API only supports these Indic ISO-639-1 language codes.
-          // Passing 'ml', 'te', 'bn', etc. throws 400 error. Leaving undefined allows Whisper to auto-detect.
-          const VALID_WHISPER_LANGS = ['en', 'hi', 'mr', 'ta', 'kn', 'ur']
-          const whisperLang = targetLanguage && VALID_WHISPER_LANGS.includes(targetLanguage) && targetLanguage !== 'en'
-            ? targetLanguage
-            : undefined
+          // A menu choice is an explicit override. In automatic mode the first
+          // recording is intentionally unhinted; only a confirmed live result
+          // can be reused as a later accuracy/latency hint.
+          // Automatic detection is provisional until the citizen presses Use.
+          // Only an explicit manual choice may guide final transcription/drafts.
+          const whisperLang = getSafeWhisperLanguageHint(
+            languageMode === 'manual' ? targetLanguage as SupportedLanguage : undefined
+          )
 
           const transcription = await openai.audio.transcriptions.create({
             file: fileObj,
             model: 'whisper-1',
+            response_format: 'verbose_json',
             ...(whisperLang ? { language: whisperLang } : {}),
             prompt: NEUTRAL_WHISPER_PROMPT,
           })
-          let text = typeof transcription === 'string' ? transcription : (transcription as any).text || ''
-          text = text.trim()
-          if (text) {
-            const normalized = await normalizeSpeechTranscript(text, openai)
-            if (normalized.cleanedTranscript) {
-              text = normalized.cleanedTranscript
-            }
+          const normalized = await normalizeSpeechTranscript(transcription.text || '', openai, {
+            asrLanguage: transcription.language,
+            selectedLanguage: targetLanguage as SupportedLanguage,
+            languageMode,
+            allowModelNormalization: true,
+          })
+          return {
+            text: normalized.cleanedTranscript,
+            languageDetection: {
+              detectedLanguage: normalized.decision === 'confirmed' || normalized.decision === 'manual'
+                ? normalized.detectedLanguage
+                : null,
+              recognizedLanguage: normalized.recognizedLanguage,
+              confidence: normalized.confidence,
+              decision: normalized.decision,
+            },
           }
-          return text
         } catch (audioError: any) {
           console.warn('[triage] Whisper transcription failed:', audioError?.message)
-          return ''
+          return { text: '' }
         }
       })(),
 
@@ -393,8 +442,8 @@ export async function POST(req: NextRequest) {
       })(),
     ])
 
-    if (audioTranscriptionText.trim()) {
-      userText = `--- VOICE RECORDING TRANSCRIPTION ---\n${audioTranscriptionText}\n\n${userText}`
+    if (audioTranscription.text.trim()) {
+      userText = `--- VOICE RECORDING TRANSCRIPTION ---\n${audioTranscription.text}\n\n${userText}`
     }
 
     if (imageAnalysisText.trim()) {
@@ -477,7 +526,7 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
     }
 
     // Resolve complainant name with priority:
-    // 1. Explicit self-intro of the filer from narrative across all 12 languages
+    // 1. Explicit self-intro of the filer from narrative across all 15 languages
     // 2. Logged-in user's identity (e.g. from DigiLocker session)
     // 3. "Anonymous Complainant" - no name given and not signed in
     // CRITICAL: If the narrative says "on behalf of X", X is the victim, NOT the complainant!
@@ -634,7 +683,11 @@ In addition to the mandatory English "complaintDraft" (which is required by Cent
         ? parsed.applicableLaws
         : getApplicableBNSLaws(resolvedFraudType, isDigitalArrest, (targetLanguage || 'en') as SupportedLanguage),
       urgencyLevel: (detectedUtr || isDigitalArrest) ? 'CRITICAL' : (parsed.urgencyLevel || 'HIGH'),
-      language: (targetLanguage === 'hi' || (/[\u0900-\u097F]/.test(userText) && targetLanguage !== 'mr') ? 'hi' : (targetLanguage || 'en')) as SupportedLanguage,
+      // `targetLanguage` is the manual choice or a single confirmed automatic
+      // result. Do not overwrite Marathi merely because it shares Devanagari
+      // with Hindi, and never relabel mixed speech from script alone.
+      language: isSupportedLanguage(targetLanguage) ? targetLanguage : 'en',
+      ...(audioTranscription.languageDetection ? { languageDetection: audioTranscription.languageDetection } : {}),
       complaintDraftRegional: str(
         parsed.complaintDraftRegional,
         targetLanguage === 'hi'

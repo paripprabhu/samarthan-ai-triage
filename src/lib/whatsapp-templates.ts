@@ -26,6 +26,12 @@ You can send a **Voice Note 🎤**, type your message ✍️, or share a **Scree
 export function getLanguageSwitchedMessage(lang: SupportedLanguage, incidentId?: string): string {
   if (incidentId) {
     switch (lang) {
+      case 'as':
+        return `✅ *ভাষা অসমীয়া (Assamese) কৰা হ’ল।*\n\nএতিয়াৰ পৰা আপোনাৰ আপডেট আৰু কেছ ৰিপ'ৰ্ট অসমীয়াত থাকিব।\n📌 *সক্ৰিয় ঘটনা ID:* ${incidentId}\n\n🤖 নতুন বিৱৰণ, UTR নম্বৰ, বেংকৰ নাম বা ভইচ নোট 🎤 পঠাওক।\n👉 নতুন অভিযোগৰ বাবে *NEW* লিখক।`
+      case 'ne':
+        return `✅ *भाषा नेपाली (Nepali) मा परिवर्तन गरियो।*\n\nअबका अपडेट र केस रिपोर्ट नेपालीमा देखाइनेछन्।\n📌 *सक्रिय घटना ID:* ${incidentId}\n\n🤖 नयाँ विवरण, UTR नम्बर, बैंकको नाम वा भ्वाइस नोट 🎤 पठाउनुहोस्।\n👉 नयाँ उजुरीका लागि *NEW* लेख्नुहोस्।`
+      case 'sd':
+        return `✅ *ٻولي سنڌي (Sindhi) ۾ تبديل ڪئي وئي۔*\n\nهاڻي توهانجا اپڊيٽ ۽ ڪيس رپورٽ سنڌي ۾ هوندا۔\n📌 *فعال واقعي جي ID:* ${incidentId}\n\n🤖 نوان تفصيل، UTR نمبر، بينڪ جو نالو يا وائس نوٽ 🎤 موڪليو۔\n👉 نئين شڪايت لاءِ *NEW* لکو۔`
       case 'hi':
         return `✅ *भाषा बदलकर हिन्दी (Hindi) कर दी गई है।*
 
@@ -128,6 +134,12 @@ All future updates and case reports will now be processed in English.
 
   // No active complaint
   switch (lang) {
+    case 'as':
+      return `✅ *ভাষা অসমীয়া (Assamese) নিৰ্বাচন কৰা হ’ল।*\n\nনমস্কাৰ! কি ঘটিল, কিমান টকা হেৰাল, আৰু ঠগৰ UPI ID, ফোন নম্বৰ বা UTR নম্বৰ থাকিলে পঠাওক।\n\n🎙️ আপুনি ভইচ নোট 🎤, লিখা বাৰ্তা ✍️, বা স্ক্ৰিনশ্বট 📸 পঠাব পাৰে।`
+    case 'ne':
+      return `✅ *भाषा नेपाली (Nepali) चयन गरियो।*\n\nके भयो, कति रकम गुम्यो, र ठगी गर्नेको UPI ID, फोन नम्बर वा UTR नम्बर भए पठाउनुहोस्।\n\n🎙️ भ्वाइस नोट 🎤, सन्देश ✍️, वा स्क्रिनसट 📸 पठाउन सक्नुहुन्छ।`
+    case 'sd':
+      return `✅ *ٻولي سنڌي (Sindhi) چونڊي وئي۔*\n\nڇا ٿيو، ڪيتري رقم وئي، ۽ ٺڳ جو UPI ID، فون نمبر يا UTR نمبر هجي ته موڪليو۔\n\n🎙️ وائس نوٽ 🎤، پيغام ✍️، يا اسڪرين شاٽ 📸 موڪلي سگهو ٿا۔`
     case 'hi':
       return `✅ *भाषा बदलकर हिन्दी (Hindi) कर दी गई है।*
 
@@ -254,6 +266,12 @@ Hello! We will now converse in English. Please describe what happened:
 
 export function getStartNewComplaintPrompt(lang: SupportedLanguage): string {
   switch (lang) {
+    case 'as':
+      return `🆕 *নতুন অভিযোগ আৰম্ভ কৰক।*\nকি ঘটিল, কিমান টকা হেৰাল আৰু ঠগৰ বিৱৰণ লিখক বা এটা **ভইচ নোট 🎤** পঠাওক।`
+    case 'ne':
+      return `🆕 *नयाँ उजुरी सुरु गर्नुहोस्।*\nके भयो, कति रकम गुम्यो र ठगी गर्नेको विवरण लेख्नुहोस् वा **भ्वाइस नोट 🎤** पठाउनुहोस्।`
+    case 'sd':
+      return `🆕 *نئين شڪايت شروع ڪريو۔*\nڇا ٿيو، ڪيتري رقم وئي ۽ ٺڳ جا تفصيل لکو يا **وائس نوٽ 🎤** موڪليو۔`
     case 'hi':
       return `🆕 *नई शिकायत दर्ज करना शुरू करें।*\nकृपया अपनी नई घटना का विवरण दें: एक **वॉयस नोट 🎤** भेजें या लिखकर बताएं कि क्या हुआ, कितनी राशि का नुकसान हुआ, और धोखेबाज़ की जानकारी।`
     case 'bn':
@@ -284,6 +302,12 @@ export function getStartNewComplaintPrompt(lang: SupportedLanguage): string {
 
 export function getActiveComplaintGreeting(lang: SupportedLanguage, incidentId: string): string {
   switch (lang) {
+    case 'as':
+      return `👋 *নমস্কাৰ! আপোনাৰ সক্ৰিয় অভিযোগ আছে:*\n📌 *ঘটনা ID:* ${incidentId}\n\nনতুন বিৱৰণ, UTR, বেংকৰ তথ্য, ভইচ নোট 🎤 বা স্ক্ৰিনশ্বট 📸 পঠাওক। ই এই অভিযোগত যোগ হ'ব।\n👉 নতুন অভিযোগৰ বাবে *NEW* লিখক।`
+    case 'ne':
+      return `👋 *नमस्ते! तपाईंको सक्रिय उजुरी छ:*\n📌 *घटना ID:* ${incidentId}\n\nनयाँ विवरण, UTR, बैंक जानकारी, भ्वाइस नोट 🎤 वा स्क्रिनसट 📸 पठाउनुहोस्। यो यही उजुरीमा थपिन्छ।\n👉 नयाँ उजुरीका लागि *NEW* लेख्नुहोस्।`
+    case 'sd':
+      return `👋 *سلام! توهانجي فعال شڪايت موجود آهي:*\n📌 *واقعي جي ID:* ${incidentId}\n\nنوان تفصيل، UTR، بينڪ ڄاڻ، وائس نوٽ 🎤 يا اسڪرين شاٽ 📸 موڪليو۔ هي ساڳي شڪايت ۾ شامل ٿيندو۔\n👉 نئين شڪايت لاءِ *NEW* لکو۔`
     case 'hi':
       return `👋 *नमस्ते! आपकी सक्रिय शिकायत हमारे पास दर्ज है:*
 📌 *घटना आईडी:* ${incidentId}
@@ -548,6 +572,15 @@ We made this change to give you an update — your case has been routed to the C
   }
 
   switch (lang) {
+    case 'as':
+      return `📊 *কেছৰ স্থিতি*\n━━━━━━━━━━━━━━━━━━━━\n📌 *ঘটনা ID:* ${id}\n${displayEmoji} *বৰ্তমান স্থিতি:* *${displayStatus}*\n🏷️ *শ্ৰেণী:* ${complaint.fraud_type || 'আৰ্থিক প্ৰৱঞ্চনা'}\n💰 *বিতৰ্কিত ধন:* ${amountStr}\n👤 *ঠগৰ তথ্য:* ${fraudster}\n🏦 *বেংক:* ${bank}\n🕒 *দাখিলৰ সময়:* ${dateStr}\n\n📄 *সম্পূৰ্ণ ৰিপ'ৰ্ট:*\n${trackingLink}\n\n💡 নতুন তথ্য যোগ কৰিবলৈ বাৰ্তা পঠাওক, বা নতুন অভিযোগৰ বাবে *NEW* লিখক।`
+
+    case 'ne':
+      return `📊 *केस स्थिति*\n━━━━━━━━━━━━━━━━━━━━\n📌 *घटना ID:* ${id}\n${displayEmoji} *हालको स्थिति:* *${displayStatus}*\n🏷️ *श्रेणी:* ${complaint.fraud_type || 'आर्थिक ठगी'}\n💰 *विवादित रकम:* ${amountStr}\n👤 *ठगी गर्नेको विवरण:* ${fraudster}\n🏦 *बैंक:* ${bank}\n🕒 *दर्ता समय:* ${dateStr}\n\n📄 *पूरा रिपोर्ट:*\n${trackingLink}\n\n💡 नयाँ विवरण पठाउनुहोस्, वा नयाँ उजुरीका लागि *NEW* लेख्नुहोस्।`
+
+    case 'sd':
+      return `📊 *ڪيس جي حالت*\n━━━━━━━━━━━━━━━━━━━━\n📌 *واقعي جي ID:* ${id}\n${displayEmoji} *موجوده حالت:* *${displayStatus}*\n🏷️ *زمرو:* ${complaint.fraud_type || 'مالي فراڊ'}\n💰 *متنازع رقم:* ${amountStr}\n👤 *ٺڳ جا تفصيل:* ${fraudster}\n🏦 *بينڪ:* ${bank}\n🕒 *داخل ڪرڻ جو وقت:* ${dateStr}\n\n📄 *مڪمل رپورٽ:*\n${trackingLink}\n\n💡 نوان تفصيل موڪليو، يا نئين شڪايت لاءِ *NEW* لکو۔`
+
     case 'hi':
       return `📊 *शिकायत स्थिति रिपोर्ट (CASE STATUS)*
 ━━━━━━━━━━━━━━━━━━━━
@@ -810,7 +843,10 @@ export function formatComplaintFiledReply(
 
   // Complainant line per language
   const complainantLine = namedComplainant
-    ? (lang === 'hi'   ? `🙋 *शिकायतकर्ता:* ${namedComplainant}\n`
+    ? (lang === 'as'   ? `🙋 *অভিযোগকাৰী:* ${namedComplainant}\n`
+      : lang === 'ne'  ? `🙋 *उजुरीकर्ता:* ${namedComplainant}\n`
+      : lang === 'sd'  ? `🙋 *شڪايت ڪندڙ:* ${namedComplainant}\n`
+      : lang === 'hi'   ? `🙋 *शिकायतकर्ता:* ${namedComplainant}\n`
       : lang === 'bn'  ? `🙋 *অভিযোগকারী:* ${namedComplainant}\n`
       : lang === 'mr'  ? `🙋 *तक्रारदार:* ${namedComplainant}\n`
       : lang === 'te'  ? `🙋 *ఫిర్యాదీ:* ${namedComplainant}\n`
@@ -830,6 +866,15 @@ export function formatComplaintFiledReply(
     : ''
 
   switch (lang) {
+    case 'as':
+      return `${voiceHeader}🚨 *নতুন অভিযোগ দাখিল হ’ল!*\n📌 *ঘটনা ID:* ${triageResult.incidentId}\n⚖️ *প্ৰযোজ্য আইন:* ${lawsList}\n💰 *হেৰোৱা ধন:* ${formattedAmt || 'উল্লেখ কৰা হোৱা নাই'}\n👤 *যাৰ বিৰুদ্ধে অভিযোগ:* ${triageResult.fraudsterIdentifier}\n${complainantLine}\n📋 *অভিযোগৰ সাৰাংশ:*\n${summaryText}\n\n⚡ *এতিয়া কি কৰিব:*\n1. তৎক্ষণাৎ 1930-ত ফোন কৰি ঘটনা ID ${triageResult.incidentId} জনাওক।\n2. UTR ${utrRef} দি আপোনাৰ বেংকক লেনদেনটো ৰখাবলৈ কওক।\n\n📄 *ৰিপ'ৰ্ট চাওক:*\n${trackingLink}`
+
+    case 'ne':
+      return `${voiceHeader}🚨 *नयाँ उजुरी दर्ता भयो!*\n📌 *घटना ID:* ${triageResult.incidentId}\n⚖️ *लागू कानुन:* ${lawsList}\n💰 *गुमेको रकम:* ${formattedAmt || 'उल्लेख छैन'}\n👤 *कसविरुद्ध उजुरी:* ${triageResult.fraudsterIdentifier}\n${complainantLine}\n📋 *उजुरीको सार:*\n${summaryText}\n\n⚡ *अहिले के गर्ने:*\n1. तुरुन्त 1930 मा फोन गरेर घटना ID ${triageResult.incidentId} बताउनुहोस्।\n2. UTR ${utrRef} सहित आफ्नो बैंकलाई कारोबार रोक्न भन्नुहोस्।\n\n📄 *रिपोर्ट हेर्नुहोस्:*\n${trackingLink}`
+
+    case 'sd':
+      return `${voiceHeader}🚨 *نئين شڪايت داخل ٿي وئي!*\n📌 *واقعي جي ID:* ${triageResult.incidentId}\n⚖️ *لاڳو قانون:* ${lawsList}\n💰 *وڃايل رقم:* ${formattedAmt || 'ذڪر ڪيل ناهي'}\n👤 *جنهن خلاف شڪايت:* ${triageResult.fraudsterIdentifier}\n${complainantLine}\n📋 *شڪايت جو خلاصو:*\n${summaryText}\n\n⚡ *هاڻي ڇا ڪجي:*\n1. فوري 1930 تي ڪال ڪري واقعي جي ID ${triageResult.incidentId} ٻڌايو۔\n2. UTR ${utrRef} سان پنهنجي بينڪ کي ٽرانزيڪشن روڪڻ لاءِ چئو۔\n\n📄 *رپورٽ ڏسو:*\n${trackingLink}`
+
     case 'hi':
       return `${voiceHeader}🚨 *नई शिकायत सफलतापूर्वक दर्ज की गई!*
 📌 *घटना आईडी:* ${triageResult.incidentId}

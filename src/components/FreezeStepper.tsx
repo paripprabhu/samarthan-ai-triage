@@ -26,6 +26,9 @@ const OPEN_PORTAL_I18N: Record<SupportedLanguage, string> = {
   or: 'ପୋର୍ଟାଲ୍ ଖୋଲନ୍ତୁ',
   ml: 'പോർട്ടൽ തുറക്കുക',
   pa: 'ਪੋਰਟਲ ਖੋਲ੍ਹੋ',
+  "as": 'প’ৰ্টেল খোলক',
+  ne: 'पोर्टल खोल्नुहोस्',
+  sd: 'پورٽل کوليو',
 }
 
 export default function FreezeStepper({ steps, language, onHotlineClick }: FreezeStepperProps) {

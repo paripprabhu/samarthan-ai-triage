@@ -4,13 +4,21 @@ import { useState, useRef, useEffect } from 'react'
 import { Mic, Square, Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
-import { SupportedLanguage } from '@/lib/i18n/languages'
+import { LANGUAGE_MAP, SupportedLanguage, isSupportedLanguage } from '@/lib/i18n/languages'
+import type { SpeechLanguageDecision } from '@/lib/speech-normalizer'
 import { getTranslation } from '@/lib/i18n/translations'
 
 interface AudioRecorderProps {
   language: SupportedLanguage
+  /** Report language can differ from the UI language after an explicit choice. */
+  reportLanguage?: SupportedLanguage
+  /** A parent fallback may obtain a provisional result after recording stops. */
+  proposedLanguage?: SupportedLanguage | null
+  languagePreference?: 'auto' | 'manual'
   onAudioReady: (blob: Blob) => void
   onLiveTranscript?: (text: string) => void
+  onLanguageDetected?: (language: SupportedLanguage) => void
+  onLanguageChoice?: (language: SupportedLanguage, mode: 'manual') => void
   theme?: 'light' | 'dark'
   size?: 'default' | 'lg'
 }
@@ -32,6 +40,9 @@ const MIC_ERROR_I18N: Record<SupportedLanguage, string> = {
   or: 'ମାଇକ୍ରୋଫୋନ୍ ଅନୁମତି ପ୍ରତ୍ୟାଖ୍ୟାନ କରାଗଲା। ଦୟାକରି ବ୍ରାଉଜର୍ ସେଟିଂସମୂହରେ ମାଇକ୍ ଅନୁମତି ଦିଅନ୍ତୁ।',
   ml: 'മൈക്രോഫോൺ അനുമതി നിരസിച്ചു. ബ്രൗസർ ക്രമീകരണങ്ങളിൽ മൈക്ക് ആക്‌സസ്സ് അനുവദിക്കുക.',
   pa: 'ਮਾਈਕ੍ਰੋਫੋਨ ਦੀ ਇਜਾਜ਼ਤ ਅਸਵੀਕਾਰ ਕੀਤੀ ਗਈ। ਕਿਰਪਾ ਕਰਕੇ ਬ੍ਰਾਊਜ਼ਰ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਮਾਈਕ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ।',
+  "as": 'মাইক্ৰ’ফোনৰ অনুমতি বন্ধ আছে। ব্ৰাউজাৰ ছেটিংছত অনুমতি দিয়ক।',
+  ne: 'माइक्रोफोन अनुमति बन्द छ। ब्राउजर सेटिङमा अनुमति दिनुहोस्।',
+  sd: 'مائيڪروفون جي اجازت بند آهي۔ برائوزر سيٽنگن ۾ اجازت ڏيو۔',
 }
 
 const AUDIO_READY_I18N: Record<SupportedLanguage, string> = {
@@ -47,10 +58,36 @@ const AUDIO_READY_I18N: Record<SupportedLanguage, string> = {
   or: '✓ ରେକର୍ଡିଂ ପ୍ରସ୍ତୁତ',
   ml: '✓ റെക്കോർഡിംഗ് തയ്യാറാണ്',
   pa: '✓ ਰਿਕਾਰਡਿੰਗ ਤਿਆਰ ਹੈ',
+  "as": '✓ ৰেকৰ্ডিং সাজু',
+  ne: '✓ रेकर्डिङ तयार छ',
+  sd: '✓ رڪارڊنگ تيار آهي',
 }
 
-export default function AudioRecorder({ language, onAudioReady, onLiveTranscript, theme = 'light', size = 'default' }: AudioRecorderProps) {
+const LANGUAGE_CONFIRMATION_I18N: Record<SupportedLanguage, { heard: string; use: string; keep: string }> = {
+  en: { heard: 'We heard {language}. Choose the report language.', use: 'Use {language}', keep: 'Keep {language}' },
+  hi: { heard: 'हमें {language} सुनाई दी। रिपोर्ट की भाषा चुनें।', use: '{language} इस्तेमाल करें', keep: '{language} रखें' },
+  bn: { heard: 'আমরা {language} শুনেছি। রিপোর্টের ভাষা বেছে নিন।', use: '{language} ব্যবহার করুন', keep: '{language} রাখুন' },
+  mr: { heard: 'आम्हाला {language} ऐकू आली. अहवालाची भाषा निवडा.', use: '{language} वापरा', keep: '{language} ठेवा' },
+  te: { heard: 'మేము {language} విన్నాము. నివేదిక భాషను ఎంచుకోండి.', use: '{language} వాడండి', keep: '{language} ఉంచండి' },
+  ta: { heard: 'நாங்கள் {language} கேட்டோம். அறிக்கை மொழியைத் தேர்ந்தெடுக்கவும்.', use: '{language} பயன்படுத்தவும்', keep: '{language} வைத்திருக்கவும்' },
+  gu: { heard: 'અમે {language} સાંભળી. રિપોર્ટની ભાષા પસંદ કરો.', use: '{language} વાપરો', keep: '{language} રાખો' },
+  ur: { heard: 'ہم نے {language} سنی۔ رپورٹ کی زبان منتخب کریں۔', use: '{language} استعمال کریں', keep: '{language} رکھیں' },
+  kn: { heard: 'ನಾವು {language} ಕೇಳಿದ್ದೇವೆ. ವರದಿಯ ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ.', use: '{language} ಬಳಸಿ', keep: '{language} ಇಟ್ಟುಕೊಳ್ಳಿ' },
+  or: { heard: 'ଆମେ {language} ଶୁଣିଲୁ। ରିପୋର୍ଟ ଭାଷା ବାଛନ୍ତୁ।', use: '{language} ବ୍ୟବହାର କରନ୍ତୁ', keep: '{language} ରଖନ୍ତୁ' },
+  ml: { heard: 'ഞങ്ങൾ {language} കേട്ടു. റിപ്പോർട്ട് ഭാഷ തിരഞ്ഞെടുക്കുക.', use: '{language} ഉപയോഗിക്കുക', keep: '{language} നിലനിർത്തുക' },
+  pa: { heard: 'ਅਸੀਂ {language} ਸੁਣੀ। ਰਿਪੋਰਟ ਦੀ ਭਾਸ਼ਾ ਚੁਣੋ।', use: '{language} ਵਰਤੋ', keep: '{language} ਰੱਖੋ' },
+  "as": { heard: 'আমি {language} শুনিলোঁ। ৰিপোর্টৰ ভাষা বাছক।', use: '{language} ব্যৱহাৰ কৰক', keep: '{language} ৰাখক' },
+  ne: { heard: 'हामीले {language} सुन्यौँ। रिपोर्टको भाषा छान्नुहोस्।', use: '{language} प्रयोग गर्नुहोस्', keep: '{language} राख्नुहोस्' },
+  sd: { heard: 'اسان {language} ٻڌو۔ رپورٽ جي ٻولي چونڊيو۔', use: '{language} استعمال ڪريو', keep: '{language} رکو' },
+}
+
+function languageCopy(template: string, languageName: string) {
+  return template.replace('{language}', languageName)
+}
+
+export default function AudioRecorder({ language, reportLanguage, proposedLanguage, languagePreference = 'manual', onAudioReady, onLiveTranscript, onLanguageDetected, onLanguageChoice, theme = 'light', size = 'default' }: AudioRecorderProps) {
   const t = getTranslation(language)
+  const languageConfirmation = LANGUAGE_CONFIRMATION_I18N[language]
   const isDark = theme === 'dark'
   const isLg = size === 'lg'
 
@@ -61,6 +98,8 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
   const [levels, setLevels] = useState<number[]>(() => Array(BAR_COUNT).fill(0.08))
   const [liveText, setLiveText] = useState('')
   const [captionError, setCaptionError] = useState('')
+  const [detectedCaptionLanguage, setDetectedCaptionLanguage] = useState<SupportedLanguage | null>(null)
+  const displayedProposal = detectedCaptionLanguage || proposedLanguage || null
 
   const mediaRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
@@ -78,6 +117,18 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
   const finalTranscriptRef = useRef('')
   const captionSeqRef = useRef(0)
   const lastAppliedSeqRef = useRef(0)
+  const proposedLanguageRef = useRef<SupportedLanguage | null>(null)
+  const recordingSessionRef = useRef(0)
+  const reportLanguageRef = useRef(reportLanguage || language)
+  const uiLanguageRef = useRef(language)
+  const languagePreferenceRef = useRef(languagePreference)
+  const decisionGenerationRef = useRef(0)
+
+  // Update synchronously during render so an external menu choice cannot lose
+  // a race to a resolved caption request while an effect is still pending.
+  uiLanguageRef.current = language
+  reportLanguageRef.current = reportLanguage || language
+  languagePreferenceRef.current = languagePreference
 
   useEffect(() => {
     return () => {
@@ -119,24 +170,39 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
     rafRef.current = requestAnimationFrame(tick)
   }
 
-  const uploadChunkForCaption = async (blob: Blob, seq: number) => {
+  const uploadChunkForCaption = async (blob: Blob, seq: number, session: number) => {
     if (blob.size < 1000) return // too short to contain speech
     try {
       const formData = new FormData()
       formData.append('audio', blob, 'chunk.webm')
-      formData.append('language', language)
+      const decisionGeneration = decisionGenerationRef.current
+      formData.append('language', reportLanguageRef.current)
+      formData.append('languageMode', languagePreferenceRef.current)
       const resp = await fetch('/api/transcribe-chunk', { method: 'POST', body: formData })
       if (!resp.ok) return
-      const { text } = await resp.json()
+      const data: { text?: string; detectedLanguage?: unknown; languageDecision?: unknown } = await resp.json()
       // Chunks resolve out of order if one Whisper call is slow - only apply
       // a response if it's not older than the last one we already applied.
       // (Every chunk WILL be "behind" the currently-recording chunk by the
       // time its request completes, since Whisper latency > the chunk
       // interval - that's expected, not staleness.)
-      if (seq <= lastAppliedSeqRef.current) return
+      if (session !== recordingSessionRef.current || decisionGeneration !== decisionGenerationRef.current || seq <= lastAppliedSeqRef.current) return
       lastAppliedSeqRef.current = seq
-      if (text && text.trim()) {
-        finalTranscriptRef.current = (finalTranscriptRef.current + ' ' + text.trim()).trim()
+      if (
+        languagePreferenceRef.current === 'auto' &&
+        data.languageDecision === ('confirmed' as SpeechLanguageDecision) &&
+        isSupportedLanguage(data.detectedLanguage) &&
+        !proposedLanguageRef.current
+      ) {
+        // Lock the first strong result for this recording. Short chunks can
+        // contain a name or a code-switch, so changing language mid-sentence
+        // would be more confusing than helpful.
+        proposedLanguageRef.current = data.detectedLanguage
+        setDetectedCaptionLanguage(data.detectedLanguage)
+        onLanguageDetected?.(data.detectedLanguage)
+      }
+      if (data.text && data.text.trim()) {
+        finalTranscriptRef.current = (finalTranscriptRef.current + ' ' + data.text.trim()).trim()
         setLiveText(finalTranscriptRef.current)
         onLiveTranscript?.(finalTranscriptRef.current)
         setCaptionError('')
@@ -152,12 +218,12 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
     }
   }
 
-  const startChunkCaptioning = (stream: MediaStream) => {
+  const startChunkCaptioning = (stream: MediaStream, session: number) => {
     const mimeType = ['audio/webm;codecs=opus', 'audio/webm']
       .find(type => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(type)) || ''
 
     const launchChunk = () => {
-      if (!(mediaRef.current && mediaRef.current.state === 'recording')) return
+      if (session !== recordingSessionRef.current || !(mediaRef.current && mediaRef.current.state === 'recording')) return
 
       const seq = ++captionSeqRef.current
       const chunkChunks: Blob[] = []
@@ -168,8 +234,8 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       }
       recorder.onstop = () => {
         const blob = new Blob(chunkChunks, { type: recorder.mimeType || 'audio/webm' })
-        uploadChunkForCaption(blob, seq)
-        if (mediaRef.current && mediaRef.current.state === 'recording') {
+        uploadChunkForCaption(blob, seq, session)
+        if (session === recordingSessionRef.current && mediaRef.current && mediaRef.current.state === 'recording') {
           launchChunk()
         }
       }
@@ -186,6 +252,8 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
 
   const startRecording = async () => {
     try {
+      const session = recordingSessionRef.current + 1
+      recordingSessionRef.current = session
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       streamRef.current = stream
 
@@ -224,6 +292,9 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       finalTranscriptRef.current = ''
       captionSeqRef.current = 0
       lastAppliedSeqRef.current = 0
+      proposedLanguageRef.current = null
+      decisionGenerationRef.current += 1
+      setDetectedCaptionLanguage(null)
 
       // Waveform visualizer, driven by the mic's actual amplitude.
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
@@ -236,7 +307,7 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       analyserRef.current = analyser
       runLevelLoop()
 
-      startChunkCaptioning(stream)
+      startChunkCaptioning(stream, session)
 
       timerRef.current = setInterval(() => {
         setSeconds((s) => {
@@ -253,6 +324,9 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
   }
 
   const stopRecording = () => {
+    // Keep the final in-flight chunk alive: it may be the only useful
+    // provisional detection for a short recording. A new recording or an
+    // explicit choice invalidates it synchronously.
     if (mediaRef.current && mediaRef.current.state !== 'inactive') {
       mediaRef.current.stop()
     }
@@ -340,8 +414,37 @@ export default function AudioRecorder({ language, onAudioReady, onLiveTranscript
       </div>
 
       {/* Live caption */}
-      {recording && (
+      {(recording || liveText || displayedProposal) && (
         <div className={clsx("max-h-24 min-h-[2.5rem] overflow-y-auto rounded-md p-2.5 text-xs", isDark ? "bg-white/5 text-white/80" : "border border-border bg-surface text-muted-foreground")}>
+          {languagePreference === 'auto' && displayedProposal && (
+            <div className={clsx("mb-1.5 flex flex-wrap items-center gap-1.5 font-medium", isDark ? "text-blue-300" : "text-primary")}>
+              <span>{languageCopy(languageConfirmation.heard, LANGUAGE_MAP[displayedProposal].name)}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  decisionGenerationRef.current += 1
+                  proposedLanguageRef.current = displayedProposal
+                  onLanguageChoice?.(displayedProposal, 'manual')
+                }}
+                className="rounded border border-current/30 px-1.5 py-0.5 text-[10px] font-semibold hover:bg-primary/10"
+              >
+                {languageCopy(languageConfirmation.use, LANGUAGE_MAP[displayedProposal].name)}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const selected = uiLanguageRef.current
+                  decisionGenerationRef.current += 1
+                  proposedLanguageRef.current = null
+                  setDetectedCaptionLanguage(null)
+                  onLanguageChoice?.(selected, 'manual')
+                }}
+                className="rounded border border-current/30 px-1.5 py-0.5 text-[10px] font-semibold hover:bg-primary/10"
+              >
+                {languageCopy(languageConfirmation.keep, LANGUAGE_MAP[uiLanguageRef.current].name)}
+              </button>
+            </div>
+          )}
           {liveText || (captionError
             ? <span className="text-amber-600">{captionError}</span>
             : <span className="opacity-50 flex items-center gap-1.5"><Loader2 className="w-3 h-3 animate-spin" />{t.intake.listening}</span>

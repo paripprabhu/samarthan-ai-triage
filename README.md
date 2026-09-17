@@ -32,7 +32,7 @@ The web experience accepts:
 - voice recordings with live, rolling captions; and
 - payment, chat, or social-media screenshots.
 
-The interface supports **12 Indian languages**: English, Hindi, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam, and Punjabi. Urdu layouts switch to right-to-left presentation automatically.
+The interface supports **15 selectable languages**: English plus Hindi, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam, Punjabi, Assamese, Nepali, and Sindhi. Voice dictation supports 13 Indian languages; Odia remains available for typed reports and report help. Urdu and Sindhi layouts switch to right-to-left presentation automatically.
 
 ### AI-assisted triage
 

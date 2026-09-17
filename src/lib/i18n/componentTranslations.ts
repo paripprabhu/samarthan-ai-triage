@@ -14,9 +14,12 @@ export interface LocalizedPoint {
   or: string
   ml: string
   pa: string
+  'as': string
+  ne: string
+  sd: string
 }
 
-// 8 Samarthan Advantages in all 12 languages
+// 8 Samarthan Advantages in all 15 languages
 export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
   {
     en: "Triage and formal complaint ready in under 60 seconds",
@@ -31,21 +34,27 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     or: "୬୦ ସେକେଣ୍ଡ ମଧ୍ୟରେ ଆନୁଷ୍ଠାନିକ ଅଭିଯୋଗ ଏବଂ ଆଇନଗତ ଟ୍ରାଏଜ୍ ପ୍ରସ୍ତୁତ",
     ml: "60 സെക്കൻഡിനുള്ളിൽ ഔദ്യോഗിക പരാതിയും നിയമപരമായ ട്രയാജും തയ്യാർ",
     pa: "60 ਸਕਿੰਟਾਂ ਦੇ ਅੰਦਰ ਰਸਮੀ ਸ਼ਿਕਾਇਤ ਅਤੇ ਕਾਨੂੰਨੀ ਟ੍ਰਾਈਏਜ ਤਿਆਰ",
-  },
+    "as": "Triage and formal complaint ready in under 60 seconds",
+    ne: "Triage and formal complaint ready in under 60 seconds",
+    sd: "Triage and formal complaint ready in under 60 seconds",
+},
   {
-    en: "Zero typing required, conversational voice intake in 12 languages",
-    hi: "बिना टाइप किए बोलकर शिकायत, 12 भाषाओं में वॉयस इनटेक",
-    bn: "টাইপিং ছাড়াই ১২টি ভাষায় ভয়েসের মাধ্যমে সরাসরি অভিযোগ",
-    mr: "टायपिंगची गरज नाही, १२ भाषांमध्ये व्हॉइसद्वारे थेट तक्रार",
-    te: "టైపింగ్ అవసరం లేదు, 12 భాషలలో వాయిస్ ద్వారా ఫిర్యాదు",
-    ta: "டைப்பிங் தேவையில்லை, 12 மொழிகளில் குரல் வழி புகார் பதிவு",
-    gu: "ટાઈપિંગ વિના બોલીને ફરિયાદ, 12 ભાષાઓમાં વૉઇસ ઇનટેક",
-    ur: "ٹائپنگ کی ضرورت نہیں، 12 زبانوں میں آواز کے ذریعے شکایت درج کریں",
-    kn: "ಟೈಪಿಂಗ್ ಅಗತ್ಯವಿಲ್ಲ, 12 ಭಾಷೆಗಳಲ್ಲಿ ಧ್ವನಿ ಮೂಲಕ ದೂರು ದಾಖಲಿಸಿ",
-    or: "ଟାଇପ୍ କରିବା ଆବଶ୍ୟକ ନାହିଁ, ୧୨ଟି ଭାଷାରେ ଭଏସ୍ ମାଧ୍ୟମରେ ଅଭିଯୋଗ",
-    ml: "ടൈപ്പിംഗ് ആവശ്യമില്ല, 12 ഭാഷകളിൽ ശബ്ദം വഴി നേരിട്ട് പരാതി നൽകാം",
-    pa: "ਟਾਈਪਿੰਗ ਦੀ ਲੋੜ ਨਹੀਂ, 12 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਆਵਾਜ਼ ਰਾਹੀਂ ਸ਼ਿਕਾਇਤ",
-  },
+    en: "Voice or text reporting in 15 selectable languages",
+    hi: "15 चुनने योग्य भाषाओं में आवाज़ या लिखकर रिपोर्ट करें",
+    bn: "১৫টি বেছে নেওয়া ভাষায় কণ্ঠে বা লিখে অভিযোগ জানান",
+    mr: "१५ निवडता येणाऱ्या भाषांमध्ये बोलून किंवा लिहून तक्रार करा",
+    te: "15 ఎంచుకోదగిన భాషల్లో వాయిస్ లేదా టెక్స్ట్‌తో ఫిర్యాదు చేయండి",
+    ta: "15 தேர்வு மொழிகளில் குரல் அல்லது எழுத்தில் புகார் அளிக்கவும்",
+    gu: "15 પસંદ કરી શકાય તેવી ભાષાઓમાં બોલીને અથવા લખીને ફરિયાદ કરો",
+    ur: "15 منتخب زبانوں میں آواز یا تحریر سے رپورٹ درج کریں",
+    kn: "15 ಆಯ್ಕೆ ಮಾಡಬಹುದಾದ ಭಾಷೆಗಳಲ್ಲಿ ಧ್ವನಿ ಅಥವಾ ಬರಹದ ಮೂಲಕ ದೂರು ನೀಡಿ",
+    or: "15ଟି ବାଛିହେବା ଭାଷାରେ କହି କିମ୍ବା ଲେଖି ଅଭିଯୋଗ କରନ୍ତୁ",
+    ml: "15 തിരഞ്ഞെടുക്കാവുന്ന ഭാഷകളിൽ ശബ്ദത്തിലൂടെയോ എഴുത്തിലൂടെയോ പരാതി നൽകുക",
+    pa: "15 ਚੁਣਨਯੋਗ ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਬੋਲ ਕੇ ਜਾਂ ਲਿਖ ਕੇ ਰਿਪੋਰਟ ਕਰੋ",
+    "as": "Voice or text reporting in 15 selectable languages",
+    ne: "Voice or text reporting in 15 selectable languages",
+    sd: "Voice or text reporting in 15 selectable languages",
+},
   {
     en: "Demo identity check with DigiLocker (Aadhaar/PAN)",
     hi: "डिजीलॉकर के साथ 1-क्लिक पहचान सत्यापन (आधार/पैन)",
@@ -59,7 +68,10 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     or: "ଡିଜିଲକର୍ ସହିତ ୧-କ୍ଲିକ୍ ପରିଚୟ ଯାଞ୍ଚ (ଆଧାର/ପାନ୍)",
     ml: "ഡിജിലോക്കർ വഴി ഒറ്റ ക്ലിക്കിൽ തിരിച്ചറിയൽ സ്ഥിരീകരണം (ആധാർ/പാൻ)",
     pa: "ਡਿਜੀਲੌਕਰ ਨਾਲ 1-ਕਲਿੱਕ ਪਛਾਣ ਤਸਦੀਕ (ਆਧਾਰ/ਪੈਨ)",
-  },
+    "as": "Demo identity check with DigiLocker (Aadhaar/PAN)",
+    ne: "Demo identity check with DigiLocker (Aadhaar/PAN)",
+    sd: "Demo identity check with DigiLocker (Aadhaar/PAN)",
+},
   {
     en: "Prepare a summary for your 1930 call",
     hi: "1930 हेल्पलाइन ऑपरेटर को पूरा केस डेटा सीधे ट्रांसफर",
@@ -73,7 +85,10 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     or: "୧୯୩୦ ହେଲ୍ପଲାଇନ୍ ଅପରେଟରଙ୍କୁ ସମ୍ପୂର୍ଣ୍ଣ କେସ୍ ତଥ୍ୟ ହସ୍ତାନ୍ତର",
     ml: "1930 ഹെൽപ്പ്‌ലൈൻ ഓപ്പറേറ്റർക്ക് പൂർണ്ണ വിവരങ്ങൾ നേരിട്ട് കൈമാറുന്നു",
     pa: "1930 ਹੈਲਪਲਾਈਨ ਆਪਰੇਟਰ ਨੂੰ ਪੂਰਾ ਕੇਸ ਵੇਰਵਾ ਸਿੱਧਾ ਟ੍ਰਾਂਸਫਰ",
-  },
+    "as": "Prepare a summary for your 1930 call",
+    ne: "Prepare a summary for your 1930 call",
+    sd: "Prepare a summary for your 1930 call",
+},
   {
     en: "Guide to ask your bank to freeze funds with UTR details",
     hi: "UTR और खाता लेनदेन ट्रैकिंग के साथ बैंक खाता फ्रीज गाइड",
@@ -87,7 +102,10 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     or: "UTR ଏବଂ କାରବାର ଟ୍ରାକିଂ ସହିତ ବ୍ୟାଙ୍କ ଖାତା ଫ୍ରିଜ୍ ଗାଇଡ୍",
     ml: "യുടിആറും ഇടപാട് ട്രാക്കിംഗും ഉള്ള ബാങ്ക് അക്കൗണ്ട് ഫ്രീസ് ഗൈഡ്",
     pa: "UTR ਅਤੇ ਲੈਣ-ਦੇਣ ਟਰੈਕਿੰਗ ਨਾਲ ਬੈਂਕ ਖਾਤਾ ਫ੍ਰੀਜ਼ ਗਾਈਡ",
-  },
+    "as": "Guide to ask your bank to freeze funds with UTR details",
+    ne: "Guide to ask your bank to freeze funds with UTR details",
+    sd: "Guide to ask your bank to freeze funds with UTR details",
+},
   {
     en: "Auto-detected IT Act & BNS legal sections for instant FIR",
     hi: "त्वरित FIR के लिए IT एक्ट और BNS की कानूनी धाराएं",
@@ -101,7 +119,10 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     or: "ତୁରନ୍ତ ଏଫଆଇଆର ପାଇଁ ଆଇଟି ଆକ୍ଟ ଏବଂ BNS ଆଇନଗତ ଧାରା",
     ml: "തൽക്ഷണ എഫ്ഐആറിനായി ഐടി നിയമവും ബിഎൻഎസ് വകുപ്പുകളും",
     pa: "ਤੁਰੰਤ ਐਫਆਈਆਰ ਲਈ ਆਈਟੀ ਐਕਟ ਅਤੇ ਬੀਐਨਐਸ ਦੀਆਂ ਕਾਨੂੰਨੀ ਧਾਰਾਵਾਂ",
-  },
+    "as": "Auto-detected IT Act & BNS legal sections for instant FIR",
+    ne: "Auto-detected IT Act & BNS legal sections for instant FIR",
+    sd: "Auto-detected IT Act & BNS legal sections for instant FIR",
+},
   {
     en: "Built-in cryptographic Evidence Vault with tamper-proof logs",
     hi: "अखंडता प्रमाण के साथ इन-बिल्ट सुरक्षित एविडेंस वॉल्ट",
@@ -115,7 +136,10 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     or: "ସୁରକ୍ଷିତ ରେକର୍ଡ ସହିତ ଇନ୍-ବିଲ୍ଟ ଏଭିଡେନ୍ସ ଭଲ୍ଟ",
     ml: "കൃത്രിമം കാണിക്കാനാവാത്ത സുരക്ഷിത എവിഡൻസ് വോൾട്ട്",
     pa: "ਛੇੜਛਾੜ-ਮੁਕਤ ਲੌਗਸ ਦੇ ਨਾਲ ਸੁਰੱਖਿਅਤ ਸਬੂਤ ਵਾਲਟ",
-  },
+    "as": "Built-in cryptographic Evidence Vault with tamper-proof logs",
+    ne: "Built-in cryptographic Evidence Vault with tamper-proof logs",
+    sd: "Built-in cryptographic Evidence Vault with tamper-proof logs",
+},
   {
     en: "24/7 WhatsApp bot for report updates",
     hi: "रियल-टाइम केस अपडेट के लिए 24x7 व्हाट्सएप बॉट साथी",
@@ -129,10 +153,13 @@ export const SAMARTHAN_POINTS_12: LocalizedPoint[] = [
     or: "ଲାଇଭ୍ କେସ୍ ଅପଡେଟ୍ ପାଇଁ ୨୪x୭ ହ୍ୱାଟ୍ସଆପ୍ ବଟ୍",
     ml: "തത്സമയ കേസ് അപ്‌ഡേറ്റുകൾക്കായി 24x7 വാട്ട്‌സ്ആപ്പ് ബോട്ട്",
     pa: "ਲਾਈਵ ਕੇਸ ਅੱਪਡੇਟ ਲਈ 24x7 ਵਟਸਐਪ ਬੋਟ",
-  },
+    "as": "24/7 WhatsApp bot for report updates",
+    ne: "24/7 WhatsApp bot for report updates",
+    sd: "24/7 WhatsApp bot for report updates",
+},
 ]
 
-// 8 Traditional Portals shortcomings in all 12 languages
+// 8 Traditional Portals shortcomings in all 15 languages
 export const OTHERS_POINTS_12: LocalizedPoint[] = [
   {
     en: "30 to 45 minutes of tedious 15+ mandatory form fields",
@@ -147,7 +174,10 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "୧୫ରୁ ଅଧିକ ଜଟିଳ ଫର୍ମ ପୂରଣରେ ୩୦ ରୁ ୪୫ ମିନିଟ୍ ନଷ୍ଟ",
     ml: "15+ സങ്കീർണ്ണ ഫോമുകൾ പൂരിപ്പിക്കാൻ 30 മുതൽ 45 മിനിറ്റ് വരെ",
     pa: "15+ ਔਖੇ ਫਾਰਮ ਭਰਨ ਵਿੱਚ 30 ਤੋਂ 45 ਮਿੰਟ ਦਾ ਸਮਾਂ ਲੱਗਦਾ ਹੈ",
-  },
+    "as": "30 to 45 minutes of tedious 15+ mandatory form fields",
+    ne: "30 to 45 minutes of tedious 15+ mandatory form fields",
+    sd: "30 to 45 minutes of tedious 15+ mandatory form fields",
+},
   {
     en: "Text-only forms with zero voice or regional language accessibility",
     hi: "केवल टेक्स्ट फॉर्म, कोई वॉयस या क्षेत्रीय भाषा सहायता नहीं",
@@ -161,7 +191,10 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "କେବଳ ଟେକ୍ସଟ୍ ଫର୍ମ, କୌଣସି ଭଏସ୍ ବା ଆଞ୍ଚଳିକ ଭାଷା ସୁବିଧା ନାହିଁ",
     ml: "ടെക്സ്റ്റ് ഫോമുകൾ മാത്രം, ശബ്ദമോ പ്രാദേശിക ഭാഷാ പിന്തുണയോ ഇല്ല",
     pa: "ਸਿਰਫ਼ ਟੈਕਸਟ ਫਾਰਮ, ਕੋਈ ਆਵਾਜ਼ ਜਾਂ ਖੇਤਰੀ ਭਾਸ਼ਾ ਸਹਾਇਤਾ ਨਹੀਂ",
-  },
+    "as": "Text-only forms with zero voice or regional language accessibility",
+    ne: "Text-only forms with zero voice or regional language accessibility",
+    sd: "Text-only forms with zero voice or regional language accessibility",
+},
   {
     en: "Manual name/ID entry with no verified authentication proof",
     hi: "बिना आधिकारिक सत्यापन के केवल अनवेरिफाइड डेटा प्रविष्टि",
@@ -175,7 +208,10 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "ବିନା ପ୍ରମାଣୀକରଣରେ କେବଳ ମାନୁଆଲ୍ ତଥ୍ୟ ଏଣ୍ଟ୍ରି",
     ml: "സ്ഥിരീകരണമില്ലാത്ത വെറും മാനുവൽ വിവരങ്ങൾ നൽകൽ",
     pa: "ਬਿਨਾਂ ਤਸਦੀਕ ਦੇ ਸਿਰਫ਼ ਮੈਨੂਅਲ ਡਾਟਾ ਐਂਟਰੀ",
-  },
+    "as": "Manual name/ID entry with no verified authentication proof",
+    ne: "Manual name/ID entry with no verified authentication proof",
+    sd: "Manual name/ID entry with no verified authentication proof",
+},
   {
     en: "Helpline phone lines frequently busy with zero digital context",
     hi: "व्यस्त हेल्पलाइन लाइन्स, ऑपरेटर को कोई पूर्व केस डेटा नहीं मिलता",
@@ -189,7 +225,10 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "ବ୍ୟସ୍ତ ହେଲ୍ପଲାଇନ୍, ଅପରେଟରଙ୍କ ପାଖରେ କୌଣସି ପୂର୍ବ ତଥ୍ୟ ନଥାଏ",
     ml: "തിരക്കുള്ള ഹെൽപ്പ്‌ലൈൻ ലൈനുകൾ, വിവരങ്ങളൊന്നും മുൻകൂട്ടി ലഭ്യമല്ല",
     pa: "ਵਿਅਸਤ ਹੈਲਪਲਾਈਨ ਲਾਈਨਾਂ, ਆਪਰੇਟਰ ਕੋਲ ਕੋਈ ਕੇਸ ਡਾਟਾ ਨਹੀਂ ਹੁੰਦਾ",
-  },
+    "as": "Helpline phone lines frequently busy with zero digital context",
+    ne: "Helpline phone lines frequently busy with zero digital context",
+    sd: "Helpline phone lines frequently busy with zero digital context",
+},
   {
     en: "Victims left alone to locate bank nodal officers & freeze accounts",
     hi: "बैंक खाता फ्रीज कराने के लिए पीड़ित को खुद भागदौड़ करनी पड़ती है",
@@ -203,7 +242,10 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "ଖାତା ଫ୍ରିଜ୍ କରିବାକୁ ପୀଡ଼ିତଙ୍କୁ ନିଜେ ହଇରାଣ ହେବାକୁ ପଡ଼େ",
     ml: "അക്കൗണ്ട് മരവിപ്പിക്കാൻ ബാങ്ക് ഓഫീസറെ ഇര തന്നെ കണ്ടെത്തേണ്ടി വരുന്നു",
     pa: "ਬੈਂਕ ਖਾਤਾ ਫ੍ਰੀਜ਼ ਕਰਾਉਣ ਲਈ ਪੀੜਤ ਨੂੰ ਆਪ ਭੱਜ-ਦੌੜ ਕਰਨੀ ਪੈਂਦੀ ਹੈ",
-  },
+    "as": "Victims left alone to locate bank nodal officers & freeze accounts",
+    ne: "Victims left alone to locate bank nodal officers & freeze accounts",
+    sd: "Victims left alone to locate bank nodal officers & freeze accounts",
+},
   {
     en: "No legal section detection, victims struggle with police IPC/BNS",
     hi: "कानूनी धाराओं की कोई पहचान नहीं, पुलिस में FIR कराने में असमर्थ",
@@ -217,7 +259,10 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "ଆଇନଗତ ଧାରା ଜଣାନଥାଏ, ଥାନାରେ ଏଫଆଇଆର ପାଇଁ ସମସ୍ୟା",
     ml: "നിയമവകുപ്പുകൾ വ്യക്തമല്ല, പോലീസ് സ്റ്റേഷനിൽ പരാതിപ്പെടാൻ ബുദ്ധിമുട്ട്",
     pa: "ਕਾਨੂੰਨੀ ਧਾਰਾਵਾਂ ਦਾ ਪਤਾ ਨਹੀਂ ਹੁੰਦਾ, ਥਾਣੇ ਵਿੱਚ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰਾਉਣ 'ਚ ਦਿੱਕਤ",
-  },
+    "as": "No legal section detection, victims struggle with police IPC/BNS",
+    ne: "No legal section detection, victims struggle with police IPC/BNS",
+    sd: "No legal section detection, victims struggle with police IPC/BNS",
+},
   {
     en: "Messy email attachments with no chain-of-custody preservation",
     hi: "अव्यवस्थित ईमेल अटैचमेंट, कोर्ट में सबूतों की वैधता पर सवाल",
@@ -231,7 +276,10 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "ଅବ୍ୟବସ୍ଥିତ ଇମେଲ୍ ସଂଲଗ୍ନକ, ପ୍ରମାଣର ବୈଧତା ଉପରେ ପ୍ରଶ୍ନ",
     ml: "ക്രമരഹിതമായ ഇമെയിൽ അറ്റാച്ച്മെന്റുകൾ, തെളിവുകളുടെ സാധുതയിൽ സംശയം",
     pa: "ਬੇਤਰਤੀਬ ਈਮੇਲ ਅਟੈਚਮੈਂਟ, ਅਦਾਲਤ ਵਿੱਚ ਸਬੂਤਾਂ ਦੀ ਪ੍ਰਮਾਣਿਕਤਾ 'ਤੇ ਸਵਾਲ",
-  },
+    "as": "Messy email attachments with no chain-of-custody preservation",
+    ne: "Messy email attachments with no chain-of-custody preservation",
+    sd: "Messy email attachments with no chain-of-custody preservation",
+},
   {
     en: "Static manual portal lookups with no proactive notifications",
     hi: "बिना किसी सक्रिय नोटिफिकेशन के पोर्टल पर बार-बार स्टेटस चेक करना",
@@ -245,10 +293,13 @@ export const OTHERS_POINTS_12: LocalizedPoint[] = [
     or: "କୌଣସି ନୋଟିଫିକେସନ୍ ବିନା ପୋର୍ଟାଲରେ ବାରମ୍ବାର ଷ୍ଟାଟସ୍ ଯାଞ୍ଚ କରିବା",
     ml: "അറിയിപ്പുകളൊന്നുമില്ലാതെ പോർട്ടലിൽ നേരിട്ട് കയറി പരിശോധിക്കേണ്ട അവസ്ഥ",
     pa: "ਬਿਨਾਂ ਕਿਸੇ ਨੋਟੀਫਿਕੇਸ਼ਨ ਦੇ ਪੋਰਟਲ 'ਤੇ ਵਾਰ-ਵਾਰ ਸਟੇਟਸ ਚੈੱਕ ਕਰਨਾ",
-  },
+    "as": "Static manual portal lookups with no proactive notifications",
+    ne: "Static manual portal lookups with no proactive notifications",
+    sd: "Static manual portal lookups with no proactive notifications",
+},
 ]
 
-// 6 Complaint Statuses across 12 languages
+// 6 Complaint Statuses across 15 languages
 export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<SupportedLanguage, string>> = {
   SUBMITTED: {
     en: 'Report saved in this demo',
@@ -263,7 +314,10 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     or: 'ଅଭିଯୋଗ ପଞ୍ଜୀକୃତ',
     ml: 'പരാതി രജിസ്റ്റർ ചെയ്തു',
     pa: 'ਸ਼ਿਕਾਇਤ ਦਰਜ ਹੋਈ',
-  },
+    "as": 'Report saved in this demo',
+    ne: 'Report saved in this demo',
+    sd: 'Report saved in this demo',
+},
   BANK_NOTIFIED: {
     en: 'Demo: bank contact step completed',
     hi: 'बैंक नोडल अधिकारी को सूचित',
@@ -277,7 +331,10 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     or: 'ବ୍ୟାଙ୍କ ନୋଡାଲ ଅଧିକାରୀଙ୍କୁ ସୂଚନା ଦିଆଗଲା',
     ml: 'ബാങ്ക് നോഡൽ ഓഫീസറെ അറിയിച്ചു',
     pa: 'ਬੈਂਕ ਨੋਡਲ ਅਧਿਕਾਰੀ ਨੂੰ ਸੂਚਿਤ ਕੀਤਾ',
-  },
+    "as": 'Demo: bank contact step completed',
+    ne: 'Demo: bank contact step completed',
+    sd: 'Demo: bank contact step completed',
+},
   PLATFORM_REPORTED: {
     en: 'Demo: platform or agency step completed',
     hi: 'प्लेटफ़ॉर्म / एजेंसी को रिपोर्ट दर्ज',
@@ -291,7 +348,10 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     or: 'ପ୍ଲାଟଫର୍ମ / ଏଜେନ୍ସିରେ ରିପୋର୍ଟ ଦାଖଲ',
     ml: 'പ്ലാറ്റ്‌ഫോം / ഏജൻസിയിൽ റിപ്പോർട്ട് നൽകി',
     pa: 'ਪਲੇਟਫਾਰਮ / ਏਜੰਸੀ ਕੋਲ ਰਿਪੋਰਟ ਦਰਜ',
-  },
+    "as": 'Demo: platform or agency step completed',
+    ne: 'Demo: platform or agency step completed',
+    sd: 'Demo: platform or agency step completed',
+},
   FIR_FILED: {
     en: 'Demo: FIR step completed',
     hi: 'प्राथमिकी दर्ज (NCRP)',
@@ -305,7 +365,10 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     or: 'ଏଫଆଇଆର ପଞ୍ଜୀକୃତ (NCRP)',
     ml: 'എഫ്ഐആർ രജിസ്റ്റർ ചെയ്തു (NCRP)',
     pa: 'ਐਫਆਈਆਰ ਦਰਜ (NCRP)',
-  },
+    "as": 'Demo: FIR step completed',
+    ne: 'Demo: FIR step completed',
+    sd: 'Demo: FIR step completed',
+},
   UNDER_INVESTIGATION: {
     en: 'Demo: review stage',
     hi: 'जांच जारी',
@@ -319,7 +382,10 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     or: 'ତଦନ୍ତ ଚାଲିଛି',
     ml: 'അന്വേഷണത്തിലാണ്',
     pa: 'ਜਾਂਚ ਜਾਰੀ ਹੈ',
-  },
+    "as": 'Demo: review stage',
+    ne: 'Demo: review stage',
+    sd: 'Demo: review stage',
+},
   RESOLVED: {
     en: 'Demo: case closed',
     hi: 'निपटाया / समाधान हुआ',
@@ -333,10 +399,13 @@ export const COMPLAINT_STATUS_LABELS_12: Record<ComplaintStatus, Record<Supporte
     or: 'ସମାଧାନ ହୋଇଛି',
     ml: 'പരിഹരിച്ചു',
     pa: 'ਨਿਪਟਾਰਾ / ਹੱਲ ਹੋਇਆ',
-  },
+    "as": 'Demo: case closed',
+    ne: 'Demo: case closed',
+    sd: 'Demo: case closed',
+},
 }
 
-// Crime Categories in all 12 languages
+// Crime Categories in all 15 languages
 export const CRIME_CATEGORY_LABELS_12: Record<string, Record<SupportedLanguage, string>> = {
   'Financial Fraud': {
     en: 'Financial Fraud',
@@ -351,7 +420,10 @@ export const CRIME_CATEGORY_LABELS_12: Record<string, Record<SupportedLanguage, 
     or: 'ଆର୍ଥିକ ଠକେଇ',
     ml: 'സാമ്പത്തിക തട്ടിപ്പ്',
     pa: 'ਵਿੱਤੀ ਧੋਖਾਧੜੀ',
-  },
+    "as": 'Financial Fraud',
+    ne: 'Financial Fraud',
+    sd: 'Financial Fraud',
+},
   'Women/Children Related Crime': {
     en: 'Women/Children Related Crime',
     hi: 'महिला/बाल अपराध',
@@ -365,7 +437,10 @@ export const CRIME_CATEGORY_LABELS_12: Record<string, Record<SupportedLanguage, 
     or: 'ମହିଳା/ଶିଶୁ ସମ୍ବନ୍ଧୀୟ ଅପରାଧ',
     ml: 'സ്ത്രീകൾ/കുട്ടികൾക്കെതിരെയുള്ള കുറ്റകൃത്യം',
     pa: 'ਔਰਤਾਂ/ਬੱਚਿਆਂ ਸੰਬੰਧੀ ਅਪਰਾਧ',
-  },
+    "as": 'Women/Children Related Crime',
+    ne: 'Women/Children Related Crime',
+    sd: 'Women/Children Related Crime',
+},
   'Extortion & Blackmail': {
     en: 'Extortion & Blackmail',
     hi: 'जबरन वसूली व ब्लैकमेल',
@@ -379,7 +454,10 @@ export const CRIME_CATEGORY_LABELS_12: Record<string, Record<SupportedLanguage, 
     or: 'ଜୋରଜବରଦସ୍ତି ଆଦାୟ ଓ ବ୍ଲାକମେଲ',
     ml: 'ഭീഷണിപ്പെടുത്തി പണം തട്ടലും ബ്ലാക്ക്‌മെയിലിംഗും',
     pa: 'ਜਬਰੀ ਵਸੂਲੀ ਅਤੇ ਬਲੈਕਮੇਲ',
-  },
+    "as": 'Extortion & Blackmail',
+    ne: 'Extortion & Blackmail',
+    sd: 'Extortion & Blackmail',
+},
   'Identity Theft': {
     en: 'Identity Theft',
     hi: 'पहचान की चोरी',
@@ -393,7 +471,10 @@ export const CRIME_CATEGORY_LABELS_12: Record<string, Record<SupportedLanguage, 
     or: 'ପରିଚୟ ଚୋରି',
     ml: 'തിരിച്ചറിയൽ രേഖ മോഷണം',
     pa: 'ਪਛਾਣ ਦੀ ਚੋਰੀ',
-  },
+    "as": 'Identity Theft',
+    ne: 'Identity Theft',
+    sd: 'Identity Theft',
+},
   'E-Commerce Scams': {
     en: 'E-Commerce Scams',
     hi: 'ई-कॉमर्स धोखाधड़ी',
@@ -407,7 +488,10 @@ export const CRIME_CATEGORY_LABELS_12: Record<string, Record<SupportedLanguage, 
     or: 'ଇ-କମର୍ସ ଠକେଇ',
     ml: 'ഇ-കൊമേഴ്‌സ് തട്ടിപ്പുകൾ',
     pa: 'ਈ-ਕਾਮਰਸ ਘੁਟਾਲੇ',
-  },
+    "as": 'E-Commerce Scams',
+    ne: 'E-Commerce Scams',
+    sd: 'E-Commerce Scams',
+},
   'Other Cyber Crime': {
     en: 'Other Cyber Crime',
     hi: 'अन्य साइबर अपराध',
@@ -421,10 +505,13 @@ export const CRIME_CATEGORY_LABELS_12: Record<string, Record<SupportedLanguage, 
     or: 'ଅନ୍ୟାନ୍ୟ ସାଇବର ଅପରାଧ',
     ml: 'മറ്റ് സൈബർ കുറ്റകൃത്യങ്ങൾ',
     pa: 'ਹੋਰ ਸਾਈਬਰ ਅਪਰਾਧ',
-  },
+    "as": 'Other Cyber Crime',
+    ne: 'Other Cyber Crime',
+    sd: 'Other Cyber Crime',
+},
 }
 
-// "lost" in "₹X lost" in all 12 languages
+// "lost" in "₹X lost" in all 15 languages
 export const LOST_LABEL_12: Record<SupportedLanguage, string> = {
   en: 'lost',
   hi: 'खोए',
@@ -438,9 +525,12 @@ export const LOST_LABEL_12: Record<SupportedLanguage, string> = {
   or: 'କ୍ଷତି ହୋଇଛି',
   ml: 'നഷ്ടപ്പെട്ടു',
   pa: 'ਗਵਾਏ',
+  "as": 'lost',
+  ne: 'lost',
+  sd: 'lost',
 }
 
-// Urgency badge labels in all 12 languages
+// Urgency badge labels in all 15 languages
 export const URGENCY_LABELS_12: Record<string, Record<SupportedLanguage, string>> = {
   CRITICAL: {
     en: 'CRITICAL',
@@ -455,7 +545,10 @@ export const URGENCY_LABELS_12: Record<string, Record<SupportedLanguage, string>
     or: 'ଜରୁରୀ',
     ml: 'നിർണായകം',
     pa: 'ਬਹੁਤ ਜ਼ਰੂਰੀ',
-  },
+    "as": 'CRITICAL',
+    ne: 'CRITICAL',
+    sd: 'CRITICAL',
+},
   HIGH: {
     en: 'HIGH',
     hi: 'उच्च',
@@ -469,7 +562,10 @@ export const URGENCY_LABELS_12: Record<string, Record<SupportedLanguage, string>
     or: 'ଉଚ୍ଚ',
     ml: 'ഉയർന്ന',
     pa: 'ਉੱਚ',
-  },
+    "as": 'HIGH',
+    ne: 'HIGH',
+    sd: 'HIGH',
+},
   MEDIUM: {
     en: 'MEDIUM',
     hi: 'मध्यम',
@@ -483,7 +579,10 @@ export const URGENCY_LABELS_12: Record<string, Record<SupportedLanguage, string>
     or: 'ମଧ୍ୟମ',
     ml: 'ഇടത്തരം',
     pa: 'ਦਰਮਿਆਨਾ',
-  },
+    "as": 'MEDIUM',
+    ne: 'MEDIUM',
+    sd: 'MEDIUM',
+},
   LOW: {
     en: 'LOW',
     hi: 'कम',
@@ -497,7 +596,10 @@ export const URGENCY_LABELS_12: Record<string, Record<SupportedLanguage, string>
     or: 'କମ',
     ml: 'കുറഞ്ഞ',
     pa: 'ਘੱਟ',
-  },
+    "as": 'LOW',
+    ne: 'LOW',
+    sd: 'LOW',
+},
 }
 
 // FIR Tracker translations
@@ -591,6 +693,27 @@ export const FIR_TRACKER_I18N: Record<SupportedLanguage, {
     demoControls: 'ਡੈਮੋ ਨਿਯੰਤਰਣ',
     advanceBtn: 'ਅਗਲੇ ਪੜਾਅ \'ਤੇ ਜਾਓ',
     resolvedBtn: 'ਸ਼ਿਕਾਇਤ ਦਾ ਨਿਪਟਾਰਾ ਹੋ ਗਿਆ',
+  },
+  "as": {
+    header: 'Report status (demo)',
+    liveBadge: 'Demo',
+    demoControls: 'Demo controls',
+    advanceBtn: 'Show next demo stage',
+    resolvedBtn: 'Demo complete',
+  },
+  ne: {
+    header: 'Report status (demo)',
+    liveBadge: 'Demo',
+    demoControls: 'Demo controls',
+    advanceBtn: 'Show next demo stage',
+    resolvedBtn: 'Demo complete',
+  },
+  sd: {
+    header: 'Report status (demo)',
+    liveBadge: 'Demo',
+    demoControls: 'Demo controls',
+    advanceBtn: 'Show next demo stage',
+    resolvedBtn: 'Demo complete',
   },
 }
 
@@ -686,6 +809,27 @@ export const EVIDENCE_VAULT_I18N: Record<SupportedLanguage, {
     addEvidence: 'ਸਬੂਤ ਜੋੜੋ',
     uploading: 'ਅੱਪਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…',
   },
+  "as": {
+    header: 'Evidence Vault',
+    badge: 'Secured',
+    subtitle: 'Add screenshots, chats, and other evidence here. Stored with your complaint.',
+    addEvidence: 'Add evidence',
+    uploading: 'Uploading…',
+  },
+  ne: {
+    header: 'Evidence Vault',
+    badge: 'Secured',
+    subtitle: 'Add screenshots, chats, and other evidence here. Stored with your complaint.',
+    addEvidence: 'Add evidence',
+    uploading: 'Uploading…',
+  },
+  sd: {
+    header: 'Evidence Vault',
+    badge: 'Secured',
+    subtitle: 'Add screenshots, chats, and other evidence here. Stored with your complaint.',
+    addEvidence: 'Add evidence',
+    uploading: 'Uploading…',
+  },
 }
 
 // Complaint Updates translations
@@ -780,6 +924,27 @@ export const COMPLAINT_UPDATES_I18N: Record<SupportedLanguage, {
     addBtn: 'ਜੋੜੋ',
     followUpTitle: 'ਫਾਲੋ-ਅੱਪ ਕਾਰਵਾਈ (1930/ਬੈਂਕ/ਪੁਲਿਸ ਨੂੰ ਦੱਸੋ)',
   },
+  "as": {
+    header: 'Add an Update',
+    subtitle: 'Remembered something new? Add a fresh detail, transaction, or contact here: it stays attached to this complaint.',
+    placeholder: 'e.g. I got another message from the same number…',
+    addBtn: 'Add',
+    followUpTitle: 'Follow-Up Actions (mention to 1930/bank/police)',
+  },
+  ne: {
+    header: 'Add an Update',
+    subtitle: 'Remembered something new? Add a fresh detail, transaction, or contact here: it stays attached to this complaint.',
+    placeholder: 'e.g. I got another message from the same number…',
+    addBtn: 'Add',
+    followUpTitle: 'Follow-Up Actions (mention to 1930/bank/police)',
+  },
+  sd: {
+    header: 'Add an Update',
+    subtitle: 'Remembered something new? Add a fresh detail, transaction, or contact here: it stays attached to this complaint.',
+    placeholder: 'e.g. I got another message from the same number…',
+    addBtn: 'Add',
+    followUpTitle: 'Follow-Up Actions (mention to 1930/bank/police)',
+  },
 }
 
 // Applicable Laws translations
@@ -860,6 +1025,24 @@ export const APPLICABLE_LAWS_I18N: Record<SupportedLanguage, {
     badge: 'AI ਸੁਝਾਅ',
     subtitle: 'ਇਸ ਘਟਨਾ ਦੇ ਆਧਾਰ \'ਤੇ ਇਹ ਕਾਨੂੰਨੀ ਧਾਰਾਵਾਂ ਲਾਗੂ ਹੋ ਸਕਦੀਆਂ ਹਨ। ਕਾਰਵਾਈ ਤੋਂ ਪਹਿਲਾਂ ਪੁਲਿਸ ਜਾਂ ਵਕੀਲ ਤੋਂ ਪੁਸ਼ਟੀ ਕਰੋ।',
     disclaimer: '⚠ ਇਹ ਕਾਨੂੰਨੀ ਸਲਾਹ ਨਹੀਂ ਹੈ। ਕੇਵਲ ਸੰਦਰਭ ਲਈ • Information Technology Act, 2000 \'ਤੇ ਆਧਾਰਿਤ।',
+  },
+  "as": {
+    header: 'Applicable Laws',
+    badge: 'AI Suggested',
+    subtitle: 'Based on this incident, these provisions may apply. Confirm with an advocate or the police before escalating.',
+    disclaimer: '⚠ Not legal advice. For reference only - based on the Information Technology Act, 2000.',
+  },
+  ne: {
+    header: 'Applicable Laws',
+    badge: 'AI Suggested',
+    subtitle: 'Based on this incident, these provisions may apply. Confirm with an advocate or the police before escalating.',
+    disclaimer: '⚠ Not legal advice. For reference only - based on the Information Technology Act, 2000.',
+  },
+  sd: {
+    header: 'Applicable Laws',
+    badge: 'AI Suggested',
+    subtitle: 'Based on this incident, these provisions may apply. Confirm with an advocate or the police before escalating.',
+    disclaimer: '⚠ Not legal advice. For reference only - based on the Information Technology Act, 2000.',
   },
 }
 
@@ -1045,6 +1228,48 @@ export const SMART_ACTIONS_I18N: Record<SupportedLanguage, {
     realContacts: 'ਅਸਲੀ ਸੰਪਰਕ',
     call1930: 'ਸਾਈਬਰ ਹੈਲਪਲਾਈਨ 1930',
     openCybercrime: 'cybercrime.gov.in ਖੋਲ੍ਹੋ',
+  },
+  "as": {
+    header: 'Next steps',
+    simulatedBadge: 'Demo',
+    bankActionTitle: 'Bank freeze request',
+    bankActionSimulating: 'Preparing a demo request for your bank…',
+    bankActionDone: 'Demo: bank freeze request marked as sent',
+    bankActionDesc: 'Demo: prepare a request to freeze funds with your bank',
+    routePoliceTitle: 'Police report step',
+    routePoliceLocating: 'Choosing a demo cyber police station…',
+    routePoliceDesc: 'Demo: find a cyber police station',
+    realContacts: 'Official contacts',
+    call1930: 'Cyber Helpline 1930',
+    openCybercrime: 'Open cybercrime.gov.in',
+  },
+  ne: {
+    header: 'Next steps',
+    simulatedBadge: 'Demo',
+    bankActionTitle: 'Bank freeze request',
+    bankActionSimulating: 'Preparing a demo request for your bank…',
+    bankActionDone: 'Demo: bank freeze request marked as sent',
+    bankActionDesc: 'Demo: prepare a request to freeze funds with your bank',
+    routePoliceTitle: 'Police report step',
+    routePoliceLocating: 'Choosing a demo cyber police station…',
+    routePoliceDesc: 'Demo: find a cyber police station',
+    realContacts: 'Official contacts',
+    call1930: 'Cyber Helpline 1930',
+    openCybercrime: 'Open cybercrime.gov.in',
+  },
+  sd: {
+    header: 'Next steps',
+    simulatedBadge: 'Demo',
+    bankActionTitle: 'Bank freeze request',
+    bankActionSimulating: 'Preparing a demo request for your bank…',
+    bankActionDone: 'Demo: bank freeze request marked as sent',
+    bankActionDesc: 'Demo: prepare a request to freeze funds with your bank',
+    routePoliceTitle: 'Police report step',
+    routePoliceLocating: 'Choosing a demo cyber police station…',
+    routePoliceDesc: 'Demo: find a cyber police station',
+    realContacts: 'Official contacts',
+    call1930: 'Cyber Helpline 1930',
+    openCybercrime: 'Open cybercrime.gov.in',
   },
 }
 
@@ -1270,4 +1495,127 @@ export const DASHBOARD_EXTRA_I18N: Record<SupportedLanguage, {
     liveGuidanceBadge: 'ਲਾਈਵ ਮਾਰਗਦਰਸ਼ਨ',
     retrievingReport: 'ਸਰਕਾਰੀ ਸ਼ਿਕਾਇਤ ਰਿਪੋਰਟ ਲੋਡ ਹੋ ਰਹੀ ਹੈ...',
   },
+  "as": {
+    subtitle: 'Review the details, then take the next step.',
+    newReportBtn: 'New report',
+    complaintDetailsHeader: 'Report details',
+    crimeCategoryLabel: 'Scam type',
+    fraudsterContactLabel: 'Scammer contact',
+    editableLabel: 'You can edit',
+    call1930Btn: 'Call 1930 Helpline',
+    liveEmergencyBadge: 'Emergency',
+    shareStatusBtn: 'Share report',
+    liveBadge: 'Available',
+    actionTrackingHeader: 'Report steps',
+    actionTrackingDesc: 'Use the steps that fit your report.',
+    recommendedImmediateHeader: 'Do this now',
+    liveGuidanceBadge: 'Guidance',
+    retrievingReport: 'Loading saved report...',
+  },
+  ne: {
+    subtitle: 'Review the details, then take the next step.',
+    newReportBtn: 'New report',
+    complaintDetailsHeader: 'Report details',
+    crimeCategoryLabel: 'Scam type',
+    fraudsterContactLabel: 'Scammer contact',
+    editableLabel: 'You can edit',
+    call1930Btn: 'Call 1930 Helpline',
+    liveEmergencyBadge: 'Emergency',
+    shareStatusBtn: 'Share report',
+    liveBadge: 'Available',
+    actionTrackingHeader: 'Report steps',
+    actionTrackingDesc: 'Use the steps that fit your report.',
+    recommendedImmediateHeader: 'Do this now',
+    liveGuidanceBadge: 'Guidance',
+    retrievingReport: 'Loading saved report...',
+  },
+  sd: {
+    subtitle: 'Review the details, then take the next step.',
+    newReportBtn: 'New report',
+    complaintDetailsHeader: 'Report details',
+    crimeCategoryLabel: 'Scam type',
+    fraudsterContactLabel: 'Scammer contact',
+    editableLabel: 'You can edit',
+    call1930Btn: 'Call 1930 Helpline',
+    liveEmergencyBadge: 'Emergency',
+    shareStatusBtn: 'Share report',
+    liveBadge: 'Available',
+    actionTrackingHeader: 'Report steps',
+    actionTrackingDesc: 'Use the steps that fit your report.',
+    recommendedImmediateHeader: 'Do this now',
+    liveGuidanceBadge: 'Guidance',
+    retrievingReport: 'Loading saved report...',
+  },
 }
+
+// Full component copy for the languages added after the original set. These
+// assignments replace the temporary English fallbacks above at module load.
+const NEW_COMPONENT_COPY = {
+  as: {
+    points: [
+      '60 ছেকেণ্ডৰ ভিতৰত ট্ৰাইয়াজ আৰু আনুষ্ঠানিক অভিযোগৰ খচৰা', 'টাইপ নকৰাকৈ 15টা ভাষাত কণ্ঠেৰে অভিযোগ', 'DigiLocker-এৰে ডেমো পৰিচয় যাচাই (Aadhaar/PAN)', '1930-লৈ কলৰ বাবে সাৰাংশ তৈয়াৰ কৰক', 'UTR বিৱৰণেৰে বেংকক ধন ফ্ৰিজ কৰিবলৈ কোৱাৰ সহায়', 'দ্ৰুত FIR-ৰ বাবে IT Act আৰু BNS ধাৰা চিনাক্ত', 'সুৰক্ষিত প্ৰমাণ ভল্ট আৰু সলনি কৰিব নোৱাৰা নথি', 'ৰিপ’ৰ্টৰ আপডেটৰ বাবে 24/7 WhatsApp বট',
+    ],
+    otherPoints: [
+      '15ৰো অধিক বাধ্যতামূলক ফৰ্ম পূৰণত 30ৰ পৰা 45 মিনিট', 'কণ্ঠ বা আঞ্চলিক ভাষাৰ সহায় নথকা কেৱল লিখিত ফৰ্ম', 'যাচাই কৰা পৰিচয়ৰ প্ৰমাণ নথকাকৈ হাতেৰে নাম/ID ভৰা', 'ডিজিটেল বিৱৰণ নথকাকৈ হেল্পলাইন প্ৰায়ে ব্যস্ত', 'বেংক বিষয়া বিচাৰি একাউণ্ট ফ্ৰিজ কৰিবলৈ ভুক্তভোগী অকলে', 'আইনী ধাৰা চিনাক্ত নহয়; আৰক্ষীৰ ওচৰত অসুবিধা', 'প্ৰমাণৰ শৃংখলা নথকা অগোছাল ইমেইল সংলগ্নক', 'সক্ৰিয় জাননী নথকা হাতেৰে প’ৰ্টেলত স্থিতি চোৱা',
+    ],
+    status: ['এই ডেমোত অভিযোগ সংৰক্ষণ কৰা হৈছে', 'ডেমো: বেংক-যোগাযোগৰ ধাপ সম্পূৰ্ণ', 'ডেমো: প্লেটফৰ্ম বা এজেন্সীৰ ধাপ সম্পূৰ্ণ', 'ডেমো: FIR ধাপ সম্পূৰ্ণ', 'ডেমো: পৰ্যালোচনাৰ ধাপ', 'ডেমো: কেচ বন্ধ'],
+    categories: ['বিত্তীয় জালিয়াতি', 'মহিলা/শিশু সম্পৰ্কীয় অপৰাধ', 'ধন আদায় আৰু ব্লেকমেইল', 'পৰিচয় চুৰি', 'ই-কমাৰ্চ জালিয়াতি', 'অন্যান্য চাইবাৰ অপৰাধ'],
+    lost: 'হেৰুওৱা', urgency: ['অতি জৰুৰী', 'উচ্চ', 'মধ্যম', 'কম'],
+    fir: { header: 'অভিযোগৰ স্থিতি (ডেমো)', liveBadge: 'ডেমো', demoControls: 'ডেমো নিয়ন্ত্ৰণ', advanceBtn: 'পৰৱৰ্তী ডেমো ধাপ দেখুৱাওক', resolvedBtn: 'ডেমো সম্পূৰ্ণ' },
+    evidence: { header: 'প্ৰমাণ ভল্ট', badge: 'সুৰক্ষিত', subtitle: 'স্ক্ৰিনশ্বট, চেট আৰু অন্য প্ৰমাণ ইয়াত যোগ কৰক। এইবোৰ অভিযোগৰ সৈতে সংৰক্ষণ কৰা হয়।', addEvidence: 'প্ৰমাণ যোগ কৰক', uploading: 'আপলোড হৈ আছে…' },
+    updates: { header: 'আপডেট যোগ কৰক', subtitle: 'নতুন কিবা মনত পৰিছে? নতুন বিৱৰণ, লেনদেন বা যোগাযোগ ইয়াত যোগ কৰক। ই এই অভিযোগৰ সৈতে থাকিব।', placeholder: 'উদাহৰণ: একে নম্বৰৰ পৰা আকৌ এটা বাৰ্তা পালোঁ…', addBtn: 'যোগ কৰক', followUpTitle: 'পৰৱৰ্তী পদক্ষেপ (1930/বেংক/আৰক্ষীক কওক)' },
+    laws: { header: 'প্ৰযোজ্য আইন', badge: 'AI-ৰ পৰামৰ্শ', subtitle: 'এই ঘটনাৰ ভিত্তিত এই ধাৰাবোৰ প্ৰযোজ্য হ’ব পাৰে। আগবঢ়াৰ আগতে আইনজীৱী বা আৰক্ষীৰ পৰা নিশ্চিত কৰক।', disclaimer: '⚠ এইটো আইনী পৰামৰ্শ নহয়। কেৱল তথ্যৰ বাবে • Information Technology Act, 2000-ৰ ভিত্তিত।' },
+    actions: { header: 'পৰৱৰ্তী পদক্ষেপ', simulatedBadge: 'ডেমো', bankActionTitle: 'বেংক ফ্ৰিজৰ অনুৰোধ', bankActionSimulating: 'আপোনাৰ বেংকৰ বাবে ডেমো অনুৰোধ তৈয়াৰ কৰা হৈছে…', bankActionDone: 'ডেমো: বেংক ফ্ৰিজ অনুৰোধ পঠোৱা বুলি চিহ্নিত', bankActionDesc: 'ডেমো: বেংকৰ ওচৰত ধন ফ্ৰিজৰ অনুৰোধ তৈয়াৰ কৰক', routePoliceTitle: 'আৰক্ষী অভিযোগৰ ধাপ', routePoliceLocating: 'ডেমো চাইবাৰ আৰক্ষী থানা বাছি আছে…', routePoliceDesc: 'ডেমো: চাইবাৰ আৰক্ষী থানা বিচাৰক', realContacts: 'আনুষ্ঠানিক যোগাযোগ', call1930: 'চাইবাৰ হেল্পলাইন 1930', openCybercrime: 'cybercrime.gov.in খোলক' },
+    dashboard: { subtitle: 'বিৱৰণ পৰ্যালোচনা কৰক, তাৰ পিছত পৰৱৰ্তী পদক্ষেপ লওক।', newReportBtn: 'নতুন অভিযোগ', complaintDetailsHeader: 'অভিযোগৰ বিৱৰণ', crimeCategoryLabel: 'জালিয়াতিৰ ধৰণ', fraudsterContactLabel: 'জালিয়াতৰ যোগাযোগ', editableLabel: 'সম্পাদনা কৰিব পাৰে', call1930Btn: '1930 হেল্পলাইনলৈ কল কৰক', liveEmergencyBadge: 'জৰুৰী', shareStatusBtn: 'অভিযোগ ভাগ কৰক', liveBadge: 'উপলব্ধ', actionTrackingHeader: 'অভিযোগৰ ধাপ', actionTrackingDesc: 'আপোনাৰ অভিযোগত প্ৰযোজ্য পদক্ষেপ বাছক।', recommendedImmediateHeader: 'এতিয়া এইটো কৰক', liveGuidanceBadge: 'পৰামৰ্শ', retrievingReport: 'সংৰক্ষিত অভিযোগ লোড হৈ আছে...' },
+  },
+  ne: {
+    points: ['60 सेकेन्डभित्र ट्रायाज र औपचारिक उजुरीको मस्यौदा', 'टाइप नगरी 15 भाषामा बोल्दै उजुरी दिनुहोस्', 'DigiLocker बाट डेमो पहिचान जाँच (Aadhaar/PAN)', '1930 मा फोन गर्न सारांश तयार गर्नुहोस्', 'UTR विवरणसहित बैंकलाई रकम रोक्न भन्न मद्दत', 'छिटो FIR का लागि IT Act र BNS धारा पहिचान', 'सुरक्षित प्रमाण भल्ट र फेरबदल गर्न नसकिने रेकर्ड', 'रिपोर्ट अपडेटका लागि 24/7 WhatsApp बोट'],
+    otherPoints: ['15 भन्दा बढी अनिवार्य फारम भर्न 30 देखि 45 मिनेट', 'आवाज वा स्थानीय भाषा सहयोग नभएका लेख-आधारित फारम', 'पुष्टि गरिएको पहिचान प्रमाणबिना नाम/ID हातैले भर्ने', 'डिजिटल विवरणबिना हेल्पलाइन प्रायः व्यस्त', 'बैंक अधिकारी खोजेर खाता रोक्न पीडित एक्लै', 'कानुनी धारा नचिनिँदा प्रहरीमा कठिनाइ', 'प्रमाणको श्रृंखला नजोगिने अस्तव्यस्त इमेल संलग्नक', 'सूचना नआउने, पोर्टलमा हातैले स्थिति जाँच्नुपर्ने'],
+    status: ['यो डेमोमा उजुरी सुरक्षित भयो', 'डेमो: बैंक सम्पर्क चरण पूरा', 'डेमो: प्लेटफर्म वा निकाय चरण पूरा', 'डेमो: FIR चरण पूरा', 'डेमो: जाँच चरण', 'डेमो: मुद्दा बन्द'], categories: ['आर्थिक ठगी', 'महिला/बालबालिकासम्बन्धी अपराध', 'धम्की र ब्ल्याकमेल', 'पहिचान चोरी', 'ई–कमर्स ठगी', 'अन्य साइबर अपराध'], lost: 'गुमेको', urgency: ['अति जरुरी', 'उच्च', 'मध्यम', 'कम'],
+    fir: { header: 'उजुरीको स्थिति (डेमो)', liveBadge: 'डेमो', demoControls: 'डेमो नियन्त्रण', advanceBtn: 'अर्को डेमो चरण देखाउनुहोस्', resolvedBtn: 'डेमो पूरा भयो' },
+    evidence: { header: 'प्रमाण भल्ट', badge: 'सुरक्षित', subtitle: 'स्क्रिनसट, च्याट र अन्य प्रमाण यहाँ थप्नुहोस्। यो उजुरीसँग सुरक्षित हुन्छ।', addEvidence: 'प्रमाण थप्नुहोस्', uploading: 'अपलोड हुँदैछ…' },
+    updates: { header: 'अपडेट थप्नुहोस्', subtitle: 'केही नयाँ सम्झनुभयो? नयाँ विवरण, कारोबार वा सम्पर्क यहाँ थप्नुहोस्। यो उजुरीसँग रहन्छ।', placeholder: 'जस्तै: उही नम्बरबाट फेरि सन्देश आयो…', addBtn: 'थप्नुहोस्', followUpTitle: 'पछिल्लो कदम (1930/बैंक/प्रहरीलाई भन्नुहोस्)' },
+    laws: { header: 'लागू कानुन', badge: 'AI को सुझाव', subtitle: 'यस घटनाका आधारमा यी प्रावधान लागू हुन सक्छन्। अगाडि बढ्नुअघि वकिल वा प्रहरीसँग पुष्टि गर्नुहोस्।', disclaimer: '⚠ यो कानुनी सल्लाह होइन। जानकारीका लागि मात्र • Information Technology Act, 2000 मा आधारित।' },
+    actions: { header: 'अर्को कदम', simulatedBadge: 'डेमो', bankActionTitle: 'बैंक रकम रोक्का अनुरोध', bankActionSimulating: 'तपाईंको बैंकका लागि डेमो अनुरोध तयार हुँदैछ…', bankActionDone: 'डेमो: बैंक रकम रोक्का अनुरोध पठाइएको भनेर चिन्ह लगाइयो', bankActionDesc: 'डेमो: बैंकलाई रकम रोक्का गर्न अनुरोध तयार गर्नुहोस्', routePoliceTitle: 'प्रहरी उजुरी चरण', routePoliceLocating: 'डेमो साइबर प्रहरी कार्यालय छानिँदैछ…', routePoliceDesc: 'डेमो: साइबर प्रहरी कार्यालय खोज्नुहोस्', realContacts: 'आधिकारिक सम्पर्क', call1930: 'साइबर हेल्पलाइन 1930', openCybercrime: 'cybercrime.gov.in खोल्नुहोस्' },
+    dashboard: { subtitle: 'विवरण जाँच्नुहोस्, अनि अर्को कदम चाल्नुहोस्।', newReportBtn: 'नयाँ उजुरी', complaintDetailsHeader: 'उजुरीको विवरण', crimeCategoryLabel: 'ठगीको प्रकार', fraudsterContactLabel: 'ठगको सम्पर्क', editableLabel: 'सम्पादन गर्न सकिन्छ', call1930Btn: '1930 हेल्पलाइनमा फोन गर्नुहोस्', liveEmergencyBadge: 'जरुरी', shareStatusBtn: 'उजुरी साझा गर्नुहोस्', liveBadge: 'उपलब्ध', actionTrackingHeader: 'उजुरीका चरण', actionTrackingDesc: 'आफ्नो उजुरी मिल्ने चरण रोज्नुहोस्।', recommendedImmediateHeader: 'अहिले यो गर्नुहोस्', liveGuidanceBadge: 'मार्गदर्शन', retrievingReport: 'सुरक्षित उजुरी लोड हुँदैछ...' },
+  },
+  sd: {
+    points: ['60 سيڪنڊن اندر ٽرائياز ۽ رسمي رپورٽ جو مسودو', 'ٽائپ ڪرڻ کان سواءِ 15 ٻولين ۾ آواز سان رپورٽ', 'DigiLocker سان ڊيمو سڃاڻپ جي جاچ (Aadhaar/PAN)', '1930 تي ڪال لاءِ خلاصو تيار ڪريو', 'UTR تفصيل سان بئنڪ کي رقم فريز لاءِ چوڻ ۾ مدد', 'جلد FIR لاءِ IT Act ۽ BNS جون شقون سڃاڻو', 'محفوظ ثبوت والٽ ۽ تبديل نه ٿيندڙ رڪارڊ', 'رپورٽ اپڊيٽ لاءِ 24/7 WhatsApp بوٽ'],
+    otherPoints: ['15 کان وڌيڪ لازمي فارم ڀرڻ ۾ 30 کان 45 منٽ', 'آواز يا مقامي ٻولي جي سهولت کان سواءِ صرف لکيل فارم', 'تصديق ٿيل سڃاڻپ جي ثبوت کان سواءِ هٿ سان نالو/ID ڀرڻ', 'ڊجيٽل تفصيل کان سواءِ هيلپ لائن اڪثر مصروف', 'بئنڪ آفيسر ڳولي کاتو فريز ڪرڻ لاءِ متاثر اڪيلو', 'قانوني شقون نه سڃاڻڻ سبب پوليس وٽ ڏکيائي', 'ثبوت جي سلسلي کان سواءِ بي ترتيب اي ميل اٽيچمينٽ', 'نوٽيفڪيشن کان سواءِ پورٽل تي هٿ سان حالت ڏسڻ'],
+    status: ['هن ڊيمو ۾ رپورٽ محفوظ ٿي وئي', 'ڊيمو: بئنڪ رابطو وارو قدم مڪمل', 'ڊيمو: پليٽ فارم يا اداري وارو قدم مڪمل', 'ڊيمو: FIR وارو قدم مڪمل', 'ڊيمو: جائزي جو مرحلو', 'ڊيمو: ڪيس بند'], categories: ['مالي ٺڳي', 'عورتن/ٻارن سان لاڳاپيل ڏوهه', 'ڀتو ۽ بليڪ ميل', 'سڃاڻپ جي چوري', 'اي-ڪامرس ٺڳي', 'ٻيا سائبر ڏوهه'], lost: 'گم ٿيل', urgency: ['تمام تڪڙو', 'وڌيڪ', 'وچولو', 'گهٽ'],
+    fir: { header: 'رپورٽ جي حالت (ڊيمو)', liveBadge: 'ڊيمو', demoControls: 'ڊيمو ڪنٽرول', advanceBtn: 'اڳيون ڊيمو مرحلو ڏيکاريو', resolvedBtn: 'ڊيمو مڪمل' },
+    evidence: { header: 'ثبوت والٽ', badge: 'محفوظ', subtitle: 'اسڪرين شاٽ، چيٽ ۽ ٻيا ثبوت هتي شامل ڪريو۔ اهي رپورٽ سان محفوظ ٿيندا۔', addEvidence: 'ثبوت شامل ڪريو', uploading: 'اپلوڊ ٿي رهيو آهي…' },
+    updates: { header: 'اپڊيٽ شامل ڪريو', subtitle: 'ڪجهه نئون ياد آيو؟ نئون تفصيل، ٽرانزيڪشن يا رابطو هتي شامل ڪريو۔ اهو هن رپورٽ سان رهندو۔', placeholder: 'مثال: ساڳئي نمبر تان ٻيهر پيغام آيو…', addBtn: 'شامل ڪريو', followUpTitle: 'اڳيون قدم (1930/بئنڪ/پوليس کي ٻڌايو)' },
+    laws: { header: 'لاڳو قانون', badge: 'AI جي صلاح', subtitle: 'هن واقعي جي بنياد تي هي شقون لاڳو ٿي سگهن ٿيون۔ اڳتي وڌڻ کان اڳ وڪيل يا پوليس سان تصديق ڪريو۔', disclaimer: '⚠ هي قانوني صلاح ناهي۔ صرف ڄاڻ لاءِ • Information Technology Act, 2000 تي ٻڌل۔' },
+    actions: { header: 'اڳيون قدم', simulatedBadge: 'ڊيمو', bankActionTitle: 'بئنڪ فريز درخواست', bankActionSimulating: 'توهان جي بئنڪ لاءِ ڊيمو درخواست تيار ٿي رهي آهي…', bankActionDone: 'ڊيمو: بئنڪ فريز درخواست موڪليل طور نشان لڳايو ويو', bankActionDesc: 'ڊيمو: بئنڪ کي رقم فريز ڪرڻ جي درخواست تيار ڪريو', routePoliceTitle: 'پوليس رپورٽ وارو قدم', routePoliceLocating: 'ڊيمو سائبر پوليس اسٽيشن چونڊيو پيو وڃي…', routePoliceDesc: 'ڊيمو: سائبر پوليس اسٽيشن ڳوليو', realContacts: 'سرڪاري رابطا', call1930: 'سائبر هيلپ لائن 1930', openCybercrime: 'cybercrime.gov.in کوليو' },
+    dashboard: { subtitle: 'تفصيل ڏسو، پوءِ اڳيون قدم کڻو۔', newReportBtn: 'نئين رپورٽ', complaintDetailsHeader: 'رپورٽ جا تفصيل', crimeCategoryLabel: 'ٺڳي جو قسم', fraudsterContactLabel: 'ٺڳ جو رابطو', editableLabel: 'تبديلي ڪري سگهجي ٿي', call1930Btn: '1930 هيلپ لائن تي ڪال ڪريو', liveEmergencyBadge: 'تڪڙي', shareStatusBtn: 'رپورٽ شيئر ڪريو', liveBadge: 'موجود', actionTrackingHeader: 'رپورٽ جا قدم', actionTrackingDesc: 'پنهنجي رپورٽ لاءِ مناسب قدم چونڊيو۔', recommendedImmediateHeader: 'هاڻي هي ڪريو', liveGuidanceBadge: 'رهنمائي', retrievingReport: 'محفوظ رپورٽ لوڊ ٿي رهي آهي...' },
+  },
+} as const
+
+SAMARTHAN_POINTS_12.forEach((point, index) => Object.assign(point, {
+  as: NEW_COMPONENT_COPY.as.points[index], ne: NEW_COMPONENT_COPY.ne.points[index], sd: NEW_COMPONENT_COPY.sd.points[index],
+}))
+OTHERS_POINTS_12.forEach((point, index) => Object.assign(point, {
+  as: NEW_COMPONENT_COPY.as.otherPoints[index], ne: NEW_COMPONENT_COPY.ne.otherPoints[index], sd: NEW_COMPONENT_COPY.sd.otherPoints[index],
+}))
+
+;(['SUBMITTED', 'BANK_NOTIFIED', 'PLATFORM_REPORTED', 'FIR_FILED', 'UNDER_INVESTIGATION', 'RESOLVED'] as ComplaintStatus[]).forEach((status, index) => Object.assign(COMPLAINT_STATUS_LABELS_12[status], {
+  as: NEW_COMPONENT_COPY.as.status[index], ne: NEW_COMPONENT_COPY.ne.status[index], sd: NEW_COMPONENT_COPY.sd.status[index],
+}))
+;(['Financial Fraud', 'Women/Children Related Crime', 'Extortion & Blackmail', 'Identity Theft', 'E-Commerce Scams', 'Other Cyber Crime']).forEach((category, index) => Object.assign(CRIME_CATEGORY_LABELS_12[category], {
+  as: NEW_COMPONENT_COPY.as.categories[index], ne: NEW_COMPONENT_COPY.ne.categories[index], sd: NEW_COMPONENT_COPY.sd.categories[index],
+}))
+Object.assign(LOST_LABEL_12, { as: NEW_COMPONENT_COPY.as.lost, ne: NEW_COMPONENT_COPY.ne.lost, sd: NEW_COMPONENT_COPY.sd.lost })
+;(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']).forEach((urgency, index) => Object.assign(URGENCY_LABELS_12[urgency], {
+  as: NEW_COMPONENT_COPY.as.urgency[index], ne: NEW_COMPONENT_COPY.ne.urgency[index], sd: NEW_COMPONENT_COPY.sd.urgency[index],
+}))
+
+;(['as', 'ne', 'sd'] as const).forEach((language) => {
+  const copy = NEW_COMPONENT_COPY[language]
+  Object.assign(FIR_TRACKER_I18N[language], copy.fir)
+  Object.assign(EVIDENCE_VAULT_I18N[language], copy.evidence)
+  Object.assign(COMPLAINT_UPDATES_I18N[language], copy.updates)
+  Object.assign(APPLICABLE_LAWS_I18N[language], copy.laws)
+  Object.assign(SMART_ACTIONS_I18N[language], copy.actions)
+  Object.assign(DASHBOARD_EXTRA_I18N[language], copy.dashboard)
+})

@@ -23,6 +23,24 @@ import { getTranslation } from '@/lib/i18n/translations'
 import { SCREEN_COPY } from '@/lib/i18n/screenCopy'
 import { DASHBOARD_EXTRA_I18N, CRIME_CATEGORY_LABELS_12, EVIDENCE_VAULT_I18N } from '@/lib/i18n/componentTranslations'
 
+const VOICE_DETECTED_LABEL: Record<SupportedLanguage, string> = {
+  en: 'Voice detected', hi: 'पहचानी गई आवाज़', bn: 'শনাক্ত করা ভাষা', mr: 'ओळखलेली भाषा',
+  te: 'గుర్తించిన భాష', ta: 'கண்டறியப்பட்ட மொழி', gu: 'ઓળખાયેલી ભાષા', ur: 'شناخت شدہ زبان',
+  kn: 'ಗುರುತಿಸಿದ ಭಾಷೆ', or: 'ଚିହ୍ନଟ ଭାଷା', ml: 'കണ്ടെത്തിയ ഭാഷ', pa: 'ਪਛਾਣੀ ਗਈ ਭਾਸ਼ਾ',
+  "as": 'ভাষা চিনাক্ত কৰা হৈছে',
+  ne: 'भाषा पहिचान भयो',
+  sd: 'ٻولي سڃاتي وئي',
+}
+
+const REPORT_LANGUAGE_LABEL: Record<SupportedLanguage, string> = {
+  en: 'Report language', hi: 'रिपोर्ट की भाषा', bn: 'রিপোর্টের ভাষা', mr: 'अहवालाची भाषा',
+  te: 'నివేదిక భాష', ta: 'அறிக்கை மொழி', gu: 'રિપોર્ટની ભાષા', ur: 'رپورٹ کی زبان',
+  kn: 'ವರದಿ ಭಾಷೆ', or: 'ରିପୋର୍ଟ ଭାଷା', ml: 'റിപ്പോർട്ട് ഭാഷ', pa: 'ਰਿਪੋਰਟ ਦੀ ਭਾਸ਼ਾ',
+  "as": 'ৰিপোর্টৰ ভাষা',
+  ne: 'रिपोर्टको भाषा',
+  sd: 'رپورٽ جي ٻولي',
+}
+
 function readAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -398,6 +416,9 @@ function DashboardContent() {
   const allFollowUpPoints = updates.flatMap(u => hi ? u.actionPointsHi : u.actionPoints)
   const evidenceLoc = EVIDENCE_VAULT_I18N[language] || EVIDENCE_VAULT_I18N.en
   const readinessSignalCount = [Boolean(r.utrNumber), Boolean(r.upiId), evidenceImages.length > 0].filter(Boolean).length
+  const detectedSpokenLanguage = r.languageDetection?.detectedLanguage
+    ? LANGUAGE_MAP[r.languageDetection.detectedLanguage]
+    : null
 
   const handleUpdate = (field: keyof typeof r, value: any) => {
     setTriageResult({ ...r, [field]: value })
@@ -457,6 +478,11 @@ function DashboardContent() {
             <h1 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
               {t.dashboard.title}
             </h1>
+            {detectedSpokenLanguage && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                {r.languageDetection?.decision === 'manual' ? REPORT_LANGUAGE_LABEL[language] : VOICE_DETECTED_LABEL[language]}: {detectedSpokenLanguage.nativeName}
+              </p>
+            )}
           </div>
           <button
             onClick={() => { reset(); router.push('/') }}

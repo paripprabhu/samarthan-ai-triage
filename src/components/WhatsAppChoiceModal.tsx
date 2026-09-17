@@ -318,6 +318,15 @@ const WA_MODAL_I18N: Record<SupportedLanguage, {
     footerAi: 'ਦੋਵੇਂ ਵਿਕਲਪ ਇੱਕੋ AI ਇੰਜਣ ਦੀ ਵਰਤੋਂ ਕਰਦੇ ਹਨ',
     close: 'ਬੰਦ ਕਰੋ',
   },
+  "as": {
+    title: 'WhatsAppত সমৰ্থন', subtitle: 'WhatsApp ৰিপোর্ট ডেমো', defaultText: 'নমস্কাৰ সমৰ্থন, মই চাইবাৰ জালিয়াতিৰ অভিযোগ কৰিব বিচাৰোঁ।', simTitle: 'WhatsApp ডেমো চেষ্টা কৰক', recommended: 'এই ডেমো ব্যৱহাৰ কৰক', simDesc: 'এই এপত কণ্ঠ বাৰ্তা, মেছেজ বা স্ক্ৰিনশ্বট চেষ্টা কৰক।', simLaunch: 'ডেমো খোলক', realTitle: 'WhatsApp খোলক', realTag: 'লাইভ বট', realDesc: 'লাইভ বট থাকিলে এই বিকল্পই কাম কৰে।', evalHeadsUp: 'এই ডেমোৰ বিষয়ে', evalNotice: 'এপৰ ভিতৰৰ বিকল্প ডেমো। লাইভ বট অফলাইন হ’ব পাৰে।', botOnline: 'লাইভ বট: অনলাইন', botStandby: 'লাইভ বট: অফলাইন', botChecking: 'লাইভ বট পৰীক্ষা কৰা হৈছে...', openWa: 'WhatsApp খোলক', footerAi: 'এপৰ ভিতৰৰ ডেমো', close: 'বন্ধ কৰক',
+  },
+  ne: {
+    title: 'WhatsApp मा समर्थन्', subtitle: 'WhatsApp उजुरी डेमो', defaultText: 'नमस्ते समर्थन्, म साइबर ठगीको उजुरी दिन चाहन्छु।', simTitle: 'WhatsApp डेमो चलाउनुहोस्', recommended: 'यो डेमो प्रयोग गर्नुहोस्', simDesc: 'यस एपमा आवाज सन्देश, मेसेज वा स्क्रिनसट चलाउनुहोस्।', simLaunch: 'डेमो खोल्नुहोस्', realTitle: 'WhatsApp खोल्नुहोस्', realTag: 'लाइभ बोट', realDesc: 'लाइभ बोट उपलब्ध हुँदा यो विकल्प चल्छ।', evalHeadsUp: 'यस डेमोबारे', evalNotice: 'एपभित्रको विकल्प डेमो हो। लाइभ बोट अफलाइन हुन सक्छ।', botOnline: 'लाइभ बोट: अनलाइन', botStandby: 'लाइभ बोट: अफलाइन', botChecking: 'लाइभ बोट जाँचिँदैछ...', openWa: 'WhatsApp खोल्नुहोस्', footerAi: 'एपभित्रको डेमो', close: 'बन्द गर्नुहोस्',
+  },
+  sd: {
+    title: 'WhatsApp تي سمَرٿن', subtitle: 'WhatsApp رپورٽ ڊيمو', defaultText: 'سلام سمَرٿن، مان سائبر فراڊ جي رپورٽ ڪرڻ چاهيان ٿو۔', simTitle: 'WhatsApp ڊيمو آزمائو', recommended: 'هي ڊيمو استعمال ڪريو', simDesc: 'هن ايپ ۾ آوازي نوٽ، پيغام يا اسڪرين شاٽ آزمائو۔', simLaunch: 'ڊيمو کوليو', realTitle: 'WhatsApp کوليو', realTag: 'لائيو بوٽ', realDesc: 'لائيو بوٽ موجود هجي ته هي اختيار ڪم ڪري ٿو۔', evalHeadsUp: 'هن ڊيمو بابت', evalNotice: 'ايپ اندر وارو اختيار ڊيمو آهي۔ لائيو بوٽ آف لائن ٿي سگهي ٿو۔', botOnline: 'لائيو بوٽ: آن لائن', botStandby: 'لائيو بوٽ: آف لائن', botChecking: 'لائيو بوٽ چيڪ ٿي رهيو آهي...', openWa: 'WhatsApp کوليو', footerAi: 'ايپ اندر وارو ڊيمو', close: 'بند ڪريو',
+  },
 }
 
   if (!isOpen || !mounted) return null

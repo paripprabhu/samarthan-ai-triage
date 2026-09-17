@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, AlertCircle, FileText, Mic, ImagePlus, ShieldAlert, CheckCircle2, X, Lock, ShieldCheck } from 'lucide-react'
 import { useTriage } from '@/context/TriageContext'
-import { SCENARIOS, TriageResult, generateId } from '@/data/scenarios'
+import { SCENARIOS, TriageResult, generateId, getScenarioPresentation } from '@/data/scenarios'
 import { inferChannelFromFraudType } from '@/data/escalationChannels'
 import AudioRecorder from '@/components/AudioRecorder'
 import LoadingTriage from '@/components/LoadingTriage'
@@ -13,7 +13,7 @@ import Navbar from '@/components/Navbar'
 import DigiLockerModal from '@/components/DigiLockerModal'
 import { useAuth, DigiLockerUser } from '@/hooks/useAuth'
 import { getTranslation } from '@/lib/i18n/translations'
-import { LANGUAGE_MAP } from '@/lib/i18n/languages'
+import { LANGUAGE_MAP, SupportedLanguage, isSupportedLanguage } from '@/lib/i18n/languages'
 import { SCREEN_COPY, formatScreenCopy } from '@/lib/i18n/screenCopy'
 import {
   extractMultilingualComplainant,
@@ -34,21 +34,39 @@ function IntakeContent() {
   const categoryParam = searchParams.get('category')
   const autoStartParam = searchParams.get('autoStart')
   const textParam = searchParams.get('text')
+  const spokenLanguageParam = searchParams.get('spokenLanguage')
+  const detectedHeroLanguage = isSupportedLanguage(spokenLanguageParam) ? spokenLanguageParam : null
+  const spokenLanguageModeParam = searchParams.get('spokenLanguageMode') === 'manual' ? 'manual' : 'auto'
+  // This value comes from the confirmation button on the hero recorder. It
+  // must be available during the first render because autoStart can submit
+  // before a useEffect has had a chance to update local state.
+  const initialHeroVoiceLanguage = spokenLanguageModeParam === 'manual' ? detectedHeroLanguage : null
 
-  const { language, setLanguage, scenarioId, setTriageResult, sharedImage, setSharedImage } = useTriage()
+  const { language, languagePreference, setLanguage, scenarioId, setTriageResult, sharedImage, setSharedImage } = useTriage()
   const t = getTranslation(language)
   const intakeUi = t.intake.ui
   const screenCopy = SCREEN_COPY[language]
-  const meta = LANGUAGE_MAP[language] || LANGUAGE_MAP.en
   const { getUser, signOut } = useAuth()
   const hi = language === 'hi'
   const scenario = SCENARIOS.find(s => s.id === scenarioId)
+  const scenarioPresentation = scenario ? getScenarioPresentation(scenario, language) : null
 
   const [currentUser, setCurrentUser] = useState<DigiLockerUser | null>(null)
   const [digiLockerModalOpen, setDigiLockerModalOpen] = useState(false)
   const [textValue, setTextValue] = useState('')
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [voiceTranscript, setVoiceTranscript] = useState('')
+  const [proposedVoiceLanguage, setProposedVoiceLanguage] = useState<SupportedLanguage | null>(null)
+  const [acceptedVoiceLanguage, setAcceptedVoiceLanguage] = useState<SupportedLanguage | null>(initialHeroVoiceLanguage)
+  const [voiceLanguageMode, setVoiceLanguageMode] = useState<'auto' | 'manual'>(
+    initialHeroVoiceLanguage ? 'manual' : languagePreference
+  )
+  const effectiveVoiceLanguageMode = languagePreference === 'manual' || spokenLanguageModeParam === 'manual'
+    ? 'manual'
+    : voiceLanguageMode
+  const reportLanguage = effectiveVoiceLanguageMode === 'manual'
+    ? (acceptedVoiceLanguage || initialHeroVoiceLanguage || language)
+    : language
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -62,6 +80,12 @@ function IntakeContent() {
     window.addEventListener('samarthan_auth_change', handler)
     return () => window.removeEventListener('samarthan_auth_change', handler)
   }, [getUser])
+
+  // A language chosen from the page menu is an explicit preference for the
+  // report too. Automatic speech detection never changes that page setting.
+  useEffect(() => {
+    if (languagePreference === 'manual') setVoiceLanguageMode('manual')
+  }, [languagePreference])
 
   const buildClientFallback = (textOverride?: string): TriageResult => {
     const finalTxt = textOverride !== undefined ? textOverride : [textValue, voiceTranscript].filter(Boolean).join('\n').trim()
@@ -79,6 +103,8 @@ function IntakeContent() {
     const detectedIfsc = extractMultilingualIFSC(finalTxt)
     const idNum = generateId()
     const inferred = inferChannelFromFraudType(mappedCat)
+
+    const reportMeta = LANGUAGE_MAP[reportLanguage] || LANGUAGE_MAP.en
 
     return {
       incidentId: idNum,
@@ -100,22 +126,22 @@ function IntakeContent() {
       timeline: new Date().toLocaleString('en-IN'),
       summary: finalTxt.length > 20 ? finalTxt.substring(0, 180) + '...' : `Reported cyber incident: ${mappedCat}.`,
       summaryHi: `${mappedCat} के तहत साइबर घटना दर्ज की गई।`,
-      summaryRegional: language === 'hi'
+      summaryRegional: reportLanguage === 'hi'
         ? `${mappedCat} के तहत साइबर घटना दर्ज की गई।`
-        : (language !== 'en' ? `[${meta.nativeName}]: ${finalTxt.substring(0, 140) || mappedCat}` : undefined),
-      language,
+        : (reportLanguage !== 'en' ? `[${reportMeta.nativeName}]: ${finalTxt.substring(0, 140) || mappedCat}` : undefined),
+      language: reportLanguage,
       complaintDraft: onBehalfOfTarget
         ? `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Complaint Regarding ${mappedCat}\n\nRespected Sir/Madam,\n\nI, ${detectedName}, hereby lodge a formal complaint on behalf of ${onBehalfOfTarget} regarding an unauthorized incident: ${finalTxt || 'Online cyber fraud'}.\n\nKindly investigate the matter and initiate legal proceedings under IT Act.\n\nYours faithfully,\n${detectedName}`
         : `To,\nThe Station House Officer,\nCyber Crime Cell\n\nSubject: Formal Complaint Regarding ${mappedCat}\n\nRespected Sir/Madam,\n\nI, ${detectedName}, hereby lodge a formal complaint regarding an unauthorized incident: ${finalTxt || 'Online cyber fraud'}.\n\nKindly investigate the matter and initiate legal proceedings under IT Act.\n\nYours faithfully,\n${detectedName}`,
       complaintDraftHi: onBehalfOfTarget
         ? `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, ${onBehalfOfTarget} की ओर से इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया आईटी अधिनियम के तहत त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`
         : `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया आईटी अधिनियम के तहत त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`,
-      complaintDraftRegional: language === 'hi'
+      complaintDraftRegional: reportLanguage === 'hi'
         ? (onBehalfOfTarget
             ? `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, ${onBehalfOfTarget} की ओर से इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`
             : `सेवा में,\nथाना प्रभारी,\nसाइबर क्राइम सेल\n\nविषय: ${mappedCat} के संबंध में औपचारिक शिकायत\n\nमहोदय,\n\nमैं, ${detectedName}, इस अनधिकृत घटना की रिपोर्ट दर्ज करा रहा हूँ: ${finalTxt || 'साइबर धोखाधड़ी'}।\n\nकृपया त्वरित कानूनी कार्रवाई करें।\n\nभवदीय,\n${detectedName}`)
-        : (language !== 'en'
-            ? getRegionalComplaintDraft(language, detectedName, onBehalfOfTarget, mappedCat, finalTxt || mappedCat, cleanAmount)
+        : (reportLanguage !== 'en'
+            ? getRegionalComplaintDraft(reportLanguage, detectedName, onBehalfOfTarget, mappedCat, finalTxt || mappedCat, cleanAmount)
             : undefined),
       freezeSteps: [
         {
@@ -171,10 +197,14 @@ function IntakeContent() {
 
     try {
       const formData = new FormData()
-      formData.append('language', language)
+      formData.append('language', reportLanguage)
+      formData.append('languageMode', effectiveVoiceLanguageMode)
       if (categoryParam && categoryParam !== 'auto') formData.append('fraudType', categoryParam)
       if (scenario) formData.append('scenarioId', scenario.id)
-      const finalTxt = [forcedText || textValue, voiceTranscript].filter(Boolean).join('\n').trim()
+      // Live captions are only a preview. When the full recording is attached,
+      // send that recording once and let the server make its single final ASR
+      // pass instead of asking triage to read the same voice report twice.
+      const finalTxt = [forcedText || textValue, audioBlob ? '' : voiceTranscript].filter(Boolean).join('\n').trim()
       if (finalTxt) formData.append('text', finalTxt)
       if (audioBlob) formData.append('audio', audioBlob, 'recording.webm')
       const finalImg = forcedImg || imageFile
@@ -225,12 +255,19 @@ function IntakeContent() {
   useEffect(() => {
     const decodedText = textParam ? decodeURIComponent(textParam) : ''
     if (decodedText && !textValue) setTextValue(decodedText)
+    if (detectedHeroLanguage && !proposedVoiceLanguage) {
+      setProposedVoiceLanguage(detectedHeroLanguage)
+      if (spokenLanguageModeParam === 'manual') {
+        setAcceptedVoiceLanguage(detectedHeroLanguage)
+        setVoiceLanguageMode('manual')
+      }
+    }
     if (sharedImage && !imageFile) setImageFile(sharedImage)
     if (autoStartParam === 'true' && !hasAutoStarted.current && decodedText) {
       hasAutoStarted.current = true
       handleAIAnalyze(decodedText)
     }
-  }, [textParam, autoStartParam, sharedImage])
+  }, [textParam, autoStartParam, sharedImage, detectedHeroLanguage, spokenLanguageModeParam, proposedVoiceLanguage])
 
   if (isLoading) {
     return <div className="min-h-screen bg-background"><LoadingTriage language={language} /></div>
@@ -259,7 +296,7 @@ function IntakeContent() {
             {(scenario || categoryLabel) && (
               <p className="text-xs text-muted-foreground">
                 {scenario
-                  ? `${screenCopy.intake.sandbox}: ${language === 'hi' ? scenario.titleHi : scenario.title}`
+                  ? `${screenCopy.intake.sandbox}: ${scenarioPresentation?.title}`
                   : `${screenCopy.intake.category}: ${categoryLabel}`}
               </p>
             )}
@@ -276,7 +313,7 @@ function IntakeContent() {
               <ShieldAlert className="w-3.5 h-3.5" />
               {screenCopy.intake.sandbox}
             </p>
-            <p className="text-xs sm:text-sm text-foreground">{language === 'hi' ? scenario.descriptionHi : scenario.description}</p>
+            <p className="text-xs sm:text-sm text-foreground">{scenarioPresentation?.description}</p>
           </motion.div>
         )}
 
@@ -374,7 +411,21 @@ function IntakeContent() {
               <span className="flex items-center gap-1.5"><Mic className="w-3.5 h-3.5" />{t.intake.voiceCardTitle}</span>
             </p>
             <div className="flex-1">
-              <AudioRecorder language={language} onAudioReady={setAudioBlob} onLiveTranscript={setVoiceTranscript} theme="light" />
+              <AudioRecorder
+                language={language}
+                languagePreference={effectiveVoiceLanguageMode}
+                reportLanguage={effectiveVoiceLanguageMode === 'manual' && acceptedVoiceLanguage ? acceptedVoiceLanguage : language}
+                onAudioReady={setAudioBlob}
+                onLiveTranscript={setVoiceTranscript}
+                onLanguageDetected={(detectedLanguage) => {
+                  setProposedVoiceLanguage(detectedLanguage)
+                }}
+                onLanguageChoice={(chosenLanguage) => {
+                  setAcceptedVoiceLanguage(chosenLanguage)
+                  setVoiceLanguageMode('manual')
+                }}
+                theme="light"
+              />
             </div>
           </div>
 

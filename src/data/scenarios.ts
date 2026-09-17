@@ -87,6 +87,13 @@ export interface TriageResult {
   digitalArrestAdvisory?: string
   timeline: string
   language?: SupportedLanguage
+  /** How spoken-language selection was made for a voice report. */
+  languageDetection?: {
+    detectedLanguage: SupportedLanguage | null
+    recognizedLanguage: SupportedLanguage | null
+    confidence: number
+    decision: 'confirmed' | 'uncertain' | 'manual'
+  }
   complaintDraft: string
   complaintDraftHi: string
   complaintDraftRegional?: string
@@ -113,6 +120,46 @@ export interface Scenario {
   inputType: InputType
   rawInput: string
   mockResponse: TriageResult
+}
+
+type ScenarioPresentation = { title: string; description: string }
+
+const SCENARIO_CATEGORY_COPY: Record<'as' | 'ne' | 'sd', Record<string, string>> = {
+  as: {
+    'UPI Fraud': 'UPI প্ৰৱঞ্চনা', 'OTP Fraud': 'OTP প্ৰৱঞ্চনা', 'Financial Fraud': 'আৰ্থিক প্ৰৱঞ্চনা',
+    'Investment Scam': 'বিনিয়োগ প্ৰৱঞ্চনা', 'Identity Theft': 'পৰিচয় চুৰি', 'Extortion & Blackmail': 'ধমকি আৰু ব্লেকমেইল',
+    'Women/Children Related Crime': 'মহিলা বা শিশুৰ বিৰুদ্ধে অপৰাধ', 'Other Cyber Crime': 'অন্য চাইবাৰ অপৰাধ',
+  },
+  ne: {
+    'UPI Fraud': 'UPI ठगी', 'OTP Fraud': 'OTP ठगी', 'Financial Fraud': 'आर्थिक ठगी',
+    'Investment Scam': 'लगानी ठगी', 'Identity Theft': 'पहिचान चोरी', 'Extortion & Blackmail': 'धम्की र ब्ल्याकमेल',
+    'Women/Children Related Crime': 'महिला वा बालबालिकासम्बन्धी अपराध', 'Other Cyber Crime': 'अन्य साइबर अपराध',
+  },
+  sd: {
+    'UPI Fraud': 'UPI فراڊ', 'OTP Fraud': 'OTP فراڊ', 'Financial Fraud': 'مالي فراڊ',
+    'Investment Scam': 'سيڙپڪاري فراڊ', 'Identity Theft': 'سڃاڻپ جي چوري', 'Extortion & Blackmail': 'ڌمڪي ۽ بليڪ ميل',
+    'Women/Children Related Crime': 'عورتن يا ٻارن سان لاڳاپيل ڏوهه', 'Other Cyber Crime': 'ٻيا سائبر ڏوهه',
+  },
+}
+
+/** Native presentation for stored demo scenarios. These are intentionally
+ * separate from the synthetic English/Hindi source reports so a newly added
+ * language never presents a demo as English or Hindi by accident. */
+export function getScenarioPresentation(scenario: Scenario, language: SupportedLanguage): ScenarioPresentation {
+  if (language === 'hi') return { title: scenario.titleHi, description: scenario.descriptionHi }
+  if (language === 'as') {
+    const category = SCENARIO_CATEGORY_COPY.as[scenario.fraudType] || 'চাইবাৰ প্ৰৱঞ্চনা'
+    return { title: `নমুনা: ${category}`, description: `এই ডেমোত ${category}ৰ এটা নমুনা ঘটনা দেখুওৱা হৈছে। নিজৰ বিৱৰণ যোগ কৰি নতুন অভিযোগ তৈয়াৰ কৰক।` }
+  }
+  if (language === 'ne') {
+    const category = SCENARIO_CATEGORY_COPY.ne[scenario.fraudType] || 'साइबर ठगी'
+    return { title: `नमूना: ${category}`, description: `यो डेमोमा ${category} को नमूना घटना देखाइएको छ। आफ्ना विवरण थपेर नयाँ उजुरी तयार गर्नुहोस्।` }
+  }
+  if (language === 'sd') {
+    const category = SCENARIO_CATEGORY_COPY.sd[scenario.fraudType] || 'سائبر فراڊ'
+    return { title: `نمونو: ${category}`, description: `هن ڊيمو ۾ ${category} جو نمونو واقعو ڏيکاريو ويو آهي۔ پنهنجا تفصيل شامل ڪري نئين رپورٽ تيار ڪريو۔` }
+  }
+  return { title: scenario.title, description: scenario.description }
 }
 
 // Whitelist of IT Act 2000 sections the AI may cite in applicableLaws.

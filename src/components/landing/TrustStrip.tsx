@@ -80,6 +80,24 @@ const SUB_LABELS: Record<string, { f1: string; f2: string; f3: string; f4: strin
     f3: 'ਆਧਾਰ ਅਤੇ ਪੈਨ ਤਸਦੀਕ',
     f4: 'ਤੁਰੰਤ ਬੈਂਕ ਫ੍ਰੀਜ਼ ਡੋਜ਼ੀਅਰ',
   },
+  "as": {
+    f1: 'Reports made through 1930 in 2024',
+    f2: 'Lost to online money fraud',
+    f3: 'Check Aadhaar and PAN with DigiLocker',
+    f4: 'Get a report and next-step guide',
+  },
+  ne: {
+    f1: 'Reports made through 1930 in 2024',
+    f2: 'Lost to online money fraud',
+    f3: 'Check Aadhaar and PAN with DigiLocker',
+    f4: 'Get a report and next-step guide',
+  },
+  sd: {
+    f1: 'Reports made through 1930 in 2024',
+    f2: 'Lost to online money fraud',
+    f3: 'Check Aadhaar and PAN with DigiLocker',
+    f4: 'Get a report and next-step guide',
+  },
 }
 
 export default function TrustStrip({ language }: TrustStripProps) {

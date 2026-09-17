@@ -244,6 +244,15 @@ const FOOTER_I18N: Record<SupportedLanguage, {
     poweredBy: 'GPT-4o ਦੁਆਰਾ ਸੰਚਾਲਿਤ',
     disclaimer: 'ਸੂਚਨਾ: ਡਿਜੀਲੌਕਰ ਤਸਦੀਕ, AI ਵੌਇਸ ਟ੍ਰਾਇਜ ਅਤੇ ਸ਼ਿਕਾਇਤ ਡਰਾਫਟਿੰਗ ਕਾਰਜਸ਼ੀਲ ਫੀਚਰ ਹਨ; ਪੁਲਿਸ ਭੇਜਣਾ ਅਤੇ ਬੈਂਕ ਫ੍ਰੀਜ਼ ਕਰਨਾ ਸਿਮੂਲੇਟਿਡ ਵਰਕਫਲੋ ਹਨ। ਅਧਿਕਾਰਤ ਪੋਰਟਲ cybercrime.gov.in ਹੈ। ਐਮਰਜੈਂਸੀ ਲਈ 1930 ਡਾਇਲ ਕਰੋ।',
   },
+  "as": {
+    ctaHeadline: 'প্ৰতিটো মিনিট গুৰুত্বপূৰ্ণ।', ctaDesc: 'টকা পঠিয়ালে এতিয়াই 1930-লৈ কল কৰক। তাৰ পিছত অভিযোগ আৰম্ভ কৰক।', ctaBtn: 'অভিযোগ আৰম্ভ কৰক', tagline: 'চাইবাৰ অভিযোগত সহায়।', linksTitle: 'লিংক', howItWorks: 'কেনেকৈ কাম কৰে', whySamarthan: 'সমৰ্থন কিয়', getStarted: 'আৰম্ভ কৰক', emergencyTitle: 'জৰুৰী', helpline1930: 'চাইবাৰ হেল্পলাইন: 1930', police100: 'পুলিচ: 100', aboutTitle: 'বিষয়ে', portalTag: 'চাইবাৰ অভিযোগ ডেমো', digilockerVerified: 'DigiLocker পৰিচয় পৰীক্ষা', poweredBy: 'GPT-4o ব্যৱহাৰ কৰে', disclaimer: 'DigiLocker পৰীক্ষা, কণ্ঠ লিপ্যন্তৰ আৰু অভিযোগ খচৰা ইয়াত কাম কৰে। পুলিচলৈ পঠোৱা আৰু বেংক ফ্ৰিজ অনুকৰণ কৰা হৈছে। এইটো চৰকাৰী ৱেবছাইট নহয়। আনুষ্ঠানিক অভিযোগৰ বাবে cybercrime.gov.in চাওক। জৰুৰী সহায়ৰ বাবে 1930-লৈ কল কৰক।',
+  },
+  ne: {
+    ctaHeadline: 'हरेक मिनेट महत्त्वपूर्ण छ।', ctaDesc: 'पैसा पठाउनुभयो भने अहिले 1930 मा फोन गर्नुहोस्। त्यसपछि उजुरी सुरु गर्नुहोस्।', ctaBtn: 'उजुरी सुरु गर्नुहोस्', tagline: 'साइबर उजुरीमा सहायता।', linksTitle: 'लिङ्कहरू', howItWorks: 'यसले कसरी काम गर्छ', whySamarthan: 'समर्थन् किन', getStarted: 'सुरु गर्नुहोस्', emergencyTitle: 'आपतकालीन', helpline1930: 'साइबर हेल्पलाइन: 1930', police100: 'प्रहरी: 100', aboutTitle: 'बारेमा', portalTag: 'साइबर उजुरी डेमो', digilockerVerified: 'DigiLocker पहिचान जाँच', poweredBy: 'GPT-4o प्रयोग गर्छ', disclaimer: 'DigiLocker जाँच, आवाजलाई लेखमा बदल्ने र उजुरीको मस्यौदा यहाँ काम गर्छ। प्रहरीमा पठाउने र बैंक रोक्का अनुकरण मात्र हो। यो सरकारी वेबसाइट होइन। आधिकारिक उजुरीका लागि cybercrime.gov.in हेर्नुहोस्। जरुरी सहायताका लागि 1930 मा फोन गर्नुहोस्।',
+  },
+  sd: {
+    ctaHeadline: 'هر منٽ اهم آهي۔', ctaDesc: 'پئسا موڪليا آهن ته هينئر 1930 تي ڪال ڪريو۔ پوءِ رپورٽ شروع ڪريو۔', ctaBtn: 'رپورٽ شروع ڪريو', tagline: 'سائبر رپورٽن ۾ مدد۔', linksTitle: 'لنڪس', howItWorks: 'اهو ڪيئن ڪم ڪري ٿو', whySamarthan: 'سمَرٿن ڇو', getStarted: 'شروع ڪريو', emergencyTitle: 'ايمرجنسي', helpline1930: 'سائبر هيلپ لائن: 1930', police100: 'پوليس: 100', aboutTitle: 'بابت', portalTag: 'سائبر رپورٽ ڊيمو', digilockerVerified: 'DigiLocker سڃاڻپ جاچ', poweredBy: 'GPT-4o استعمال ڪري ٿو', disclaimer: 'DigiLocker جاچ، آواز کي لکت ۾ بدلڻ ۽ رپورٽ جو مسودو هتي ڪم ڪن ٿا۔ پوليس ڏانهن موڪلڻ ۽ بئنڪ فريز صرف نموني طور آهن۔ هي سرڪاري ويب سائيٽ ناهي۔ سرڪاري رپورٽ لاءِ cybercrime.gov.in ڏسو۔ فوري مدد لاءِ 1930 تي ڪال ڪريو۔',
+  },
 }
 
 export default function FooterSection({ language }: FooterSectionProps) {

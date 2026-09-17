@@ -88,7 +88,8 @@ export default function LanguagePickerModal({
                       onSelect(lang.code)
                       onClose()
                     }}
-                    className={`text-left p-3 rounded-xl border transition-all flex items-center justify-between cursor-pointer group ${
+                    dir={lang.rtl ? 'rtl' : 'ltr'}
+                    className={`${lang.rtl ? 'text-right' : 'text-left'} p-3 rounded-xl border transition-all flex items-center justify-between cursor-pointer group ${
                       isSelected
                         ? 'border-blue-600 bg-blue-50/70 dark:bg-blue-950/40 shadow-xs'
                         : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60'
@@ -96,7 +97,7 @@ export default function LanguagePickerModal({
                   >
                     <div className="flex flex-col">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-base font-bold text-zinc-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        <span dir={lang.rtl ? 'rtl' : 'ltr'} className="text-base font-bold text-zinc-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           {lang.nativeName}
                         </span>
                         <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
@@ -126,6 +127,9 @@ export default function LanguagePickerModal({
             <div className="px-5 py-3 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-900/80 text-center shrink-0">
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 🎙️ {copy.footer}
+              </p>
+              <p className="mt-1 text-[10px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                {copy.voiceSupport}
               </p>
             </div>
           </motion.div>

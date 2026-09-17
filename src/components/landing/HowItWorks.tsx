@@ -28,25 +28,52 @@ const SUBTITLE_MAP: Record<string, string> = {
   or: 'କୌଣସି ଜଟିଳ ଫର୍ମ ବିନା ସାଇବର୍ ଅପରାଧ ଅଭିଯୋଗ ଦାଖଲ କରନ୍ତୁ, ଆଇନଗତ ଧାରା ଜାଣନ୍ତୁ ଏବଂ ବ୍ୟାଙ୍କ ଖାତା ଫ୍ରିଜ୍ ପ୍ରକ୍ରିୟା ଆରମ୍ଭ କରନ୍ତୁ।',
   ml: 'സങ്കീർണ്ണമായ ഫോമുകളില്ലാതെ സൈബർ കുറ്റകൃത്യ പരാതികൾ നൽകുക, നിയമ വകുപ്പുകൾ നേടുക, ബാങ്ക് അക്കൗണ്ട് ഫ്രീസ് ചെയ്യുക.',
   pa: 'ਬਿਨਾਂ ਕਿਸੇ ਗੁੰਝਲਦਾਰ ਫਾਰਮ ਦੇ ਸਾਈਬਰ ਅਪਰਾਧ ਦੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ, ਕਾਨੂੰਨੀ ਧਾਰਾਵਾਂ ਪ੍ਰਾਪਤ ਕਰੋ ਅਤੇ ਬੈਂਕ ਖਾਤਾ ਫ੍ਰੀਜ਼ ਕਰਨ ਦੀ ਪ੍ਰਕਿਰਿਆ ਸ਼ੁਰੂ ਕਰੋ।',
+  "as": 'কি ঘটিছে কওক। আমি ৰিপোর্ট তৈয়াৰ আৰু পৰৱৰ্তী পদক্ষেপত সহায় কৰোঁ।',
+  ne: 'के भयो भन्नुहोस्। हामी रिपोर्ट तयार गर्न र अर्को कदम बुझ्न मद्दत गर्छौँ।',
+  sd: 'ٻڌايو ته ڇا ٿيو۔ اسين رپورٽ تيار ڪرڻ ۽ ايندڙ قدم سمجهڻ ۾ مدد ڪنداسين۔',
+}
+
+const REGIONAL_STEP_POINTS: Partial<Record<SupportedLanguage, [string, string][]>> = {
+  as: [
+    ['১৫টা ভাষা: ১৩টা ভাৰতীয় ভাষাত কণ্ঠেৰে লিখিব পাৰি; ওড়িয়াত টাইপ বা ৰিপ’ৰ্ট সহায়', 'DigiLocker-এৰে পৰিচয় যাচাই কৰক'],
+    ['প্ৰাসংগিক আইনী ধাৰা চাওক', 'স্পষ্ট অভিযোগৰ খচৰা পৰীক্ষা কৰক'],
+    ['1930-লৈ কলত কি ক’ব জানক', 'বেংকলৈ দিয়াৰ পদক্ষেপ লওক'],
+  ],
+  ne: [
+    ['१५ भाषा: १३ भारतीय भाषामा आवाजबाट लेख्न सकिन्छ; ओडियाका लागि टाइप वा रिपोर्ट सहायता', 'DigiLocker बाट पहिचान जाँच्नुहोस्'],
+    ['सम्बन्धित कानुनी धारा हेर्नुहोस्', 'स्पष्ट उजुरीको मस्यौदा जाँच्नुहोस्'],
+    ['१९३० मा के भन्ने जान्नुहोस्', 'बैंकसँग साझा गर्ने चरणहरू पाउनुहोस्'],
+  ],
+  sd: [
+    ['۱۵ ٻوليون: ۱۳ ڀارتي ٻولين ۾ آواز سان لکڻ؛ اوڊيا لاءِ ٽائپ يا رپورٽ مدد', 'DigiLocker سان سڃاڻپ جي جاچ ڪريو'],
+    ['لاڳو قانوني شقون ڏسو', 'صاف رپورٽ جو مسودو ڏسو'],
+    ['1930 تي ڇا چوڻو آهي ڄاڻو', 'بئنڪ سان شيئر ڪرڻ جا قدم حاصل ڪريو'],
+  ],
 }
 
 export default function HowItWorks({ language }: HowItWorksProps) {
   const isHi = language === 'hi'
   const t = getTranslation(language)
   const subtitle = SUBTITLE_MAP[language] || SUBTITLE_MAP.en
+  const regionalPoints = REGIONAL_STEP_POINTS[language]
 
   const steps: StepItem[] = [
     {
       n: '01',
       title: t.howItWorks.step1Title,
       body: t.howItWorks.step1Desc,
-      points: isHi
+      points: regionalPoints
+        ? [
+            { icon: <Mic className="w-3.5 h-3.5 text-primary shrink-0" />, text: regionalPoints[0][0] },
+            { icon: <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />, text: regionalPoints[0][1] },
+          ]
+        : isHi
         ? [
             { icon: <Mic className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'बोलकर या लिखकर त्वरित शिकायत' },
             { icon: <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'डिजीलॉकर से सुरक्षित आधार सत्यापन' },
           ]
         : [
-            { icon: <Mic className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Use voice or text in 12 languages' },
+            { icon: <Mic className="w-3.5 h-3.5 text-primary shrink-0" />, text: '15 languages: voice dictation in 13 Indian languages; Odia for text and report help' },
             { icon: <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'Verify your identity with DigiLocker' },
           ],
       shot: '/landing/shot-intake.png',
@@ -55,7 +82,12 @@ export default function HowItWorks({ language }: HowItWorksProps) {
       n: '02',
       title: t.howItWorks.step2Title,
       body: t.howItWorks.step2Desc,
-      points: isHi
+      points: regionalPoints
+        ? [
+            { icon: <Scale className="w-3.5 h-3.5 text-primary shrink-0" />, text: regionalPoints[1][0] },
+            { icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: regionalPoints[1][1] },
+          ]
+        : isHi
         ? [
             { icon: <Scale className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'IT एक्ट और BNS की कानूनी धाराएं' },
             { icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />, text: 'तैयार औपचारिक पुलिस शिकायत पत्र' },
@@ -70,7 +102,12 @@ export default function HowItWorks({ language }: HowItWorksProps) {
       n: '03',
       title: t.howItWorks.step3Title,
       body: t.howItWorks.step3Desc,
-      points: isHi
+      points: regionalPoints
+        ? [
+            { icon: <Phone className="w-3.5 h-3.5 text-red-600 shrink-0" />, text: regionalPoints[2][0] },
+            { icon: <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />, text: regionalPoints[2][1] },
+          ]
+        : isHi
         ? [
             { icon: <Phone className="w-3.5 h-3.5 text-red-600 shrink-0" />, text: '1930 ऑपरेटर को बताने के मुख्य बिंदु' },
             { icon: <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />, text: 'बैंक नोडल अधिकारी को खाता फ्रीज नोटिस' },

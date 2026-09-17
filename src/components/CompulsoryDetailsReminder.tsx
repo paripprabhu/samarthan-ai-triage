@@ -267,6 +267,15 @@ const REMINDER_I18N: Record<SupportedLanguage, {
     pending: 'ਬਾਕੀ',
     aiHint: 'ਸੌਖਾ ਤਰੀਕਾ: ਹੇਠਾਂ ਅਪਡੇਟਸ ਵਿੱਚ ਕੁਦਰਤੀ ਢੰਗ ਨਾਲ ਲਿਖੋ (ਜਿਵੇਂ: "ਮੇਰਾ UTR 482910394821 ਹੈ, ਬੈਂਕ SBI"): AI ਆਪਣੇ-ਆਪ ਭਰ ਦੇਵੇਗਾ!',
   },
+  "as": {
+    completeBadge: 'সকলো তথ্য যোগ কৰা হৈছে', completeText: 'বেংকক ধন ফ্ৰিজৰ অনুৰোধ আৰু FIRৰ বাবে আপোনাৰ ৰিপোর্টত প্ৰয়োজনীয় তথ্য আছে।', requiredBadge: 'প্ৰয়োজনীয়', completed: 'সম্পূৰ্ণ', actionRequired: 'ধন ফ্ৰিজ আৰু FIRৰ বাবে তথ্য যোগ কৰক', autoFillBtn: 'আপডেটত তথ্য যোগ কৰক', done: 'হ’ল', pending: 'বাকী', aiHint: 'তলৰ আপডেটত তথ্য লিখক। যেনে: “UTR 482910394821, বেংক SBI।”',
+  },
+  ne: {
+    completeBadge: 'सबै विवरण थपियो', completeText: 'तपाईंको रिपोर्टमा बैंकलाई रकम रोक्न र FIR का लागि आवश्यक मुख्य विवरण छन्।', requiredBadge: 'आवश्यक', completed: 'पूरा', actionRequired: 'रकम रोक्न र FIR का लागि विवरण थप्नुहोस्', autoFillBtn: 'अपडेटमा विवरण थप्नुहोस्', done: 'सकियो', pending: 'बाँकी', aiHint: 'तलको अपडेटमा विवरण लेख्नुहोस्। जस्तै: “UTR 482910394821, बैंक SBI।”',
+  },
+  sd: {
+    completeBadge: 'سڀ تفصيل شامل آهن', completeText: 'توهان جي رپورٽ ۾ بئنڪ کي رقم فريز ڪرڻ ۽ FIR لاءِ ضروري تفصيل آهن۔', requiredBadge: 'ضروري', completed: 'مڪمل', actionRequired: 'رقم فريز ۽ FIR لاءِ تفصيل شامل ڪريو', autoFillBtn: 'اپڊيٽ ۾ تفصيل شامل ڪريو', done: 'ٿي ويو', pending: 'باقي', aiHint: 'هيٺ اپڊيٽ ۾ تفصيل لکو۔ مثال: “UTR 482910394821، بئنڪ SBI۔”',
+  },
 }
 
 const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; importance: string }>> = {
@@ -283,7 +292,10 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     or: { label: '୧୨-ଅଙ୍କ ବିଶିଷ୍ଟ କାରବାର UTR ନମ୍ବର', importance: 'ବ୍ୟାଙ୍କ ଏବଂ NPCI ଦ୍ୱାରା ଫଣ୍ଡ ଫ୍ରିଜ୍ ପାଇଁ ବାଧ୍ୟତାମୂଳକ' },
     ml: { label: '12-അക്ക ഇടപാട് UTR നമ്പർ', importance: 'ബാങ്കും NPCI-യും വഴി ഫണ്ട് മരവിപ്പിക്കാൻ നിർബന്ധമാണ്' },
     pa: { label: '12-ਅੰਕਾਂ ਦਾ ਲੈਣ-ਦੇਣ UTR ਨੰਬਰ', importance: 'ਬੈਂਕ ਅਤੇ NPCI ਦੁਆਰਾ ਫੰਡ ਫ੍ਰੀਜ਼ ਕਰਨ ਲਈ ਲਾਜ਼ਮੀ' },
-  },
+    "as": { label: 'লেনদেনৰ UTR (১২ অংক)', importance: 'বেংক আৰু NPCIক সোনকালে ধন ফ্ৰিজ কৰিবলৈ ক’বলৈ লাগে' },
+    ne: { label: 'लेनदेन UTR (१२ अंक)', importance: 'बैंक र NPCI लाई छिटो रकम रोक्न भन्न आवश्यक' },
+    sd: { label: 'ٽرانزيڪشن UTR (۱۲ عدد)', importance: 'بئنڪ ۽ NPCI کي جلدي رقم فريز ڪرڻ لاءِ ضروري' },
+},
   bankName: {
     en: { label: 'Your bank name', importance: 'Needed to contact your bank’s fraud team' },
     hi: { label: 'बैंक का नाम (जिससे पैसे कटे)', importance: 'बैंक नोडल अधिकारी को तत्काल सूचित करने के लिए आवश्यक' },
@@ -297,7 +309,10 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     or: { label: 'ବ୍ୟାଙ୍କର ନାମ (ଯେଉଁଥିରୁ ଟଙ୍କା କଟିଛି)', importance: 'ବ୍ୟାଙ୍କ ନୋଡାଲ ଅଧିକାରୀଙ୍କୁ ଜଣାଇବା ପାଇଁ ଆବଶ୍ୟକ' },
     ml: { label: 'ഡെബിറ്റ് ചെയ്ത ബാങ്കിന്റെ പേര്', importance: 'ബാങ്ക് നോഡൽ ഓഫീസറെ അറിയിക്കാൻ ആവശ്യമാണ്' },
     pa: { label: 'ਬੈਂਕ ਦਾ ਨਾਮ (ਜਿਸ ਵਿੱਚੋਂ ਪੈਸੇ ਕੱਟੇ)', importance: 'ਬੈਂਕ ਨੋਡਲ ਅਧਿਕਾਰੀ ਨੂੰ ਸੂਚਿਤ ਕਰਨ ਲਈ ਲੋੜੀਂਦਾ' },
-  },
+    "as": { label: 'আপোনাৰ বেংকৰ নাম', importance: 'বেংকৰ প্ৰৱঞ্চনা দলৰ সৈতে যোগাযোগৰ বাবে লাগে' },
+    ne: { label: 'तपाईंको बैंकको नाम', importance: 'बैंकको ठगी टोलीलाई सम्पर्क गर्न आवश्यक' },
+    sd: { label: 'توهان جي بئنڪ جو نالو', importance: 'بئنڪ جي فراڊ ٽيم سان رابطو ڪرڻ لاءِ ضروري' },
+},
   fraudster: {
     en: { label: 'Scammer or receiver ID', importance: 'Needed to block the account and file an FIR' },
     hi: { label: 'धोखेबाज़ का UPI ID / खाता / मोबाइल नंबर', importance: 'लाभार्थी खाते को ब्लॉक करने और प्राथमिकी दर्ज करने के लिए आवश्यक' },
@@ -311,7 +326,10 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     or: { label: 'ଠକର UPI ID / ଆକାଉଣ୍ଟ / ମୋବାଇଲ୍ ନମ୍ବର', importance: 'ଆକାଉଣ୍ଟ ବ୍ଲକ୍ ଏବଂ FIR ଦାଖଲ ପାଇଁ ଆବଶ୍ୟକ' },
     ml: { label: 'തട്ടിപ്പുകാരന്റെ UPI ID / അക്കൗണ്ട് / ഫോൺ', importance: 'അക്കൗണ്ട് തടയാനും എഫ്ഐആർ ഫയൽ ചെയ്യാനും ആവശ്യമാണ്' },
     pa: { label: 'ਧੋਖੇਬਾਜ਼ ਦਾ UPI ID / ਖਾਤਾ / ਮੋਬਾਈਲ ਨੰਬਰ', importance: 'ਖਾਤਾ ਬਲਾਕ ਕਰਨ ਅਤੇ ਐੱਫ.ਆੀ.ਆਰ. ਦਰਜ ਕਰਨ ਲਈ ਲੋੜੀਂਦਾ' },
-  },
+    "as": { label: 'প্ৰৱঞ্চক বা গ্ৰাহকৰ ID', importance: 'একাউণ্ট বন্ধ আৰু FIRৰ বাবে লাগে' },
+    ne: { label: 'ठग वा प्राप्तकर्ताको ID', importance: 'खाता रोक्न र FIR का लागि आवश्यक' },
+    sd: { label: 'ٺڳ يا وصول ڪندڙ جي ID', importance: 'اڪائونٽ بند ۽ FIR لاءِ ضروري' },
+},
   complainant: {
     en: { label: 'Your full name', importance: 'Needed for an FIR and police statement' },
     hi: { label: 'शिकायतकर्ता का पूरा नाम', importance: 'कानूनी FIR और पुलिस बयान के लिए आवश्यक' },
@@ -325,7 +343,10 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     or: { label: 'ଅଭିଯୋଗକାରୀଙ୍କ ପୂରା ନାମ', importance: 'ଆଇନଗତ FIR ଏବଂ ପୋଲିସ ବୟାନ ପାଇଁ ଆବଶ୍ୟକ' },
     ml: { label: 'പരാതിക്കാരന്റെ പൂർണ്ണമായ പേര്', importance: 'നിയമപരമായ എഫ്ഐആറിനും പോലീസ് മൊഴിക്കും ആവശ്യമാണ്' },
     pa: { label: 'ਸ਼ਿਕਾਇਤਕਰਤਾ ਦਾ ਪੂਰਾ ਨਾਮ', importance: 'ਕਾਨੂੰਨੀ ਐੱਫ.ਆਈ.ਆਰ. ਅਤੇ ਪੁਲਿਸ ਬਿਆਨ ਲਈ ਲੋੜੀਂਦਾ' },
-  },
+    "as": { label: 'আপোনাৰ সম্পূৰ্ণ নাম', importance: 'FIR আৰু আৰক্ষী বিবৃতিৰ বাবে লাগে' },
+    ne: { label: 'तपाईंको पूरा नाम', importance: 'FIR र प्रहरी बयानका लागि आवश्यक' },
+    sd: { label: 'توهان جو پورو نالو', importance: 'FIR ۽ پوليس بيان لاءِ ضروري' },
+},
   amount: {
     en: { label: 'Amount lost', importance: 'Needed to state the amount to recover' },
     hi: { label: 'धोखाधड़ी की राशि (₹)', importance: 'वसूली के लिए दावा की गई सटीक राशि' },
@@ -339,7 +360,10 @@ const FIELD_I18N: Record<string, Record<SupportedLanguage, { label: string; impo
     or: { label: 'ଠକେଇ ହୋଇଥିବା ରାଶି (₹)', importance: 'ପ୍ରତ୍ୟାର୍ପଣ ପାଇଁ ଦାବି କରାଯାଇଥିବା ସଠିକ୍ ରାଶି' },
     ml: { label: 'തട്ടിപ്പ് തുക (₹)', importance: 'വീണ്ടെടുക്കലിനായി കൃത്യമായ ക്ലെയിം തുക' },
     pa: { label: 'ਧੋਖਾਧੜੀ ਦੀ ਰਕਮ (₹)', importance: 'ਵਸੂਲੀ ਲਈ ਦਾਅਵਾ ਕੀਤੀ ਸਹੀ ਰਕਮ' },
-  },
+    "as": { label: 'হেৰুওৱা ধন', importance: 'উদ্ধাৰৰ বাবে সঠিক ধনৰ পৰিমাণ লাগে' },
+    ne: { label: 'हराएको रकम', importance: 'फिर्ता माग्न रकम बताउन आवश्यक' },
+    sd: { label: 'وڃايل رقم', importance: 'واپسي لاءِ رقم ٻڌائڻ ضروري' },
+},
 }
 
 interface CompulsoryDetailsReminderProps {

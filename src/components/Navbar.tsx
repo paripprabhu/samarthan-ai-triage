@@ -120,7 +120,7 @@ export default function Navbar({ language: propLanguage, onLanguageToggle, onSel
                 <span className="hidden md:inline">{t.nav.myComplaints}</span>
               </button>
 
-              {/* 2. Language Selector Button (Opens 12-language modal) */}
+              {/* 2. Language selector */}
               <button
                 onClick={() => setLangPickerOpen(true)}
                 aria-label={t.nav.selectLanguage}

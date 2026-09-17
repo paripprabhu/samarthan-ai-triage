@@ -23,7 +23,10 @@ const COMMON_LAW_TITLES: Record<string, Record<SupportedLanguage, string>> = {
     or: 'କମ୍ପ୍ୟୁଟର ମାଧ୍ୟମରେ ପ୍ରତାରଣା',
     ml: 'കമ്പ്യൂട്ടർ ദുരുപയോഗം വഴിയുള്ള തട്ടിപ്പ്',
     pa: 'ਕੰਪਿਊਟਰ ਸਰੋਤਾਂ ਰਾਹੀਂ ਧੋਖਾਧੜੀ',
-  },
+    "as": 'কম্পিউটাৰ ব্যৱহাৰ কৰি ভুৱা পৰিচয়ে ঠগি',
+    ne: 'कम्प्युटर प्रयोग गरी झुटो पहिचानबाट ठगी',
+    sd: 'ڪمپيوٽر وسيلي ڪوڙي سڃاڻپ سان ٺڳي',
+},
   '66C': {
     en: 'Punishment for identity theft',
     hi: 'पहचान की चोरी के लिए दंड',
@@ -37,7 +40,10 @@ const COMMON_LAW_TITLES: Record<string, Record<SupportedLanguage, string>> = {
     or: 'ପରିଚୟ ଚୋରି ପାଇଁ ଦଣ୍ଡ',
     ml: 'തിരിച്ചറിയൽ രേഖ മോഷണത്തിനുള്ള ശിക്ഷ',
     pa: 'ਪਛਾਣ ਦੀ ਚੋਰੀ ਲਈ ਸਜ਼ਾ',
-  },
+    "as": 'পৰিচয় চুৰিৰ শাস্তি',
+    ne: 'पहिचान चोरीको सजाय',
+    sd: 'سڃاڻپ چوري جي سزا',
+},
   '67': {
     en: 'Publishing obscene material in electronic form',
     hi: 'इलेक्ट्रॉनिक रूप में अश्लील सामग्री का प्रसारण',
@@ -51,7 +57,10 @@ const COMMON_LAW_TITLES: Record<string, Record<SupportedLanguage, string>> = {
     or: 'ଇଲେକ୍ଟ୍ରୋନିକ୍ ମାଧ୍ୟମରେ ଅଶ୍ଳୀଳ ସାମଗ୍ରୀ ପ୍ରସାରଣ',
     ml: 'ഇലക്ട്രോണിക് രൂപത്തിൽ അശ്ലീല വിവരങ്ങൾ പ്രചരിപ്പിക്കൽ',
     pa: 'ਇਲੈਕਟ੍ਰਾਨਿਕ ਰੂਪ ਵਿੱਚ ਅਸ਼ਲੀਲ ਸਮੱਗਰੀ ਦਾ ਪ੍ਰਸਾਰਣ',
-  },
+    "as": 'ইলেকট্ৰনিক ৰূপত অশ্লীল সামগ্ৰী প্ৰকাশ',
+    ne: 'विद्युतीय रूपमा अश्लील सामग्री प्रकाशित गर्नु',
+    sd: 'اليڪٽرانڪ صورت ۾ فحش مواد شايع ڪرڻ',
+},
 }
 
 function getLocalizedLawTitle(law: ApplicableLaw, lang: SupportedLanguage): string {
