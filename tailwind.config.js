@@ -64,7 +64,7 @@ module.exports = {
         'ui-micro': ['0.625rem', { lineHeight: '0.875rem' }],   // 10px (Smallest font tier)
       },
       boxShadow: {
-        /* Supabase-flat: barely-there elevation */
+        /* Barely-there elevation */
         xs: '0 1px 2px 0 rgb(0 0 0 / 0.04)',
         sm: '0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04)',
         card: '0 1px 2px 0 rgb(0 0 0 / 0.03), 0 0 0 1px rgb(0 0 0 / 0.02)',

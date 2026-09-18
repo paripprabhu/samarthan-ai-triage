@@ -61,7 +61,7 @@ try {
 
   await sql`create index if not exists complaints_saved_at_idx on complaints (saved_at desc)`
 
-  // Single-row table the Railway-hosted WhatsApp bot writes its live status +
+  // Single-row table the hosted WhatsApp bot writes its live status +
   // QR data-URL into, so the Vercel site can show connection state / QR without
   // the bot and Next.js sharing a filesystem.
   await sql`

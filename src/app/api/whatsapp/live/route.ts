@@ -11,7 +11,7 @@ const PID_FILE = path.resolve(process.cwd(), '.whatsapp_bot.pid')
 const AUTH_DIR = path.resolve(process.cwd(), '.whatsapp_auth')
 const SCRIPT_PATH = path.resolve(process.cwd(), 'scripts/whatsapp-bot.mjs')
 
-// In production the bot runs on Railway (separate filesystem) and publishes
+// In production the bot runs in a separate worker and publishes
 // its status + QR to Postgres. Read that first; fall back to the local state
 // file only for same-machine local dev.
 async function getStateFromDb() {
@@ -96,7 +96,7 @@ function spawnBotProcess() {
 
 export async function GET() {
   // Prefer a fresh same-machine state file (local dev); otherwise the DB row
-  // the Railway-hosted bot publishes.
+  // the hosted bot publishes.
   const local = getLiveState()
   if (local.isRunning) return NextResponse.json(local)
 

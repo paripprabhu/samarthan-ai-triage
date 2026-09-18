@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { TriageProvider } from '@/context/TriageContext'
-import SmoothScroll from '@/components/SmoothScroll'
 
 export const metadata: Metadata = {
   title: 'समर्थन Samarthan - Citizen Cybercrime Triage & Reporting Portal',
@@ -34,9 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <TriageProvider>
-          <SmoothScroll>
-            {children}
-          </SmoothScroll>
+          {children}
         </TriageProvider>
       </body>
     </html>

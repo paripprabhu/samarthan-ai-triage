@@ -125,7 +125,7 @@ let isStarting = false
 let reconnectAttempts = 0
 let latestState = {}
 
-// DB handle - used so a cloud-hosted bot (Railway) can publish its status +
+// DB handle - used so a cloud-hosted bot can publish its status +
 // QR to the same Postgres the Vercel site reads. Optional: falls back to the
 // local state file if DATABASE_URL is unset (pure local dev).
 const sqlDb = process.env.DATABASE_URL ? neon(process.env.DATABASE_URL) : null
@@ -223,7 +223,7 @@ async function startWhatsAppBot() {
   console.log(`[Init] Using auth directory: ${AUTH_DIR}`)
   console.log(`[Init] Forwarding triage calls to: ${NEXT_API_URL}`)
 
-  // Auto-unpack session bundle if running in a fresh cloud container (e.g. Railway/Render)
+  // Auto-unpack session bundle if running in a fresh cloud container.
   if (process.env.WHATSAPP_SESSION_BUNDLE_BASE64) {
     const credsFile = path.join(AUTH_DIR, 'creds.json')
     if (!fs.existsSync(credsFile)) {
@@ -563,9 +563,9 @@ startWhatsAppBot().catch((err) => {
 })
 
 // ── Tiny HTTP server ──────────────────────────────────────────────
-// Railway health checks want a listening port. This also serves the live
+// A hosted worker needs a listening port. This also serves the live
 // QR as a scannable page so you can link WhatsApp without digging through
-// deploy logs: open  https://<your-railway-domain>/  and scan it.
+// deployment logs: open the worker URL and scan it.
 const PORT = process.env.PORT || 8080
 import('node:http').then(({ createServer }) => {
   createServer((req, res) => {

@@ -1,4 +1,0 @@
-# Railway runs only scripts/whatsapp-bot.mjs — trim the heavy Next.js build output
-.next/
-out/
-.vercel

@@ -85,8 +85,3 @@ allowance. The bot is light: a long-lived socket plus occasional OpenAI
 calls for voice-note transcription.
 
 ---
-
-### (Old) Railway notes
-Railway removed its free tier — Hobby is $5/mo. `railway.json` +
-`nixpacks.toml` are kept in the repo in case you switch back, but Fly is
-the free path.

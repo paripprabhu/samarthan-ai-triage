@@ -218,7 +218,6 @@ Useful manual test scenarios are documented in:
 | `src/lib/i18n` | Supported languages, translations, and multilingual extraction helpers |
 | `src/data` | Scenario data, types, legal-section catalog, and escalation copy |
 | `scripts` | Database migration, synthetic seeding, and WhatsApp worker utilities |
-| `supabase/schema.sql` | Reference SQL schema |
 
 ## Scope and safety
 
